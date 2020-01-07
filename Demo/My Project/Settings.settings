@@ -1,0 +1,33 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="SmtpServerName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">localhost</Value>
+    </Setting>
+    <Setting Name="SmtpServerPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="SmtpUsername" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SmtpPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SmtpAuthType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">NONE</Value>
+    </Setting>
+    <Setting Name="TestRecipientName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Foo Bar</Value>
+    </Setting>
+    <Setting Name="TestRecipientAddress" Type="System.String" Scope="User">
+      <Value Profile="(Default)">foo.bar@invalid.domain</Value>
+    </Setting>
+    <Setting Name="TestSenderName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Jon Doe</Value>
+    </Setting>
+    <Setting Name="TestSenderAddress" Type="System.String" Scope="User">
+      <Value Profile="(Default)">jon.doe@invalid.domain</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
