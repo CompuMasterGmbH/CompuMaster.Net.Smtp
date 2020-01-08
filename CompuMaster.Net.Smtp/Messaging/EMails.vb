@@ -1,7 +1,7 @@
 Option Explicit On
 Option Strict On
 
-Public Class EMails
+Public NotInheritable Class EMails
 
     Public Enum Priority As Integer
         High = 1

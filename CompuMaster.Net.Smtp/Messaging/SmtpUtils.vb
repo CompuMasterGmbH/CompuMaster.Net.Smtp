@@ -15,9 +15,9 @@ Friend Class SmtpUtils
         End If
         Dim Result As New List(Of String)
         'Go through every char of the string
+        Dim SplitHere As Boolean
+        Dim StartPosition As Integer
         For MyCounter As Integer = 0 To text.Length - 1
-            Dim SplitHere As Boolean
-            Dim StartPosition As Integer
             'Find split points
             If text.Chars(MyCounter) = separator Then
                 If MyCounter = 0 Then
@@ -116,7 +116,7 @@ Friend Class SmtpUtils
                     idxLast = idxPattern + lenPattern
                 End While
             Case Else
-                Throw New ArgumentOutOfRangeException("comparisonType", "Invalid value")
+                Throw New ArgumentOutOfRangeException(NameOf(comparisonType), "Invalid value")
         End Select
         Return result.ToString()
     End Function

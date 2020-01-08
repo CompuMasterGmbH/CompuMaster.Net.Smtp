@@ -8,12 +8,13 @@ Public Module DemoApp
         My.Settings.TestRecipientAddress = InputBox("TestRecipientAddress",, My.Settings.TestRecipientAddress)
         My.Settings.Save()
 
-        Dim MySmtpWorker As New SmtpWorker()
-        MySmtpWorker.SmtpServerName = My.Settings.SmtpServerName
-        MySmtpWorker.SmtpServerPort = My.Settings.SmtpServerPort
-        MySmtpWorker.SmtpAuthType = My.Settings.SmtpAuthType
-        MySmtpWorker.SmtpUserName = My.Settings.SmtpUsername
-        MySmtpWorker.SmtpPassword = My.Settings.SmtpPassword
+        Dim MySmtpWorker As New SmtpWorker With {
+            .SmtpServerName = My.Settings.SmtpServerName,
+            .SmtpServerPort = My.Settings.SmtpServerPort,
+            .SmtpAuthType = My.Settings.SmtpAuthType,
+            .SmtpUserName = My.Settings.SmtpUsername,
+            .SmtpPassword = My.Settings.SmtpPassword
+        }
 
         Dim MyAttachment As New EMailAttachment("logo_64x64.png", "logo")
 

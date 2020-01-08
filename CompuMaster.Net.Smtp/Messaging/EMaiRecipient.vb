@@ -18,7 +18,7 @@ Public Class EMailRecipient
     ''' </remarks>
     Public Shared Function CreateRecipientString(ByVal name As String, ByVal address As String) As String
         If address = Nothing Then Return ""
-        If name <> "" Then
+        If name <> Nothing Then
             name = name.Replace("\", "\\")
             name = name.Replace("<", "\<").Replace(">", "\>").Replace("(", "\(").Replace(")", "\)").Replace("[", "\[").Replace("]", "\]")
             name = name.Replace(".", "\.").Replace(",", "\,").Replace(":", "\:").Replace(";", "\;")
@@ -30,7 +30,7 @@ Public Class EMailRecipient
             Next
             name = name.Replace(ChrW(127), " "c)
         End If
-        Return CType(IIf(name <> "", name & " ", ""), String) & "<" & address & ">"
+        Return CType(IIf(name <> Nothing, name & " ", ""), String) & "<" & address & ">"
     End Function
 
     ''' <summary>
@@ -133,7 +133,7 @@ Public Class EMailRecipient
 
     Public Sub New(ByVal name As String, ByVal address As String)
         If address Is Nothing Then
-            Throw New ArgumentNullException("address")
+            Throw New ArgumentNullException(NameOf(address))
         End If
         Me.Name = name
         Me.Address = address

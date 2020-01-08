@@ -134,6 +134,7 @@ Public Class SmtpWorker
                     Next
                 End If
             Catch ex As Exception
+                'Critical error
                 Return New SmtpSendResult(ex)
             End Try
 
@@ -143,24 +144,14 @@ Public Class SmtpWorker
                 MyMail.SubjectEncoding = System.Text.Encoding.GetEncoding(MsgCharset)
                 MyMail.BodyEncoding = System.Text.Encoding.GetEncoding(MsgCharset)
             Catch
-                Try
-                    'System.Environment.StackTrace doesn't work with medium-trust --> work around it using a new exception class
-                    Dim WorkaroundEx As New Exception("")
-                    Dim WorkaroundStackTrace As String = WorkaroundEx.StackTrace 'contains only last few lines of stacktrace
-                    Try
-                        WorkaroundStackTrace = System.Environment.StackTrace 'contains full stacktrace
-                    Catch
-                    End Try
-                Catch
-                End Try
             End Try
 
             Dim plainView As System.Net.Mail.AlternateView = Nothing
             Dim htmlView As System.Net.Mail.AlternateView = Nothing
-            If MsgTextBody <> "" Then
+            If MsgTextBody <> Nothing Then
                 plainView = System.Net.Mail.AlternateView.CreateAlternateViewFromString(MsgTextBody, Nothing, "text/plain")
             End If
-            If MsgHTMLBody <> "" Then
+            If MsgHTMLBody <> Nothing Then
                 htmlView = System.Net.Mail.AlternateView.CreateAlternateViewFromString(MsgHTMLBody, Nothing, "text/html")
             End If
 
@@ -176,8 +167,7 @@ Public Class SmtpWorker
                     If Not Attachments(MyCounter).RawData Is Nothing OrElse Attachments(MyCounter).RawDataFilename <> Nothing Then
                         Try
                             'Create a temporary file, store the data there and add that file as attachment before removing again
-                            Dim tempFile As String = System.IO.Path.GetTempFileName()
-                            System.IO.File.Delete(tempFile)
+                            Dim tempFile As String = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid.ToString("n"))
                             TempFiles.Add(tempFile)
                             System.IO.Directory.CreateDirectory(tempFile)
                             tempFile &= System.IO.Path.DirectorySeparatorChar & Attachments(MyCounter).RawDataFilename
@@ -187,21 +177,23 @@ Public Class SmtpWorker
                             tempFileStream.Close()
                             'TempFiles.Add(tempFile)
                             If Attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID <> Nothing Then
-                                MyEmbeddedImg = New System.Net.Mail.LinkedResource(tempFile)
-                                MyEmbeddedImg.ContentId = Attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID
+                                MyEmbeddedImg = New System.Net.Mail.LinkedResource(tempFile) With {
+                                    .ContentId = Attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID
+                                }
                             Else
                                 MyAttachment = New System.Net.Mail.Attachment(tempFile)
                             End If
                         Catch ex As Exception
                             ErrorFound = ex.ToString & vbNewLine
                         End Try
-                    ElseIf Attachments(MyCounter).FilePath <> "" Then
+                    ElseIf Attachments(MyCounter).FilePath <> Nothing Then
                         Dim fi As New IO.FileInfo(Attachments(MyCounter).FilePath)
                         If fi.Exists Then
                             Try
                                 If Attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID <> Nothing Then
-                                    MyEmbeddedImg = New System.Net.Mail.LinkedResource(Attachments(MyCounter).FilePath)
-                                    MyEmbeddedImg.ContentId = Attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID
+                                    MyEmbeddedImg = New System.Net.Mail.LinkedResource(Attachments(MyCounter).FilePath) With {
+                                        .ContentId = Attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID
+                                    }
                                 Else
                                     MyAttachment = New System.Net.Mail.Attachment(Attachments(MyCounter).FilePath)
                                 End If
@@ -294,10 +286,10 @@ Public Class SmtpWorker
                 'Setup additional headers
                 If Not AdditionalHeaders Is Nothing Then
                     For Each MyKey As String In AdditionalHeaders
-                        If MyKey.ToLower() = "reply-to" AndAlso AdditionalHeaders(MyKey) <> "" AndAlso AdditionalHeaders(MyKey) <> "<>" Then 'between lib version approx. 199 up to approx. 209.101 (excl.) there was an issue that additional header reply-to might contain non-empty value but meant as empty (value="<>")
+                        If MyKey.ToLower() = "reply-to" AndAlso AdditionalHeaders(MyKey) <> Nothing AndAlso AdditionalHeaders(MyKey) <> "<>" Then 'for some time, there was an issue that additional header reply-to might contain non-empty value but meant as empty (value="<>")
                             Dim rcpt As EMailRecipient = EMailRecipient.SplitEMailAddressesIntoAddressParts(AdditionalHeaders(MyKey))
                             MyMail.ReplyTo = New System.Net.Mail.MailAddress(rcpt.Address, rcpt.Name)
-                        ElseIf AdditionalHeaders(MyKey) <> "" AndAlso AdditionalHeaders(MyKey) <> "<>" Then 'don't add invalid header value
+                        ElseIf AdditionalHeaders(MyKey) <> Nothing AndAlso AdditionalHeaders(MyKey) <> "<>" Then 'don't add invalid header value
                             MyMail.Headers.Add(MyKey, AdditionalHeaders(MyKey))
                         End If
                     Next
