@@ -6,51 +6,40 @@ SMTP messaging with support for alternative body and embedded images
 Dim MySmtpWorker As New SmtpWorker()
 MySmtpWorker.SmtpServerName = "localhost"
 MySmtpWorker.SmtpServerPort = 465
-MySmtpWorker.SmtpAuthType = "LOGIN-SSL"
+MySmtpWorker.SmtpAuthType = SmtpWorker.SmtpAuthTypes.LoginSsl,
 MySmtpWorker.SmtpUserName = "user"
 MySmtpWorker.SmtpPassword = "password"
 ```
 
-## Sample: Send with alternative message parts and attachment for embedded image
+## Sample: Prepare a message with alternative message parts and attachment for embedded image
 ```vb.net
 Dim MyAttachment As New EMailAttachment("logo_64x64.png", "logo")
-Dim SendResult As CompuMaster.Net.Smtp.SmtpSendResult
-SendResult = MySmtpWorker.SendToSingeRecipient(
-    My.Settings.TestRecipientName, 
-    My.Settings.TestRecipientAddress, 
-    "TestSingle", 
-    "plain body", 
-    "<h1>html body</h1><img src=""cid:" & MyAttachment.PlaceholderInMhtmlToBeReplacedByContentID & """>", 
-    My.Settings.TestSenderName, 
-    My.Settings.TestSenderAddress, 
-    "utf-8", 
-    New EMailAttachment() {MyAttachment}, 
-    EMails.Priority.High, 
-    EMails.Sensitivity.Status_Normal, 
-    False, False, Nothing)
-System.Console.WriteLine("Success=" & SendResult.Success)
+Dim Attachments As New List(Of EMailAttachment)(New EMailAttachment() {MyAttachment})
+Dim Recipient As New EMailRecipient(My.Settings.TestRecipientName, My.Settings.TestRecipientAddress)
+Dim Sender As New EMailRecipient(My.Settings.TestSenderName, My.Settings.TestSenderAddress)
+Dim ReplyToAddress As EMailRecipient = Sender
+Dim MyMessage As New EMailMessage(Recipient,
+                                          "TestSubject",
+                                          "Plain body",
+                                          "<h1>HTML body with embedded image</h1><img src=""cid:" & MyAttachment.PlaceholderInMhtmlToBeReplacedByContentID & """>",
+                                          Sender,
+                                          ReplyToAddress,
+                                          System.Text.Encoding.UTF8,
+                                          Attachments,
+                                          EMails.Priority.High,
+                                          EMails.Sensitivity.Normal,
+                                          False,
+                                          False,
+                                          CType(Nothing, Specialized.NameValueCollection))
 ```
 
-## Sample: Send to multiple recipients
+## Sample: Send demo e-mail and check for exceptions
 ```vb.net
-Dim MyAttachment As New EMailAttachment("logo_64x64.png", "logo")
-Dim MyRecipient1TO As String = EMailRecipient.CreateRecipientString(My.Settings.TestRecipientName, My.Settings.TestRecipientAddress)
-Dim MyRecipient2CC As String = EMailRecipient.CreateRecipientString(My.Settings.TestRecipientName, My.Settings.TestRecipientAddress)
-Dim MyRecipient3BCC As String = EMailRecipient.CreateRecipientString(My.Settings.TestRecipientName, My.Settings.TestRecipientAddress)
 Dim SendResult As CompuMaster.Net.Smtp.SmtpSendResult
-SendResult = MySmtpWorker.SendToMultipleRecipients(
-    MyRecipient1TO, 
-    MyRecipient2CC, 
-    MyRecipient3BCC, 
-    "TestMultiple", 
-    "plain body", 
-    "<h1>html body</h1><img src=""cid:" & MyAttachment.PlaceholderInMhtmlToBeReplacedByContentID & """>", 
-    My.Settings.TestSenderName, 
-    My.Settings.TestSenderAddress, 
-    "utf-8", 
-    New EMailAttachment() {MyAttachment}, 
-    EMails.Priority.High, 
-    EMails.Sensitivity.Status_Normal, 
-    False, False, Nothing)
-System.Console.WriteLine("Success=" & SendResult.Success)
+SendResult = MySmtpWorker.SendMessage(MyMessage)
+If SendResult.Success Then
+    System.Console.WriteLine("EMAIL SENT SUCCESSFULLY :-)")
+Else
+    System.Console.WriteLine("FAILURE: " & SendResult.Exception.ToString)
+End If
 ```
