@@ -38,7 +38,7 @@ Public Module DemoApp
                                           False,
                                           CType(Nothing, Specialized.NameValueCollection))
 
-        'Send demo e-mail using the method for a single recipient
+        'Send demo e-mail and check for exceptions
         Dim SendResult As CompuMaster.Net.Smtp.SmtpSendResult
         SendResult = MySmtpWorker.SendMessage(MyMessage)
         If SendResult.Success Then
