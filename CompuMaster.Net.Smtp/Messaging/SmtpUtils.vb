@@ -4,6 +4,18 @@ Option Strict On
 Friend Class SmtpUtils
 
     ''' <summary>
+    ''' Check the expression and return a strongly typed value
+    ''' </summary>
+    ''' <typeparam name="T"></typeparam>
+    ''' <param name="expression">The expression for the check</param>
+    ''' <param name="trueValue">The return value if the expression is true</param>
+    ''' <param name="falseValue">The return value if the expression is false</param>
+    ''' <returns>A strongly typed return value</returns>
+    Public Shared Function IIf(Of T)(expression As Boolean, trueValue As T, falseValue As T) As T
+        If expression Then Return trueValue Else Return falseValue
+    End Function
+
+    ''' <summary>
     '''     Split a string by a separator if there is not a special leading character
     ''' </summary>
     ''' <param name="text"></param>
@@ -28,7 +40,7 @@ Friend Class SmtpUtils
             End If
             'Add partial string
             If SplitHere OrElse MyCounter = text.Length - 1 Then
-                Result.Add(text.Substring(StartPosition, CType(IIf(SplitHere = False, 1, 0), Integer) + MyCounter - StartPosition)) 'If Split=False then this if-block was caused by the end of the text; in this case we have to simulate to be after the last character position to ensure correct extraction of the last text element
+                Result.Add(text.Substring(StartPosition, IIf(Of Integer)(SplitHere = False, 1, 0) + MyCounter - StartPosition)) 'If Split=False then this if-block was caused by the end of the text; in this case we have to simulate to be after the last character position to ensure correct extraction of the last text element
                 SplitHere = False 'Reset status
                 StartPosition = MyCounter + 1 'Next string starts after the current char
             End If

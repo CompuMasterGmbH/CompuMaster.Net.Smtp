@@ -30,7 +30,7 @@ Public Class EMailRecipient
             Next
             name = name.Replace(ChrW(127), " "c)
         End If
-        Return CType(IIf(name <> Nothing, name & " ", ""), String) & "<" & address & ">"
+        Return SmtpUtils.IIf(Of String)(name <> Nothing, name & " ", "") & "<" & address & ">"
     End Function
 
     ''' <summary>

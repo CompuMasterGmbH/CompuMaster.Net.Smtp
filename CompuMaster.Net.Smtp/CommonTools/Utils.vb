@@ -862,7 +862,7 @@ Public Class Utils
             End If
             'Add partial string
             If SplitHere OrElse MyCounter = text.Length - 1 Then
-                Result.Add(text.Substring(StartPosition, CType(IIf(SplitHere = False, 1, 0), Integer) + MyCounter - StartPosition)) 'If Split=False then this if-block was caused by the end of the text; in this case we have to simulate to be after the last character position to ensure correct extraction of the last text element
+                Result.Add(text.Substring(StartPosition, IIf(Of Integer)(SplitHere = False, 1, 0) + MyCounter - StartPosition)) 'If Split=False then this if-block was caused by the end of the text; in this case we have to simulate to be after the last character position to ensure correct extraction of the last text element
                 SplitHere = False 'Reset status
                 StartPosition = MyCounter + 1 'Next string starts after the current char
             End If
@@ -1021,7 +1021,7 @@ Public Class Utils
             End Select
 
             message = Left$(message, iob - 1) & formatString & Mid$(message, icb + 1)
-            iob = iob + Len(formatString) + CType(IIf(orig_iv >= 0, 2, 0), Integer)
+            iob = iob + Len(formatString) + IIf(Of Integer)(orig_iv >= 0, 2, 0)
 
             If orig_iv >= 0 Then
                 iv = orig_iv
@@ -1408,7 +1408,7 @@ Public Class Utils
                 If LinkEndPosBySpaceChar = -1 Then LinkEndPosBySpaceChar = Len(Msg)
                 LinkEndPosByReturnChar = InStr(LinkStartPos, LCase(Msg), Chr(13)) - 1
                 If LinkEndPosByReturnChar = -1 Then LinkEndPosByReturnChar = Len(Msg)
-                LinkEndPos = CType(IIf(LinkEndPosBySpaceChar < LinkEndPosByReturnChar, LinkEndPosBySpaceChar, LinkEndPosByReturnChar), Integer)
+                LinkEndPos = IIf(Of Integer)(LinkEndPosBySpaceChar < LinkEndPosByReturnChar, LinkEndPosBySpaceChar, LinkEndPosByReturnChar)
                 'Exclude Satzzeichen
                 If Mid(Msg, LinkEndPos, 1) = "." Or
                             Mid(Msg, LinkEndPos, 1) = "!" Or
@@ -1472,7 +1472,7 @@ Public Class Utils
                 If LinkEndPosBySpaceChar = -1 Then LinkEndPosBySpaceChar = Len(Msg)
                 LinkEndPosByReturnChar = InStr(LinkStartPos, LCase(Msg), Chr(13)) - 1
                 If LinkEndPosByReturnChar = -1 Then LinkEndPosByReturnChar = Len(Msg)
-                LinkEndPos = CType(IIf(LinkEndPosBySpaceChar < LinkEndPosByReturnChar, LinkEndPosBySpaceChar, LinkEndPosByReturnChar), Integer)
+                LinkEndPos = IIf(Of Integer)(LinkEndPosBySpaceChar < LinkEndPosByReturnChar, LinkEndPosBySpaceChar, LinkEndPosByReturnChar)
                 'Exclude Satzzeichen
                 If Mid(Msg, LinkEndPos, 1) = "." Or
                             Mid(Msg, LinkEndPos, 1) = "!" Or
@@ -1507,7 +1507,7 @@ Public Class Utils
             If LinkAreaStartPosByAnchorWithSpace = 0 Then LinkAreaStartPosByAnchorWithSpace = Len(Msg) + 1
             LinkAreaStartPosByAnchorWithReturn = InStr(OldEndPoint + 1, LCase(Msg), "<a" & Chr(13))
             If LinkAreaStartPosByAnchorWithReturn = 0 Then LinkAreaStartPosByAnchorWithReturn = Len(Msg) + 1
-            LinkAreaStartPos = CType(IIf(LinkAreaStartPosByAnchorWithSpace < LinkAreaStartPosByAnchorWithReturn, LinkAreaStartPosByAnchorWithSpace, LinkAreaStartPosByAnchorWithReturn), Integer)
+            LinkAreaStartPos = IIf(Of Integer)(LinkAreaStartPosByAnchorWithSpace < LinkAreaStartPosByAnchorWithReturn, LinkAreaStartPosByAnchorWithSpace, LinkAreaStartPosByAnchorWithReturn)
             ProbeArea = Mid(Msg, OldEndPoint + 1, LinkAreaStartPos - OldEndPoint - 1)
             ProbeArea = ConvertProtocolAddressIntoHyperLink(SearchForTypicalString, ProbeArea, ProtocolInitiator)
             Msg = Mid(Msg, 1, OldEndPoint) & ProbeArea & Mid(Msg, LinkAreaStartPos)
@@ -1531,7 +1531,7 @@ Public Class Utils
             If LinkAreaStartPosByAnchorWithSpace = 0 Then LinkAreaStartPosByAnchorWithSpace = Len(Msg) + 1
             LinkAreaStartPosByAnchorWithReturn = InStr(OldEndPoint + 1, LCase(Msg), "<a" & Chr(13))
             If LinkAreaStartPosByAnchorWithReturn = 0 Then LinkAreaStartPosByAnchorWithReturn = Len(Msg) + 1
-            LinkAreaStartPos = CType(IIf(LinkAreaStartPosByAnchorWithSpace < LinkAreaStartPosByAnchorWithReturn, LinkAreaStartPosByAnchorWithSpace, LinkAreaStartPosByAnchorWithReturn), Integer)
+            LinkAreaStartPos = IIf(Of Integer)(LinkAreaStartPosByAnchorWithSpace < LinkAreaStartPosByAnchorWithReturn, LinkAreaStartPosByAnchorWithSpace, LinkAreaStartPosByAnchorWithReturn)
             ProbeArea = Mid(Msg, OldEndPoint + 1, LinkAreaStartPos - OldEndPoint - 1)
             ProbeArea = ConvertEMailAddressIntoHyperLink(ProbeArea)
             Msg = Mid(Msg, 1, OldEndPoint) & ProbeArea & Mid(Msg, LinkAreaStartPos)
