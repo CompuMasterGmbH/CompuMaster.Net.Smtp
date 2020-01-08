@@ -94,9 +94,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.vb" />
-    <None Include="CommonTools\Utils.vb" />
-    <None Include="CommonTools\configuration.vb" />
-    <None Include="CommonTools\SqlClient.vb" />
     <Compile Include="GlobalSuppressions.vb" />
     <Compile Include="Messaging\EMailAttachment.vb" />
     <Compile Include="Messaging\EMaiRecipient.vb" />
@@ -107,9 +104,6 @@
     <None Include="Messaging\QueueMonitoring.vb" />
     <None Include="Messaging\QueueWorker.vb" />
     <Compile Include="Messaging\SmtpUtils.vb" />
-    <None Include="WMSystem\Exceptions.vb" />
-    <None Include="WMSystem\GlobalConfiguration.vb" />
-    <None Include="WMSystem\WMSystem.vb" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
