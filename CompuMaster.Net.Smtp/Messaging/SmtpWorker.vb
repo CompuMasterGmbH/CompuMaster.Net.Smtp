@@ -262,23 +262,23 @@ Public Class SmtpWorker
                 'Setup mail sensitivity
                 If Not Sensitivity = Nothing Then
                     Select Case Sensitivity
-                        Case EMails.Sensitivity.Status_CompanyConfidential
+                        Case EMails.Sensitivity.CompanyConfidential
                             MyMail.Headers.Add("Sensitivity", "Company-Confidential")
-                        Case EMails.Sensitivity.Status_Personal
+                        Case EMails.Sensitivity.Personal
                             MyMail.Headers.Add("Sensitivity", "Personal")
-                        Case EMails.Sensitivity.Status_Private
+                        Case EMails.Sensitivity.Private
                             MyMail.Headers.Add("Sensitivity", "Private")
                     End Select
                 End If
 
                 'Setup mail receipt confirmations
                 If RequestReadingConfirmation Then
-                    'Disposition-Notification-To: "Jochen Wezel" <compumaster@web.de> 'Lesebest?tigung
+                    'Disposition-Notification-To: "Jochen Wezel" <my-company@my-webmailer-company.com> 'Lesebest?tigung
                     MyMail.Headers.Add("Disposition-Notification-To", SenderAddress)
                 End If
                 'MIGHT BE FIXED OR IS STILL TODO: The bug is that nothing happens :( _
                 If RequestTransmissionConfirmation Then
-                    'Return-Receipt-To: "Jochen Wezel" <compumaster@web.de> '?bermittlungsbest?tigung
+                    'Return-Receipt-To: "Jochen Wezel" <my-company@my-webmailer-company.com> '?bermittlungsbest?tigung
                     'MyMail.Headers.Add("Return-Receipt-To", SenderAddress)
                     MyMail.DeliveryNotificationOptions = System.Net.Mail.DeliveryNotificationOptions.OnSuccess
                 End If

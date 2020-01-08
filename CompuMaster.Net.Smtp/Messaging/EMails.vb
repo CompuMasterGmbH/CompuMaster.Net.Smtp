@@ -10,10 +10,10 @@ Public NotInheritable Class EMails
     End Enum
 
     Public Enum Sensitivity As Integer
-        Status_Normal = 1
-        Status_Personal = 2
-        Status_Private = 3
-        Status_CompanyConfidential = 4
+        Normal = 1
+        Personal = 2
+        [Private] = 3
+        CompanyConfidential = 4
     End Enum
 
 End Class

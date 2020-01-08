@@ -51,22 +51,22 @@ Public Class EMailRecipient
     ''' <remarks>
     '''     Valid parameter values are e. g. 
     ''' <list>
-    ''' <item>l?nc\,\.\:\;\@\[\]\(\)ma9\'\\\&lt;\&gt;kljkj &lt;compumaster@web.de&gt;, her\,ma9\'\\\&lt;\&gt;kljkj &lt;jwezel@compumaster.de&gt;</item>
-    ''' <item>&lt;compumaster@web.de&gt;,&lt;jwezel@compumaster.de&gt;</item>
-    ''' <item>compumaster@web.de,jwezel@compumaster.de</item>
+    ''' <item>l?nc\,\.\:\;\@\[\]\(\)ma9\'\\\&lt;\&gt;kljkj &lt;my-company@my-webmailer-company.com&gt;, her\,ma9\'\\\&lt;\&gt;kljkj &lt;jon.doe@my-company.com&gt;</item>
+    ''' <item>&lt;my-company@my-webmailer-company.com&gt;,&lt;jon.doe@my-company.com&gt;</item>
+    ''' <item>my-company@my-webmailer-company.com,jon.doe@my-company.com</item>
     ''' </list>
     ''' </remarks>
     Friend Shared Function SplitEMailAddressesFromRecipientsList(ByVal receipientsCommaSeparated As String) As String()
         Dim Result As String() = SmtpUtils.SplitString(receipientsCommaSeparated, ","c, "\"c)
         For MyCounter As Integer = 0 To Result.Length - 1
             'Now we got strings like
-            '"l?nc\,\.\:\;\@\[\]\(\)ma9\'\\\<\>kljkj <compumaster@web.de>"
-            '" her\,ma9\'\\\<\>kljkj <jwezel@compumaster.de>"
-            '" ""Jochen"" <jwezel@compumaster.de>" <------------TOCHECK!
-            '" <compumaster@web.de>"
-            '"<jwezel@compumaster.de>" 
-            '"compumaster@web.de"
-            '"jwezel@compumaster.de"
+            '"l?nc\,\.\:\;\@\[\]\(\)ma9\'\\\<\>kljkj <my-company@my-webmailer-company.com>"
+            '" her\,ma9\'\\\<\>kljkj <jon.doe@my-company.com>"
+            '" ""Jochen"" <jon.doe@my-company.com>" <------------TOCHECK!
+            '" <my-company@my-webmailer-company.com>"
+            '"<jon.doe@my-company.com>" 
+            '"my-company@my-webmailer-company.com"
+            '"jon.doe@my-company.com"
             Dim AddressStart As Integer = Result(MyCounter).LastIndexOf("<")
             If AddressStart > 0 Then
                 Result(MyCounter) = Mid(Result(MyCounter), AddressStart)
@@ -76,12 +76,12 @@ Public Class EMailRecipient
                 Result(MyCounter) = ""
             End If
             'Now we got strings like
-            '"<compumaster@web.de>"
-            '"<jwezel@compumaster.de>"
-            '"<compumaster@web.de>"
-            '"<jwezel@compumaster.de>" 
-            '"compumaster@web.de"
-            '"jwezel@compumaster.de"
+            '"<my-company@my-webmailer-company.com>"
+            '"<jon.doe@my-company.com>"
+            '"<my-company@my-webmailer-company.com>"
+            '"<jon.doe@my-company.com>" 
+            '"my-company@my-webmailer-company.com"
+            '"jon.doe@my-company.com"
             If Left(Result(MyCounter), 1) = "<" AndAlso Right(Result(MyCounter), 1) = ">" Then
                 Result(MyCounter) = Mid(Result(MyCounter), 2, Len(Result(MyCounter)) - 2)
             End If

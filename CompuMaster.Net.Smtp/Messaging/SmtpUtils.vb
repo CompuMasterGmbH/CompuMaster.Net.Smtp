@@ -4,6 +4,30 @@ Option Strict On
 Friend Class SmtpUtils
 
     ''' <summary>
+    '''     Return the string which is not nothing or otherwise return DBNull.Value 
+    ''' </summary>
+    ''' <param name="value">The string to be validated</param>
+    Public Shared Function StringNotNothingOrDBNull(ByVal value As String) As Object
+        If value Is Nothing Then
+            Return DBNull.Value
+        Else
+            Return value
+        End If
+    End Function
+
+    ''' <summary>
+    '''     Return the object which is not nothing or otherwise return DBNull.Value 
+    ''' </summary>
+    ''' <param name="value">The object to be validated</param>
+    Public Shared Function ObjectNotNothingOrDBNull(ByVal value As Object) As Object
+        If value Is Nothing Then
+            Return DBNull.Value
+        Else
+            Return value
+        End If
+    End Function
+
+    ''' <summary>
     ''' Check the expression and return a strongly typed value
     ''' </summary>
     ''' <typeparam name="T"></typeparam>
