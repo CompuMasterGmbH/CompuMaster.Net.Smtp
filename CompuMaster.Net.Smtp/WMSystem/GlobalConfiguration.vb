@@ -165,7 +165,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="key"></param>
         ''' <remarks></remarks>
-        Friend Function QueryConfigRecord(ByVal key As String) As ConfigRecord
+        Friend Function QueryConfigRecord(key As String) As ConfigRecord
             Dim ResultRecords As List(Of ConfigRecord) = Me.QueryConfigRecords(key)
             Select Case ResultRecords.Count
                 Case 0
@@ -182,7 +182,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="key"></param>
         ''' <remarks></remarks>
-        Friend Function QueryConfigRecords(ByVal key As String) As List(Of ConfigRecord)
+        Friend Function QueryConfigRecords(key As String) As List(Of ConfigRecord)
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As SqlCommand = New SqlCommand("SELECT PropertyName AS KeyName, ValueInt, ValueNText, ValueBoolean, ValueImage, ValueDecimal, ValueDateTime FROM [dbo].[System_GlobalProperties] WHERE ValueNVarChar = @ProductName AND PropertyName = @key", MyConn)
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
@@ -208,7 +208,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="key"></param>
         ''' <remarks></remarks>
-        Friend Function QueryConfigRecordsWithSubKeys(ByVal key As String) As List(Of ConfigRecord)
+        Friend Function QueryConfigRecordsWithSubKeys(key As String) As List(Of ConfigRecord)
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As SqlCommand = New SqlCommand("SELECT PropertyName AS KeyName, ValueInt, ValueNText, ValueBoolean, ValueImage, ValueDecimal, ValueDateTime FROM [dbo].[System_GlobalProperties] WHERE ValueNVarChar = @ProductName AND PropertyName LIKE CAST(@key + N'%' AS nvarchar(128))", MyConn)
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
@@ -233,7 +233,7 @@ Namespace CompuMaster.camm.WebManager
         ''' Delete a configuration set based on 1 record per key
         ''' </summary>
         ''' <param name="key"></param>
-        Friend Sub DeleteConfigRecord(ByVal key As String)
+        Friend Sub DeleteConfigRecord(key As String)
             Me.WriteConfigRecord(New ConfigRecord(key))
         End Sub
 
@@ -241,7 +241,7 @@ Namespace CompuMaster.camm.WebManager
         ''' Delete a configuration set based on 0 up to multiple records per key
         ''' </summary>
         ''' <param name="key"></param>
-        Friend Sub DeleteConfigRecords(ByVal key As String)
+        Friend Sub DeleteConfigRecords(key As String)
             Me.WriteConfigRecords(key, New List(Of ConfigRecord))
         End Sub
 
@@ -249,27 +249,27 @@ Namespace CompuMaster.camm.WebManager
         ''' Save a configuration set based on 1 record per key to the central database
         ''' </summary>
         ''' <param name="data"></param>
-        Friend Sub WriteConfigRecord(ByVal data As ConfigRecord)
+        Friend Sub WriteConfigRecord(data As ConfigRecord)
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As SqlCommand = New SqlCommand()
             MyCmd.Connection = MyConn
-            MyCmd.CommandText = "DECLARE @RowNumber int" & vbNewLine & _
-                        "SELECT @RowNumber = COUNT(*)" & vbNewLine & _
-                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
-                        "WHERE VALUENVarChar = @ProductName AND PropertyName = @key" & vbNewLine & _
-                        "SELECT @RowNumber" & vbNewLine & _
-                        vbNewLine & _
-                        "IF @RemoveOnly = 0 AND IsNull(@RowNumber,0) = 0 " & vbNewLine & _
-                        "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine & _
-                        "		(ValueNVarChar, PropertyName, ValueInt, ValueNText, ValueBoolean, ValueImage, ValueDecimal, ValueDateTime)" & vbNewLine & _
-                        "	VALUES (@ProductName, @key, @ValueInt, @ValueNText, @ValueBoolean, @ValueImage, @ValueDecimal, @ValueDateTime)" & vbNewLine & _
-                        "ELSE IF @RemoveOnly = 0 AND IsNull(@RowNumber,0) = 1" & vbNewLine & _
-                        "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine & _
-                        "	SET ValueInt = @ValueInt, ValueNText = @ValueNText, ValueBoolean = @ValueBoolean, ValueImage = @ValueImage, ValueDecimal = @ValueDecimal, ValueDateTime = @ValueDateTime" & vbNewLine & _
-                        "	WHERE ValueNVarChar = @ProductName AND PropertyName = @key" & vbNewLine & _
-                        "ELSE IF @RemoveOnly <> 0 AND IsNull(@RowNumber,0) = 1" & vbNewLine & _
-                        "	DELETE FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
-                        "	WHERE ValueNVarChar = @ProductName AND PropertyName = @key" & vbNewLine & _
+            MyCmd.CommandText = "DECLARE @RowNumber int" & vbNewLine &
+                        "SELECT @RowNumber = COUNT(*)" & vbNewLine &
+                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine &
+                        "WHERE VALUENVarChar = @ProductName AND PropertyName = @key" & vbNewLine &
+                        "SELECT @RowNumber" & vbNewLine &
+                        vbNewLine &
+                        "IF @RemoveOnly = 0 AND IsNull(@RowNumber,0) = 0 " & vbNewLine &
+                        "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine &
+                        "		(ValueNVarChar, PropertyName, ValueInt, ValueNText, ValueBoolean, ValueImage, ValueDecimal, ValueDateTime)" & vbNewLine &
+                        "	VALUES (@ProductName, @key, @ValueInt, @ValueNText, @ValueBoolean, @ValueImage, @ValueDecimal, @ValueDateTime)" & vbNewLine &
+                        "ELSE IF @RemoveOnly = 0 AND IsNull(@RowNumber,0) = 1" & vbNewLine &
+                        "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine &
+                        "	SET ValueInt = @ValueInt, ValueNText = @ValueNText, ValueBoolean = @ValueBoolean, ValueImage = @ValueImage, ValueDecimal = @ValueDecimal, ValueDateTime = @ValueDateTime" & vbNewLine &
+                        "	WHERE ValueNVarChar = @ProductName AND PropertyName = @key" & vbNewLine &
+                        "ELSE IF @RemoveOnly <> 0 AND IsNull(@RowNumber,0) = 1" & vbNewLine &
+                        "	DELETE FROM [dbo].[System_GlobalProperties]" & vbNewLine &
+                        "	WHERE ValueNVarChar = @ProductName AND PropertyName = @key" & vbNewLine &
                         "SELECT @RowNumber AS ExistingRowsCount" & vbNewLine
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
             MyCmd.Parameters.Add("@RemoveOnly", SqlDbType.Bit).Value = data.IsWithoutAnyConfigData
@@ -292,7 +292,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="key"></param>
         ''' <param name="dataSet"></param>
-        Friend Sub WriteConfigRecords(ByVal key As String, ByVal dataSet As List(Of ConfigRecord))
+        Friend Sub WriteConfigRecords(key As String, dataSet As List(Of ConfigRecord))
             If key = Nothing Then
                 Throw New ArgumentNullException("key")
             ElseIf key.Length > 128 Then
@@ -308,20 +308,20 @@ Namespace CompuMaster.camm.WebManager
             Dim MyCmd As SqlCommand = New SqlCommand()
             MyCmd.Connection = MyConn
             Dim sql As New System.Text.StringBuilder
-            sql.AppendLine("DELETE" & vbNewLine & _
-                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
+            sql.AppendLine("DELETE" & vbNewLine &
+                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine &
                         "WHERE VALUENVarChar = @ProductName AND PropertyName = @key")
             For MyCounter As Integer = 0 To dataSet.Count - 1
                 If dataSet(MyCounter).IsWithoutAnyConfigData = False Then
-                    sql.AppendLine("INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine & _
-                                "	(ValueNVarChar, PropertyName, ValueInt, ValueNText, ValueBoolean, ValueImage, ValueDecimal, ValueDateTime)" & vbNewLine & _
+                    sql.AppendLine("INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine &
+                                "	(ValueNVarChar, PropertyName, ValueInt, ValueNText, ValueBoolean, ValueImage, ValueDecimal, ValueDateTime)" & vbNewLine &
                                 "VALUES (@ProductName, @key, @Value" & MyCounter & "Int, @Value" & MyCounter & "NText, @Value" & MyCounter & "Boolean, @Value" & MyCounter & "Image, @Value" & MyCounter & "Decimal, @Value" & MyCounter & "DateTime)")
                     Dim data As ConfigRecord = dataSet(MyCounter)
-                MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "Int", SqlDbType.Int)).Value = Utils.NullableTypeWithItsValueOrDBNull(data.Int64Value)
-                MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "NText", SqlDbType.NText)).Value = Utils.StringNotNothingOrDBNull(data.StringValue)
-                MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "Boolean", SqlDbType.Bit)).Value = Utils.NullableTypeWithItsValueOrDBNull(data.BooleanValue)
-                MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "Image", SqlDbType.Image)).Value = Utils.ArrayNotNothingOrDBNull(data.ByteArrayValue)
-                MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "Decimal", SqlDbType.Decimal)).Value = Utils.NullableTypeWithItsValueOrDBNull(data.DecimalValue)
+                    MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "Int", SqlDbType.Int)).Value = Utils.NullableTypeWithItsValueOrDBNull(data.Int64Value)
+                    MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "NText", SqlDbType.NText)).Value = Utils.StringNotNothingOrDBNull(data.StringValue)
+                    MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "Boolean", SqlDbType.Bit)).Value = Utils.NullableTypeWithItsValueOrDBNull(data.BooleanValue)
+                    MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "Image", SqlDbType.Image)).Value = Utils.ArrayNotNothingOrDBNull(data.ByteArrayValue)
+                    MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "Decimal", SqlDbType.Decimal)).Value = Utils.NullableTypeWithItsValueOrDBNull(data.DecimalValue)
                     MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "DateTime", SqlDbType.DateTime)).Value = Utils.NullableTypeWithItsValueOrDBNull(data.DateTimeValue)
                 End If
             Next
@@ -336,7 +336,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="key"></param>
         ''' <remarks></remarks>
-        Friend Function QueryInt64ConfigEntry(ByVal key As String) As Nullable(Of Long)
+        Friend Function QueryInt64ConfigEntry(key As String) As Nullable(Of Long)
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As SqlCommand = New SqlCommand("SELECT ValueInt FROM [dbo].[System_GlobalProperties] WHERE ValueNVarChar = @ProductName AND PropertyName = @key", MyConn)
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
@@ -350,7 +350,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="key"></param>
         ''' <remarks></remarks>
-        Friend Function QueryStringConfigEntry(ByVal key As String) As String
+        Friend Function QueryStringConfigEntry(key As String) As String
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As SqlCommand = New SqlCommand("SELECT ValueNText FROM [dbo].[System_GlobalProperties] WHERE ValueNVarChar = @ProductName AND PropertyName = @key", MyConn)
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
@@ -363,7 +363,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="key"></param>
         ''' <remarks></remarks>
-        Friend Function QueryBooleanConfigEntry(ByVal key As String) As Nullable(Of Boolean)
+        Friend Function QueryBooleanConfigEntry(key As String) As Nullable(Of Boolean)
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As SqlCommand = New SqlCommand("SELECT ValueBoolean FROM [dbo].[System_GlobalProperties] WHERE ValueNVarChar = @ProductName AND PropertyName = @key", MyConn)
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
@@ -376,7 +376,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="key"></param>
         ''' <remarks></remarks>
-        Friend Function QueryByteArrayConfigEntry(ByVal key As String) As Byte()
+        Friend Function QueryByteArrayConfigEntry(key As String) As Byte()
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As SqlCommand = New SqlCommand("SELECT ValueImage FROM [dbo].[System_GlobalProperties] WHERE ValueNVarChar = @ProductName AND PropertyName = @key", MyConn)
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
@@ -389,7 +389,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="key"></param>
         ''' <remarks></remarks>
-        Friend Function QueryDoubleConfigEntry(ByVal key As String) As Nullable(Of Double)
+        Friend Function QueryDoubleConfigEntry(key As String) As Nullable(Of Double)
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As SqlCommand = New SqlCommand("SELECT ValueDecimal FROM [dbo].[System_GlobalProperties] WHERE ValueNVarChar = @ProductName AND PropertyName = @key", MyConn)
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
@@ -402,7 +402,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="key"></param>
         ''' <remarks></remarks>
-        Friend Function QueryDecimalConfigEntry(ByVal key As String) As Nullable(Of Decimal)
+        Friend Function QueryDecimalConfigEntry(key As String) As Nullable(Of Decimal)
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As SqlCommand = New SqlCommand("SELECT ValueDecimal FROM [dbo].[System_GlobalProperties] WHERE ValueNVarChar = @ProductName AND PropertyName = @key", MyConn)
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
@@ -415,7 +415,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="key"></param>
         ''' <remarks></remarks>
-        Friend Function QueryDateTimeConfigEntry(ByVal key As String) As Nullable(Of DateTime)
+        Friend Function QueryDateTimeConfigEntry(key As String) As Nullable(Of DateTime)
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As SqlCommand = New SqlCommand("SELECT ValueDateTime FROM [dbo].[System_GlobalProperties] WHERE ValueNVarChar = @ProductName AND PropertyName = @key", MyConn)
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey

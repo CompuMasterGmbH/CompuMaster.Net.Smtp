@@ -18,25 +18,34 @@ Public Module DemoApp
             .SmtpPassword = My.Settings.SmtpPassword
         }
 
-        'Use a demo logo from file
+        'Prepare email message
         Dim MyAttachment As New EMailAttachment("logo_64x64.png", "logo")
-
+        Dim Attachments As New List(Of EMailAttachment)(New EMailAttachment() {MyAttachment})
+        Dim Recipient As New EMailRecipient(My.Settings.TestRecipientName, My.Settings.TestRecipientAddress)
+        Dim Sender As New EMailRecipient(My.Settings.TestSenderName, My.Settings.TestSenderAddress)
+        Dim ReplyToAddress As EMailRecipient = Sender
+        Dim MyMessage As New EMailMessage(Recipient,
+                                          "TestSubject",
+                                          "Plain body",
+                                          "<h1>HTML body with embedded image</h1><img src=""cid:" & MyAttachment.PlaceholderInMhtmlToBeReplacedByContentID & """>",
+                                          Sender,
+                                          ReplyToAddress,
+                                          System.Text.Encoding.UTF8,
+                                          Attachments,
+                                          EMails.Priority.High,
+                                          EMails.Sensitivity.Normal,
+                                          False,
+                                          False,
+                                          CType(Nothing, Specialized.NameValueCollection))
 
         'Send demo e-mail using the method for a single recipient
         Dim SendResult As CompuMaster.Net.Smtp.SmtpSendResult
-        SendResult = MySmtpWorker.SendToSingleRecipient(My.Settings.TestRecipientName, My.Settings.TestRecipientAddress, "TestSingle", "plain body", "<h1>html body</h1>", My.Settings.TestSenderName, My.Settings.TestSenderAddress)
-        Console.WriteLine("Single #1 Success=" & SendResult.Success)
-        SendResult = MySmtpWorker.SendToSingleRecipient(My.Settings.TestRecipientName, My.Settings.TestRecipientAddress, "TestSingle", "plain body", "<h1>html body</h1>", My.Settings.TestSenderName, My.Settings.TestSenderAddress, My.Settings.TestSenderName, My.Settings.TestSenderAddress)
-        Console.WriteLine("Single #2 Success=" & SendResult.Success)
-        SendResult = MySmtpWorker.SendToSingleRecipient(My.Settings.TestRecipientName, My.Settings.TestRecipientAddress, "TestSingle", "plain body", "<h1>html body</h1><img src=""cid:" & MyAttachment.PlaceholderInMhtmlToBeReplacedByContentID & """>", My.Settings.TestSenderName, My.Settings.TestSenderAddress, "utf-8", New EMailAttachment() {MyAttachment}, EMails.Priority.High, EMails.Sensitivity.Normal, False, False, CType(Nothing, Specialized.NameValueCollection))
-        Console.WriteLine("Single #3 Success=" & SendResult.Success)
-        SendResult = MySmtpWorker.SendToSingleRecipient(My.Settings.TestRecipientName, My.Settings.TestRecipientAddress, "TestSingle", "plain body", "<h1>html body</h1><img src=""cid:" & MyAttachment.PlaceholderInMhtmlToBeReplacedByContentID & """>", My.Settings.TestSenderName, My.Settings.TestSenderAddress, My.Settings.TestSenderName, My.Settings.TestSenderAddress, "utf-8", New EMailAttachment() {MyAttachment}, EMails.Priority.High, EMails.Sensitivity.Normal, False, False, CType(Nothing, Specialized.NameValueCollection))
-        Console.WriteLine("Single #4 Success=" & SendResult.Success)
-
-        'Send demo e-mail using the method for multiple recipients 
-        Dim MyRecipient As String = EMailRecipient.CreateRecipientString(My.Settings.TestRecipientName, My.Settings.TestRecipientAddress)
-        SendResult = MySmtpWorker.SendToMultipleRecipients(MyRecipient, "", "", "TestMultiple", "plain body", "<h1>html body</h1><img src=""cid:" & MyAttachment.PlaceholderInMhtmlToBeReplacedByContentID & """>", My.Settings.TestSenderName, My.Settings.TestSenderAddress, "utf-8", New EMailAttachment() {MyAttachment}, EMails.Priority.High, EMails.Sensitivity.Normal, False, False, Nothing)
-        Console.WriteLine("Success=" & SendResult.Success)
+        SendResult = MySmtpWorker.SendMessage(MyMessage)
+        If SendResult.Success Then
+            System.Console.WriteLine("EMAIL SENT SUCCESSFULLY :-)")
+        Else
+            System.Console.WriteLine("FAILURE: " & SendResult.Exception.ToString)
+        End If
 
     End Sub
 

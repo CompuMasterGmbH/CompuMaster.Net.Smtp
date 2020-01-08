@@ -25,7 +25,7 @@ Public Class MailQueue
     '''     Commit all changes in the transaction
     ''' </summary>
     ''' <param name="connection">An open connection to the camm Web-Manager database</param>
-    Public Sub CommitQueueTransaction(ByVal connection As IDbConnection)
+    Public Sub CommitQueueTransaction(connection As IDbConnection)
 
         Dim ReUseDBConnection As Boolean = True
         If connection Is Nothing Then
@@ -59,7 +59,7 @@ Public Class MailQueue
     '''     Roll back all changes in the transaction
     ''' </summary>
     ''' <param name="connection">An open connection to the camm Web-Manager database</param>
-    Public Sub RollbackQueueTransaction(ByVal connection As IDbConnection)
+    Public Sub RollbackQueueTransaction(connection As IDbConnection)
 
         Dim ReUseDBConnection As Boolean = True
         If connection Is Nothing Then
@@ -115,7 +115,7 @@ Public Class MailQueue
     ''' <param name="RequestReadingConfirmation">Request a reading confirmation</param>
     ''' <param name="AdditionalHeaders">Additional headers for the e-mail</param>
     ''' <returns>True if successfull, false for failures (also see bufErrorDetails)</returns>
-    Private Function SendViaQueue(ByVal RcptName As String, ByVal RcptAddress As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal MsgCharset As String, ByVal connection As IDbConnection, ByRef bufErrorDetails As String, ByVal Attachments() As EMailAttachment, ByVal Priority As EMails.Priority, ByVal Sensitivity As EMails.Sensitivity, ByVal RequestTransmissionConfirmation As Boolean, ByVal RequestReadingConfirmation As Boolean, ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection) As Boolean
+    Private Function SendViaQueue(RcptName As String, RcptAddress As String, MsgSubject As String, MsgTextBody As String, MsgHTMLBody As String, SenderName As String, SenderAddress As String, MsgCharset As String, connection As IDbConnection, ByRef bufErrorDetails As String, Attachments() As EMailAttachment, Priority As EMails.Priority, Sensitivity As EMails.Sensitivity, RequestTransmissionConfirmation As Boolean, RequestReadingConfirmation As Boolean, AdditionalHeaders As Collections.Specialized.NameValueCollection) As Boolean
         Return SendViaQueue(CreateReceipientString(RcptName, RcptAddress), CType(Nothing, String), CType(Nothing, String), MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, MsgCharset, connection, bufErrorDetails, Attachments, Priority, Sensitivity, RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders)
     End Function
     ''' <summary>
@@ -139,7 +139,7 @@ Public Class MailQueue
     ''' <param name="requestReadingConfirmation">Request a reading confirmation</param>
     ''' <param name="additionalHeaders">Additional headers for the e-mail</param>
     ''' <returns>True if successfull, false for failures (also see bufErrorDetails)</returns>
-    Private Function SendViaQueue(ByVal rcptAddresses_To As String, ByVal rcptAddresses_CC As String, ByVal rcptAddresses_BCC As String, ByVal msgSubject As String, ByVal msgTextBody As String, ByVal msgHTMLBody As String, ByVal senderName As String, ByVal senderAddress As String, ByVal msgCharset As String, ByVal connection As IDbConnection, ByRef bufErrorDetails As String, ByVal attachments() As EMailAttachment, ByVal priority As EMails.Priority, ByVal sensitivity As EMails.Sensitivity, ByVal requestTransmissionConfirmation As Boolean, ByVal requestReadingConfirmation As Boolean, ByVal additionalHeaders As Collections.Specialized.NameValueCollection) As Boolean
+    Private Function SendViaQueue(rcptAddresses_To As String, rcptAddresses_CC As String, rcptAddresses_BCC As String, msgSubject As String, msgTextBody As String, msgHTMLBody As String, senderName As String, senderAddress As String, msgCharset As String, connection As IDbConnection, ByRef bufErrorDetails As String, attachments() As EMailAttachment, priority As EMails.Priority, sensitivity As EMails.Sensitivity, requestTransmissionConfirmation As Boolean, requestReadingConfirmation As Boolean, additionalHeaders As Collections.Specialized.NameValueCollection) As Boolean
         Try
             Dim MailData As String = Data.DataTables.ConvertDatasetToXml(emailmessage.CreateQueueMessageXml(
                 rcptAddresses_To,

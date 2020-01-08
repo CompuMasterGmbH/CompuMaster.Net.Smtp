@@ -107,7 +107,7 @@ Public Class QueueMonitoring
     ''' <param name="xml">The XML representation of the mail data</param>
     ''' <param name="mailQueueID">The ID of the item in the mail queue, required for logging purposes only</param>
     ''' <returns>True if successfull</returns>
-    Private Function SendMail(ByVal xml As String, ByVal mailQueueID As Integer, ByVal dbConnection As SqlClient.SqlConnection) As Boolean
+    Private Function SendMail(xml As String, mailQueueID As Integer, dbConnection As SqlClient.SqlConnection) As Boolean
 
         Dim MailData As New MailMessage(xml, _WebManager)
         Dim Errors As String = String.Empty
@@ -131,7 +131,7 @@ Public Class QueueMonitoring
     ''' </summary>
     ''' <param name="queuedItemID">ID of Log_emailMessage record</param>
     ''' <param name="state">State of an email</param>
-    Public Sub UpdateQueueState(ByVal queuedItemID As Integer, ByVal state As QueueMonitoring.QueueStates)
+    Public Sub UpdateQueueState(queuedItemID As Integer, state As QueueMonitoring.QueueStates)
         Dim dbConn As New System.Data.SqlClient.SqlConnection(Me.ConnectionString)
         dbConn.Open()
 
@@ -161,7 +161,7 @@ Public Class QueueMonitoring
     '''     Log_eMailData for emailID
     ''' </summary>
     ''' <param name="queuedItemID">unique id of Log_eMailMessage record</param>
-    Public Function LoadMailMessage(ByVal queuedItemID As Integer) As MailMessage
+    Public Function LoadMailMessage(queuedItemID As Integer) As MailMessage
         Dim result As String
 
         Dim dbConn As New System.Data.SqlClient.SqlConnection(Me.ConnectionString)
@@ -242,7 +242,7 @@ Public Class QueueMonitoring
     ''' <summary>
     '''     Set the last error information by the mail queue processor
     ''' </summary>
-    Private Sub SetLastErrorDetails(ByVal errorDetails As String, ByVal mailQueueID As Integer, ByVal connection As SqlConnection, ByVal automations As Tools.Data.DataQuery.AnyIDataProvider.Automations)
+    Private Sub SetLastErrorDetails(errorDetails As String, mailQueueID As Integer, connection As SqlConnection, automations As Tools.Data.DataQuery.AnyIDataProvider.Automations)
         Dim _DBBuildNo As Integer = Setup.DatabaseUtils.Version(Me._WebManager, True).Build
         If _DBBuildNo >= 155 Then
             Try
@@ -261,7 +261,7 @@ Public Class QueueMonitoring
     ''' <summary>
     '''     Set the last activity information by the mail queue processor
     ''' </summary>
-    Private Sub SetLastActivityDate(ByVal connection As SqlConnection, ByVal automations As Tools.Data.DataQuery.AnyIDataProvider.Automations)
+    Private Sub SetLastActivityDate(connection As SqlConnection, automations As Tools.Data.DataQuery.AnyIDataProvider.Automations)
         Try
             Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(
                         connection,
@@ -312,7 +312,7 @@ Public Class QueueMonitoring
 
 #Region "Shorten mail queue table when there are too old rows"
 
-    Private Sub CleanUpOldQueueElementsWhenNotDoneTooLongTime(ByVal connection As SqlConnection)
+    Private Sub CleanUpOldQueueElementsWhenNotDoneTooLongTime(connection As SqlConnection)
 
         'Detect the last execution of the cleanup method
         Static LastCleanUpCached As DateTime
@@ -348,7 +348,7 @@ Public Class QueueMonitoring
     ''' <remarks>
     '''     An additional new log entry will be created to log the truncation
     ''' </remarks>
-    Private Sub CleanUpOldQueueElements(ByVal connection As SqlConnection)
+    Private Sub CleanUpOldQueueElements(connection As SqlConnection)
         Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(
                         connection,
                         "DELETE [dbo].[Log_eMailMessages] FROM (SELECT ID FROM [dbo].[Log_eMailMessages] WHERE State IN (" & CType(QueueStates.Cancelled, Byte) & "," & CType(QueueStates.Successfull, Byte) & "," & CType(QueueStates.FailureAfterLastTrial, Byte) & "," & CType(QueueStates.FailureAccepted, Byte) & ") AND DATEDIFF (d,[DateTime],GetDate()) > 90) AS toremove WHERE dbo.Log_eMailMessages.ID = toremove.ID",

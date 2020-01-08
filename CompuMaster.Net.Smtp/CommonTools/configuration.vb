@@ -142,7 +142,7 @@ Friend Class Configuration
     ''' </summary>
     ''' <param name="appSettingName">The name of the appSetting item</param>
     ''' <param name="suppressExceptions">True if exceptions shall be suppressed and default value returned or False if exception shall be thrown if there is an error</param>
-    Private Shared Function LoadTripleStateSetting(ByVal appSettingName As String, ByVal suppressExceptions As Boolean) As WMSystem.TripleState
+    Private Shared Function LoadTripleStateSetting(appSettingName As String, suppressExceptions As Boolean) As WMSystem.TripleState
         Dim Result As WMSystem.TripleState = WMSystem.TripleState.Undefined
         Try
             Dim value As String = CType(WebManagerSettings.Item(appSettingName), String)
@@ -175,7 +175,7 @@ Friend Class Configuration
     ''' <param name="appSettingName">The name of the appSetting item</param>
     ''' <param name="defaultValue">A default value if not configured of configured invalid</param>
     ''' <param name="suppressExceptions">True if exceptions shall be suppressed and default value returned or False if exception shall be thrown if there is an error</param>
-    Private Shared Function LoadBooleanSetting(ByVal appSettingName As String, ByVal defaultValue As Boolean, ByVal suppressExceptions As Boolean) As Boolean
+    Private Shared Function LoadBooleanSetting(appSettingName As String, defaultValue As Boolean, suppressExceptions As Boolean) As Boolean
         Dim Result As Boolean = defaultValue
         Try
             Dim value As String = CType(WebManagerSettings.Item(appSettingName), String)
@@ -208,7 +208,7 @@ Friend Class Configuration
     ''' <param name="appSettingName">The name of the appSetting item</param>
     ''' <param name="defaultValue">A default value if not configured of configured invalid</param>
     ''' <param name="suppressExceptions">True if exceptions shall be suppressed and default value returned or False if exception shall be thrown if there is an error</param>
-    Friend Shared Function LoadIntegerSetting(ByVal appSettingName As String, ByVal defaultValue As Integer, ByVal suppressExceptions As Boolean) As Integer
+    Friend Shared Function LoadIntegerSetting(appSettingName As String, defaultValue As Integer, suppressExceptions As Boolean) As Integer
         Dim Result As Integer = defaultValue
         Try
             Dim value As String = CType(WebManagerSettings.Item(appSettingName), String)
@@ -231,7 +231,7 @@ Friend Class Configuration
     ''' <param name="appSettingName">The name of the appSetting item</param>
     ''' <param name="defaultValue">A default value if not configured of configured invalid</param>
     ''' <param name="suppressExceptions">True if exceptions shall be suppressed and default value returned or False if exception shall be thrown if there is an error</param>
-    Friend Shared Function LoadLongSetting(ByVal appSettingName As String, ByVal defaultValue As Long, ByVal suppressExceptions As Boolean) As Long
+    Friend Shared Function LoadLongSetting(appSettingName As String, defaultValue As Long, suppressExceptions As Boolean) As Long
         Dim Result As Long = defaultValue
         Try
             Dim value As String = CType(WebManagerSettings.Item(appSettingName), String)
@@ -253,7 +253,7 @@ Friend Class Configuration
     ''' </summary>
     ''' <param name="appSettingName">The name of the appSetting item</param>
     ''' <param name="defaultValue">A default value if not configured of configured invalid</param>
-    Friend Shared Function LoadStringSetting(ByVal appSettingName As String, ByVal defaultValue As String) As String
+    Friend Shared Function LoadStringSetting(appSettingName As String, defaultValue As String) As String
         Dim value As String = CType(WebManagerSettings.Item(appSettingName), String)
         If value = Nothing Then
             Return defaultValue

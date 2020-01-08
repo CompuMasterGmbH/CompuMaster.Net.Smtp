@@ -89,7 +89,7 @@ Namespace CompuMaster.camm.WebManager
         Inherits Exception
         Implements System.Runtime.Serialization.ISerializable
 
-        Friend Sub New(ByVal errorValue As WMSystem.System_AccessAuthorizationChecks_DBResults)
+        Friend Sub New(errorValue As WMSystem.System_AccessAuthorizationChecks_DBResults)
             MyBase.New(errorValue.ToString)
         End Sub
 
@@ -98,7 +98,7 @@ Namespace CompuMaster.camm.WebManager
         Inherits Exception
         Implements System.Runtime.Serialization.ISerializable
 
-        Friend Sub New(ByVal errorValue As WMSystem.System_AccessAuthorizationChecks_DBResults)
+        Friend Sub New(errorValue As WMSystem.System_AccessAuthorizationChecks_DBResults)
             MyBase.New(errorValue.ToString)
         End Sub
 
@@ -112,11 +112,11 @@ Namespace CompuMaster.camm.WebManager
     Public Class UserNotFoundException
         Inherits Exception
 
-        Public Sub New(ByVal userID As Long)
+        Public Sub New(userID As Long)
             MyBase.New("User account with the requested ID can't be found: " & userID.ToString)
         End Sub
 
-        Public Sub New(ByVal userName As String)
+        Public Sub New(userName As String)
             MyBase.New("User account with the requested login name can't be found: " & userName)
         End Sub
 
@@ -129,7 +129,7 @@ Namespace CompuMaster.camm.WebManager
     Public Class UserDeleteException
         Inherits Exception
 
-        Public Sub New(ByVal userID As Long, exceptionMessage As String)
+        Public Sub New(userID As Long, exceptionMessage As String)
             MyBase.New("User account with the requested ID can't be found: " & userID.ToString & "; " & exceptionMessage)
         End Sub
 
@@ -141,11 +141,11 @@ Namespace CompuMaster.camm.WebManager
     Public Class UserDeleteByHimselfException
         Inherits Exception
 
-        Public Sub New(ByVal userID As Long)
+        Public Sub New(userID As Long)
             MyBase.New("User account with the requested ID can't be deleted by itself: " & userID.ToString)
         End Sub
 
-        Public Sub New(ByVal userName As String)
+        Public Sub New(userName As String)
             MyBase.New("User account with the requested login name can't be deleted by itself: " & userName)
         End Sub
 
@@ -158,11 +158,11 @@ Namespace CompuMaster.camm.WebManager
     Public Class UserHasBeenDeletedException
         Inherits Exception
 
-        Public Sub New(ByVal userID As Long)
+        Public Sub New(userID As Long)
             MyBase.New("User account with the requested ID has been deleted: " & userID.ToString)
         End Sub
 
-        Public Sub New(ByVal userName As String)
+        Public Sub New(userName As String)
             MyBase.New("User account with the requested login name has been deleted: " & userName)
         End Sub
 
@@ -172,11 +172,11 @@ Namespace CompuMaster.camm.WebManager
     Public Class ImpersonationUserNotAbleToStartLoginProcessException
         Inherits Exception
 
-        Public Sub New(ByVal userID As Long)
+        Public Sub New(userID As Long)
             MyBase.New("User account with the requested ID can't be used to start the standard login process: " & userID.ToString)
         End Sub
 
-        Public Sub New(ByVal userName As String)
+        Public Sub New(userName As String)
             MyBase.New("User account with the requested login name can't be used to start the standard login process: " & userName)
         End Sub
 
@@ -189,7 +189,7 @@ Namespace CompuMaster.camm.WebManager
     Public Class PasswordTooWeakException
         Inherits UserInfoDataException
 
-        Public Sub New(ByVal message As String)
+        Public Sub New(message As String)
             MyBase.New(message)
         End Sub
 
@@ -202,7 +202,7 @@ Namespace CompuMaster.camm.WebManager
     Public Class PasswordRequiredException
         Inherits UserInfoDataException
 
-        Public Sub New(ByVal message As String)
+        Public Sub New(message As String)
             MyBase.New(message)
         End Sub
 
@@ -215,7 +215,7 @@ Namespace CompuMaster.camm.WebManager
     Public Class RequiredFieldException
         Inherits UserInfoDataException
 
-        Public Sub New(ByVal fieldName As String, ByVal message As String)
+        Public Sub New(fieldName As String, message As String)
             MyBase.New(message)
             Me._fieldName = fieldName
         End Sub
@@ -225,7 +225,7 @@ Namespace CompuMaster.camm.WebManager
             Get
                 Return _fieldName
             End Get
-            Set(ByVal value As String)
+            Set(value As String)
                 _fieldName = value
             End Set
         End Property
@@ -238,7 +238,7 @@ Namespace CompuMaster.camm.WebManager
         Public Sub New()
         End Sub
 
-        Public Sub New(ByVal message As String)
+        Public Sub New(message As String)
             MyBase.New(message)
         End Sub
 

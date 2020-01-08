@@ -23,7 +23,7 @@ Public Class WMSystem
             End If
             Return _System_DebugLevel
         End Get
-        Set(ByVal Value As DebugLevels)
+        Set(Value As DebugLevels)
             _System_DebugLevel = Value
         End Set
     End Property

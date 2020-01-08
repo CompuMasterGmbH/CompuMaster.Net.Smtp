@@ -7,7 +7,7 @@ Friend Class SmtpUtils
     '''     Return the string which is not nothing or otherwise return DBNull.Value 
     ''' </summary>
     ''' <param name="value">The string to be validated</param>
-    Public Shared Function StringNotNothingOrDBNull(ByVal value As String) As Object
+    Public Shared Function StringNotNothingOrDBNull(value As String) As Object
         If value Is Nothing Then
             Return DBNull.Value
         Else
@@ -19,7 +19,7 @@ Friend Class SmtpUtils
     '''     Return the object which is not nothing or otherwise return DBNull.Value 
     ''' </summary>
     ''' <param name="value">The object to be validated</param>
-    Public Shared Function ObjectNotNothingOrDBNull(ByVal value As Object) As Object
+    Public Shared Function ObjectNotNothingOrDBNull(value As Object) As Object
         If value Is Nothing Then
             Return DBNull.Value
         Else
@@ -45,7 +45,7 @@ Friend Class SmtpUtils
     ''' <param name="text"></param>
     ''' <param name="separator"></param>
     ''' <param name="exceptLeadingCharacter"></param>
-    Public Shared Function SplitString(ByVal text As String, ByVal separator As Char, ByVal exceptLeadingCharacter As Char) As String()
+    Public Shared Function SplitString(text As String, separator As Char, exceptLeadingCharacter As Char) As String()
         If text = Nothing Then
             Return New String() {}
         End If
@@ -103,7 +103,7 @@ Friend Class SmtpUtils
     ''' <param name="comparisonType">The comparison type for searching for the pattern</param>
     ''' <returns>A new string with all replacements</returns>
     ''' <remarks></remarks>
-    Friend Shared Function ReplaceString(ByVal original As String, ByVal pattern As String, ByVal replacement As String, ByVal comparisonType As ReplaceComparisonTypes) As String
+    Friend Shared Function ReplaceString(original As String, pattern As String, replacement As String, comparisonType As ReplaceComparisonTypes) As String
         If original = Nothing OrElse pattern = Nothing Then
             Return original
         End If

@@ -14,8 +14,8 @@
     <Setting Name="SmtpPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="SmtpAuthType" Type="System.String" Scope="User">
-      <Value Profile="(Default)">NONE</Value>
+    <Setting Name="SmtpAuthType" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="TestRecipientName" Type="System.String" Scope="User">
       <Value Profile="(Default)">Foo Bar</Value>

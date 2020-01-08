@@ -8,18 +8,18 @@ Public Class EMailAttachment
     Public Sub New()
         'Do nothing
     End Sub
-    Public Sub New(ByVal filepath As String)
+    Public Sub New(filepath As String)
         Me.FilePath = filepath
     End Sub
-    Public Sub New(ByVal filepath As String, ByVal placeholderName As String)
+    Public Sub New(filepath As String, placeholderName As String)
         Me.FilePath = filepath
         Me.PlaceholderInMhtmlToBeReplacedByContentID = placeholderName
     End Sub
-    Public Sub New(ByVal data As Byte(), ByVal filename As String)
+    Public Sub New(data As Byte(), filename As String)
         Me.RawData = data
         Me.RawDataFilename = filename
     End Sub
-    Public Sub New(ByVal data As Byte(), ByVal filename As String, ByVal placeholderName As String)
+    Public Sub New(data As Byte(), filename As String, placeholderName As String)
         Me.RawData = data
         Me.RawDataFilename = filename
         Me.PlaceholderInMhtmlToBeReplacedByContentID = placeholderName
@@ -33,7 +33,7 @@ Public Class EMailAttachment
         Get
             Return _AttachmentData
         End Get
-        Set(ByVal Value As Byte())
+        Set(Value As Byte())
             _AttachmentData = Value
         End Set
     End Property
@@ -46,7 +46,7 @@ Public Class EMailAttachment
         Get
             Return _AttachmentData_Filename
         End Get
-        Set(ByVal Value As String)
+        Set(Value As String)
             _AttachmentData_Filename = Value
         End Set
     End Property
@@ -59,7 +59,7 @@ Public Class EMailAttachment
         Get
             Return _AttachmentFile
         End Get
-        Set(ByVal Value As String)
+        Set(Value As String)
             _AttachmentFile = Value
         End Set
     End Property
@@ -75,19 +75,19 @@ Public Class EMailAttachment
         Get
             Return _PlaceholderInMHTML_ToReplaceWithCID
         End Get
-        Set(ByVal Value As String)
+        Set(Value As String)
             _PlaceholderInMHTML_ToReplaceWithCID = Value
         End Set
     End Property
 
     ''' <summary>
-    ''' Replace all Content-IDs by encoding-independent Content-IDs
+    ''' Replace all Content-IDs by encoding-independent Content-IDs and cleanup all attachments with placeholder but without reference from message HTML
     ''' </summary>
     ''' <param name="htmlBody">The e-mail HTML body</param>
     ''' <param name="attachments">The attachments of the e-mail</param>
-    Friend Shared Sub FixHtmlContentIDs(ByRef htmlBody As String, ByRef attachments As EMailAttachment())
+    Friend Shared Sub FixHtmlContentIDs(ByRef htmlBody As String, attachments As List(Of EMailAttachment))
         If Not attachments Is Nothing Then
-            For MyCounter As Integer = 0 To attachments.Length - 1
+            For MyCounter As Integer = 0 To attachments.Count - 1
                 If attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID <> Nothing Then
                     'Ensure working content-ID in all encodings
                     'If suggested Content-ID is not possible for usage without a working encoding (at least it's unknown how to do it, currently), then replace the Content-ID by another value and also do this replacement in the html message part
@@ -103,14 +103,12 @@ Public Class EMailAttachment
             Next
 
             'remove attachments with missing references
-            Dim atts As New ArrayList(attachments)
-            For MyCounter As Integer = atts.Count - 1 To 0 Step -1
-                If CType(atts(MyCounter), EMailAttachment).PlaceholderInMhtmlToBeReplacedByContentID <> Nothing AndAlso htmlBody.IndexOf(CType(atts(MyCounter), EMailAttachment).PlaceholderInMhtmlToBeReplacedByContentID) = -1 Then
+            For MyCounter As Integer = attachments.Count - 1 To 0 Step -1
+                If attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID <> Nothing AndAlso htmlBody.IndexOf(attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID) = -1 Then
                     'html doesn't contain any reference to the embedded object - removing attachment
-                    atts.RemoveAt(MyCounter)
+                    attachments.RemoveAt(MyCounter)
                 End If
             Next
-            attachments = CType(atts.ToArray(GetType(EMailAttachment)), EMailAttachment())
         End If
     End Sub
 

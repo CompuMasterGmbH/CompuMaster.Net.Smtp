@@ -5,7 +5,15 @@ Public NotInheritable Class EMails
 
     Public Enum Priority As Integer
         High = 1
+        ''' <summary>
+        ''' Not supported by all e-mail systems
+        ''' </summary>
+        Higher = 2
         Normal = 3
+        ''' <summary>
+        ''' Not supported by all e-mail systems
+        ''' </summary>
+        Lower = 4
         Low = 5
     End Enum
 

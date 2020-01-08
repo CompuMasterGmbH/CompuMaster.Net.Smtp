@@ -3,11 +3,11 @@ Option Explicit On
 
 Public Class EMailRecipient
 
-    Public Sub New(ByVal address As String)
+    Public Sub New(address As String)
         Me.New(CType(Nothing, String), address)
     End Sub
 
-    Public Sub New(ByVal name As String, ByVal address As String)
+    Public Sub New(name As String, address As String)
         If address Is Nothing Then
             Throw New ArgumentNullException(NameOf(address))
         End If
@@ -16,12 +16,11 @@ Public Class EMailRecipient
     End Sub
 
     Private _Address As String
-
     Public Property Address() As String
         Get
             Return _Address
         End Get
-        Set(ByVal value As String)
+        Set(value As String)
             If value Is Nothing Then
                 Throw New ArgumentNullException("Address")
             End If
@@ -29,15 +28,27 @@ Public Class EMailRecipient
         End Set
     End Property
 
-    Private _Name As String
     Public Property Name() As String
-        Get
-            Return _Name
-        End Get
-        Set(ByVal value As String)
-            _Name = value
-        End Set
-    End Property
+
+    ''' <summary>
+    ''' Convert EMailRecipient into address format of SMTP standard
+    ''' </summary>
+    ''' <returns></returns>
+    Public Overrides Function ToString() As String
+        Return CreateRecipientString(Me.Name, Me.Address)
+    End Function
+
+    Friend Shared Function JoinToListWithSmtpFormat(recipients As List(Of EMailRecipient)) As String
+        If recipients Is Nothing Then Return Nothing
+        Dim Result As New System.Text.StringBuilder
+        For Each recipient As EMailRecipient In recipients
+            If Result.Length <> 0 Then
+                Result.Append(",")
+            End If
+            Result.Append(recipient.ToString)
+        Next
+        Return Result.ToString
+    End Function
 
     ''' <summary>
     '''     Create a valid receipient string for the address lists parameters of method SendEMail
@@ -52,7 +63,7 @@ Public Class EMailRecipient
     '''	              characters (ASCII codes 0 through 31 inclusive And _
     '''	              127)</para>
     ''' </remarks>
-    Public Shared Function CreateRecipientString(ByVal name As String, ByVal address As String) As String
+    Friend Shared Function CreateRecipientString(name As String, address As String) As String
         If address = Nothing Then Return ""
         If name <> Nothing Then
             name = name.Replace("\", "\\")
@@ -76,8 +87,33 @@ Public Class EMailRecipient
     ''' <remarks>
     '''     <para>In case of an empty address, an empty string will be returned, too (no ArgumentNullException).</para>
     ''' </remarks>
-    Public Shared Function CreateRecipientString(ByVal address As String) As String
+    Friend Shared Function CreateRecipientString(address As String) As String
         Return CreateRecipientString(Nothing, address)
+    End Function
+
+    ''' <summary>
+    ''' Split an e-mail address in typical encoding for SMTP protocol into the two parts e-mail address and receipient name
+    ''' </summary>
+    ''' <param name="emailAddressInSmtpFormat"></param>
+    ''' <remarks></remarks>
+    Public Shared Function CreateFromSmtpFormat(emailAddressInSmtpFormat As String) As EMailRecipient
+        Dim Address As String
+        If Not emailAddressInSmtpFormat.LastIndexOf("<") = -1 Then
+            Address = emailAddressInSmtpFormat.Substring(emailAddressInSmtpFormat.LastIndexOf("<"), emailAddressInSmtpFormat.Length - emailAddressInSmtpFormat.LastIndexOf("<"))
+            Address = Address.Replace("<", "").Replace(">", "")
+        Else
+            Address = emailAddressInSmtpFormat
+        End If
+
+        Dim Name As String
+        If emailAddressInSmtpFormat.LastIndexOf(" ") > 0 AndAlso emailAddressInSmtpFormat.LastIndexOf(" ") = emailAddressInSmtpFormat.LastIndexOf("<") - 1 Then
+            Name = emailAddressInSmtpFormat.Substring(0, emailAddressInSmtpFormat.LastIndexOf(" "))
+            Name = Name.Replace("<", "").Replace(">", "")
+        Else
+            Name = String.Empty
+        End If
+
+        Return New EMailRecipient(Name, Address)
     End Function
 
     ''' <summary>
@@ -92,7 +128,7 @@ Public Class EMailRecipient
     ''' <item>my-company@my-webmailer-company.com,jon.doe@my-company.com</item>
     ''' </list>
     ''' </remarks>
-    Friend Shared Function SplitEMailAddressesFromRecipientsList(ByVal receipientsCommaSeparated As String) As String()
+    Friend Shared Function SplitEMailAddressesFromRecipientsList(receipientsCommaSeparated As String) As String()
         Dim Result As String() = SmtpUtils.SplitString(receipientsCommaSeparated, ","c, "\"c)
         For MyCounter As Integer = 0 To Result.Length - 1
             'Now we got strings like
@@ -126,42 +162,17 @@ Public Class EMailRecipient
     End Function
 
     ''' <summary>
-    ''' Split an e-mail address in typical encoding for SMTP protocol into the two parts e-mail address and receipient name
-    ''' </summary>
-    ''' <param name="emailAddressInSmtpFormat"></param>
-    ''' <remarks></remarks>
-    Friend Shared Function SplitEMailAddressesIntoAddressParts(ByVal emailAddressInSmtpFormat As String) As EMailRecipient
-        Dim Address As String
-        If Not emailAddressInSmtpFormat.LastIndexOf("<") = -1 Then
-            Address = emailAddressInSmtpFormat.Substring(emailAddressInSmtpFormat.LastIndexOf("<"), emailAddressInSmtpFormat.Length - emailAddressInSmtpFormat.LastIndexOf("<"))
-            Address = Address.Replace("<", "").Replace(">", "")
-        Else
-            Address = emailAddressInSmtpFormat
-        End If
-
-        Dim Name As String
-        If emailAddressInSmtpFormat.LastIndexOf(" ") > 0 AndAlso emailAddressInSmtpFormat.LastIndexOf(" ") = emailAddressInSmtpFormat.LastIndexOf("<") - 1 Then
-            Name = emailAddressInSmtpFormat.Substring(0, emailAddressInSmtpFormat.LastIndexOf(" "))
-            Name = Name.Replace("<", "").Replace(">", "")
-        Else
-            Name = String.Empty
-        End If
-
-        Return New EMailRecipient(Name, Address)
-    End Function
-
-    ''' <summary>
     ''' Split an e-mail address list in typical encoding for SMTP protocol into the two parts e-mail address and receipient name
     ''' </summary>
     ''' <param name="emailAddressesInSmtpFormat"></param>
     ''' <remarks></remarks>
-    Friend Shared Function SplitEMailAddressesIntoEMailRecipientsFromRecipientsList(ByVal emailAddressesInSmtpFormat As String) As EMailRecipient()
-        Dim Result As String() = SmtpUtils.SplitString(emailAddressesInSmtpFormat, ","c, "\"c)
-        Dim EmailReceipient(Result.Length - 1) As EMailRecipient
-        For MyCounter As Integer = 0 To Result.Length - 1
-            EmailReceipient(MyCounter) = SplitEMailAddressesIntoAddressParts(Result(MyCounter))
+    Friend Shared Function SplitEMailAddressesIntoEMailRecipientsFromRecipientsList(emailAddressesInSmtpFormat As String) As List(Of EMailRecipient)
+        Dim Addresses As String() = SmtpUtils.SplitString(emailAddressesInSmtpFormat, ","c, "\"c)
+        Dim EmailReceipients As New List(Of EMailRecipient)
+        For MyCounter As Integer = 0 To Addresses.Length - 1
+            EmailReceipients.Add(CreateFromSmtpFormat(Addresses(MyCounter)))
         Next
-        Return EmailReceipient
+        Return EmailReceipients
     End Function
 
 End Class

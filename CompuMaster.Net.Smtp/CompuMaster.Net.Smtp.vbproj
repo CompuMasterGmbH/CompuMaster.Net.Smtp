@@ -96,9 +96,6 @@
     <Compile Include="AssemblyInfo.vb" />
     <None Include="CommonTools\Utils.vb" />
     <None Include="CommonTools\configuration.vb" />
-    <None Include="CommonTools\cammWebManager.vb">
-      <SubType>ASPXCodeBehind</SubType>
-    </None>
     <None Include="CommonTools\SqlClient.vb" />
     <Compile Include="GlobalSuppressions.vb" />
     <Compile Include="Messaging\EMailAttachment.vb" />
@@ -108,7 +105,6 @@
     <Compile Include="Messaging\EMails.vb" />
     <Compile Include="Messaging\EMailMessage.vb" />
     <None Include="Messaging\QueueMonitoring.vb" />
-    <None Include="CommonTools\mimetypes.vb" />
     <None Include="Messaging\QueueWorker.vb" />
     <Compile Include="Messaging\SmtpUtils.vb" />
     <None Include="WMSystem\Exceptions.vb" />

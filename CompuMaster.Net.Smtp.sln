@@ -7,6 +7,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "CompuMaster.Net.Smtp", "Com
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Demo", "Demo\Demo.vbproj", "{1617C70F-901C-49F7-B204-144B7012B992}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Tests", "Tests\Tests.vbproj", "{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug 2 Linux|Any CPU = Debug 2 Linux|Any CPU
@@ -31,6 +33,14 @@ Global
 		{1617C70F-901C-49F7-B204-144B7012B992}.NAnt Release|Any CPU.Build.0 = Release|Any CPU
 		{1617C70F-901C-49F7-B204-144B7012B992}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1617C70F-901C-49F7-B204-144B7012B992}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Debug 2 Linux|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Debug 2 Linux|Any CPU.Build.0 = Debug|Any CPU
+		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.NAnt Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.NAnt Release|Any CPU.Build.0 = Release|Any CPU
+		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

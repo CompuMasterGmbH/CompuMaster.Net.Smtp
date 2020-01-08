@@ -22,28 +22,28 @@ Public Class Utils
 
 #Region "ReadString/ByteDataFromUri"
 
-    Public Shared Function ReadByteDataFromUri(ByVal uri As String) As Byte()
+    Public Shared Function ReadByteDataFromUri(uri As String) As Byte()
         Dim client As New System.Net.WebClient
         Return client.DownloadData(uri)
     End Function
 
-    Public Shared Function ReadStringDataFromUri(ByVal uri As String, ByVal encodingName As String) As String
+    Public Shared Function ReadStringDataFromUri(uri As String, encodingName As String) As String
         Return ReadStringDataFromUri(CType(Nothing, System.Net.WebClient), uri, encodingName)
     End Function
 
-    Public Shared Function ReadStringDataFromUri(ByVal uri As String, ByVal encodingName As String, ByVal ignoreSslValidationExceptions As Boolean) As String
+    Public Shared Function ReadStringDataFromUri(uri As String, encodingName As String, ignoreSslValidationExceptions As Boolean) As String
         Return ReadStringDataFromUri(CType(Nothing, System.Net.WebClient), uri, encodingName, False)
     End Function
 
-    Public Shared Function ReadStringDataFromUri(ByVal client As System.Net.WebClient, ByVal uri As String, ByVal encodingName As String) As String
+    Public Shared Function ReadStringDataFromUri(client As System.Net.WebClient, uri As String, encodingName As String) As String
         Return ReadStringDataFromUri(client, uri, encodingName, False)
     End Function
 
-    Public Shared Function ReadStringDataFromUri(ByVal client As System.Net.WebClient, ByVal uri As String, ByVal encodingName As String, ByVal ignoreSslValidationExceptions As Boolean) As String
+    Public Shared Function ReadStringDataFromUri(client As System.Net.WebClient, uri As String, encodingName As String, ignoreSslValidationExceptions As Boolean) As String
         Return ReadStringDataFromUri(client, uri, encodingName, False, CType(Nothing, String))
     End Function
 
-    Public Shared Function ReadStringDataFromUri(ByVal client As System.Net.WebClient, ByVal uri As String, ByVal encodingName As String, ByVal ignoreSslValidationExceptions As Boolean, ByVal postData As String) As String
+    Public Shared Function ReadStringDataFromUri(client As System.Net.WebClient, uri As String, encodingName As String, ignoreSslValidationExceptions As Boolean, postData As String) As String
         If client Is Nothing Then client = New System.Net.WebClient
         'https://compumaster.dyndns.biz/.....asmx without trusted certificate
 #If Not NET_1_1 Then
@@ -105,7 +105,7 @@ Public Class Utils
     ''' <param name="errors"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function OnValidationCallback(ByVal sender As Object, ByVal cert As System.Security.Cryptography.X509Certificates.X509Certificate, ByVal chain As System.Security.Cryptography.X509Certificates.X509Chain, ByVal errors As System.Net.Security.SslPolicyErrors) As Boolean
+    Public Shared Function OnValidationCallback(sender As Object, cert As System.Security.Cryptography.X509Certificates.X509Certificate, chain As System.Security.Cryptography.X509Certificates.X509Chain, errors As System.Net.Security.SslPolicyErrors) As Boolean
         Return True
     End Function
 #End If
@@ -138,7 +138,7 @@ Public Class Utils
     '''     Is the host a localhost?
     ''' </summary>
     ''' <param name="IPAddress">The IP address to validate</param>
-    Public Shared Function IsLoopBackDevice(ByVal IPAddress As String) As Boolean
+    Public Shared Function IsLoopBackDevice(IPAddress As String) As Boolean
         Return System.Net.IPAddress.IsLoopback(System.Net.IPAddress.Parse(IPAddress))
     End Function
 
@@ -163,7 +163,7 @@ Public Class Utils
     ''' <param name="CheckValueIfDBNull">The value to be checked</param>
     ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
     ''' <returns>A value which is not DBNull</returns>
-    Public Shared Function IfNull(ByVal CheckValueIfDBNull As Object, Optional ByVal ReplaceWithThis As Object = Nothing) As Object
+    Public Shared Function IfNull(CheckValueIfDBNull As Object, Optional ReplaceWithThis As Object = Nothing) As Object
         If IsDBNull(CheckValueIfDBNull) Then
             Return (ReplaceWithThis)
         Else
@@ -179,7 +179,7 @@ Public Class Utils
     ''' <param name="expression">An expression which shall be validated</param>
     ''' <param name="trueValue">If the expression is True, this parameter will be returned</param>
     ''' <param name="falseValue">If the expression is False, this parameter will be returned</param>
-    Public Shared Function InlineIf(ByVal expression As Boolean, ByVal trueValue As String, ByVal falseValue As String) As String
+    Public Shared Function InlineIf(expression As Boolean, trueValue As String, falseValue As String) As String
         If expression Then
             Return trueValue
         Else
@@ -192,7 +192,7 @@ Public Class Utils
     ''' <param name="expression">An expression which shall be validated</param>
     ''' <param name="trueValue">If the expression is True, this parameter will be returned</param>
     ''' <param name="falseValue">If the expression is False, this parameter will be returned</param>
-    Public Shared Function InlineIf(ByVal expression As Boolean, ByVal trueValue As Integer, ByVal falseValue As Integer) As Integer
+    Public Shared Function InlineIf(expression As Boolean, trueValue As Integer, falseValue As Integer) As Integer
         If expression Then
             Return trueValue
         Else
@@ -205,7 +205,7 @@ Public Class Utils
     ''' <param name="expression">An expression which shall be validated</param>
     ''' <param name="trueValue">If the expression is True, this parameter will be returned</param>
     ''' <param name="falseValue">If the expression is False, this parameter will be returned</param>
-    Public Shared Function InlineIf(ByVal expression As Boolean, ByVal trueValue As Date, ByVal falseValue As Date) As Date
+    Public Shared Function InlineIf(expression As Boolean, trueValue As Date, falseValue As Date) As Date
         If expression Then
             Return trueValue
         Else
@@ -218,7 +218,7 @@ Public Class Utils
     ''' <param name="expression">An expression which shall be validated</param>
     ''' <param name="trueValue">If the expression is True, this parameter will be returned</param>
     ''' <param name="falseValue">If the expression is False, this parameter will be returned</param>
-    Public Shared Function InlineIf(ByVal expression As Boolean, ByVal trueValue As Long, ByVal falseValue As Long) As Long
+    Public Shared Function InlineIf(expression As Boolean, trueValue As Long, falseValue As Long) As Long
         If expression Then
             Return trueValue
         Else
@@ -231,7 +231,7 @@ Public Class Utils
     ''' <param name="expression">An expression which shall be validated</param>
     ''' <param name="trueValue">If the expression is True, this parameter will be returned</param>
     ''' <param name="falseValue">If the expression is False, this parameter will be returned</param>
-    Public Shared Function InlineIf(ByVal expression As Boolean, ByVal trueValue As Double, ByVal falseValue As Double) As Double
+    Public Shared Function InlineIf(expression As Boolean, trueValue As Double, falseValue As Double) As Double
         If expression Then
             Return trueValue
         Else
@@ -244,7 +244,7 @@ Public Class Utils
     ''' <param name="expression">An expression which shall be validated</param>
     ''' <param name="trueValue">If the expression is True, this parameter will be returned</param>
     ''' <param name="falseValue">If the expression is False, this parameter will be returned</param>
-    Public Shared Function InlineIf(ByVal expression As Boolean, ByVal trueValue As Boolean, ByVal falseValue As Boolean) As Boolean
+    Public Shared Function InlineIf(expression As Boolean, trueValue As Boolean, falseValue As Boolean) As Boolean
         If expression Then
             Return trueValue
         Else
@@ -259,7 +259,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="value">A boolean value</param>
     ''' <returns>A value of type TriState with either TriState.True or TriState.False</returns>
-    Friend Shared Function BooleanToWMTriplestate(ByVal value As Boolean) As WMSystem.TripleState
+    Friend Shared Function BooleanToWMTriplestate(value As Boolean) As WMSystem.TripleState
         If value Then
             Return WMSystem.TripleState.True
         Else
@@ -271,7 +271,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="value">A boolean value</param>
     ''' <returns>A value of type TriState with either TriState.True or TriState.False</returns>
-    Friend Shared Function BooleanToTristate(ByVal value As Boolean) As TriState
+    Friend Shared Function BooleanToTristate(value As Boolean) As TriState
         If value Then
             Return TriState.True
         Else
@@ -286,7 +286,7 @@ Public Class Utils
     ''' <remarks>
     '''     If the input value is TriState.Default, there will be thrown an ArgumentException
     ''' </remarks>
-    Friend Shared Function TristateToBoolean(ByVal value As TriState) As Boolean
+    Friend Shared Function TristateToBoolean(value As TriState) As Boolean
         If value = TriState.True Then
             Return True
         ElseIf value = TriState.False Then
@@ -303,7 +303,7 @@ Public Class Utils
     ''' <remarks>
     '''     If the input value is TriState.Default, there will be thrown an ArgumentException
     ''' </remarks>
-    Friend Shared Function WMTriplestateToBoolean(ByVal value As WMSystem.TripleState) As Boolean
+    Friend Shared Function WMTriplestateToBoolean(value As WMSystem.TripleState) As Boolean
         If value = WMSystem.TripleState.True Then
             Return True
         ElseIf value = WMSystem.TripleState.False Then
@@ -317,7 +317,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="value">A value of type WMSystem.TripleState</param>
     ''' <returns>A Tristate value</returns>
-    Friend Shared Function WMTriplestateToTristate(ByVal value As WMSystem.TripleState) As TriState
+    Friend Shared Function WMTriplestateToTristate(value As WMSystem.TripleState) As TriState
         If value = WMSystem.TripleState.True Then
             Return TriState.True
         ElseIf value = WMSystem.TripleState.False Then
@@ -331,7 +331,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="value">A Tristate value</param>
     ''' <returns>A value of type WMSystem.TripleState</returns>
-    Friend Shared Function TristateToWMTriplestate(ByVal value As TriState) As WMSystem.TripleState
+    Friend Shared Function TristateToWMTriplestate(value As TriState) As WMSystem.TripleState
         If value = TriState.True Then
             Return WMSystem.TripleState.True
         ElseIf value = TriState.False Then
@@ -355,7 +355,7 @@ Public Class Utils
     '''     Return the string which is not nothing or else String.Empty
     ''' </summary>
     ''' <param name="value">The string to be validated</param>
-    Public Shared Function StringNotEmptyOrNothing(ByVal value As String) As String
+    Public Shared Function StringNotEmptyOrNothing(value As String) As String
         If value = Nothing Then
             Return Nothing
         Else
@@ -366,7 +366,7 @@ Public Class Utils
     '''     Return the string which is not nothing or else String.Empty
     ''' </summary>
     ''' <param name="value">The string to be validated</param>
-    Public Shared Function StringNotNothingOrEmpty(ByVal value As String) As String
+    Public Shared Function StringNotNothingOrEmpty(value As String) As String
         If value Is Nothing Then
             Return String.Empty
         Else
@@ -378,7 +378,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="value">The string to be validated</param>
     ''' <param name="alternativeValue">An alternative value if the first value is nothing</param>
-    Public Shared Function StringNotNothingOrAlternativeValue(ByVal value As String, ByVal alternativeValue As String) As String
+    Public Shared Function StringNotNothingOrAlternativeValue(value As String, alternativeValue As String) As String
         If value Is Nothing Then
             Return alternativeValue
         Else
@@ -390,7 +390,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="value">The string to be validated</param>
     ''' <param name="alternativeValue">An alternative value if the first value is empty</param>
-    Public Shared Function StringNotEmptyOrAlternativeValue(ByVal value As String, ByVal alternativeValue As String) As String
+    Public Shared Function StringNotEmptyOrAlternativeValue(value As String, alternativeValue As String) As String
         If value = Nothing Then
             Return alternativeValue
         Else
@@ -401,7 +401,7 @@ Public Class Utils
     '''     Return the string which is not empty or otherwise return DBNull.Value 
     ''' </summary>
     ''' <param name="value">The string to be validated</param>
-    Public Shared Function StringNotEmptyOrDBNull(ByVal value As String) As Object
+    Public Shared Function StringNotEmptyOrDBNull(value As String) As Object
         If value = Nothing Then
             Return DBNull.Value
         Else
@@ -412,7 +412,7 @@ Public Class Utils
     '''     Return the datetime value which is not nothing or otherwise return DBNull.Value 
     ''' </summary>
     ''' <param name="value">The datetime value to be validated</param>
-    Public Shared Function DateTimeNotNothingOrDBNull(ByVal value As DateTime) As Object
+    Public Shared Function DateTimeNotNothingOrDBNull(value As DateTime) As Object
         If value = Nothing Then
             Return DBNull.Value
         Else
@@ -423,7 +423,7 @@ Public Class Utils
     '''     Return the object which is not nothing or otherwise return DBNull.Value 
     ''' </summary>
     ''' <param name="value">The object to be validated</param>
-    Public Shared Function ObjectNotNothingOrEmptyString(ByVal value As Object) As Object
+    Public Shared Function ObjectNotNothingOrEmptyString(value As Object) As Object
         If value Is Nothing Then
             Return String.Empty
         Else
@@ -434,7 +434,7 @@ Public Class Utils
     '''     Return the object which is not nothing or otherwise return DBNull.Value 
     ''' </summary>
     ''' <param name="value">The object to be validated</param>
-    Public Shared Function ObjectNotNothingOrDBNull(ByVal value As Object) As Object
+    Public Shared Function ObjectNotNothingOrDBNull(value As Object) As Object
         If value Is Nothing Then
             Return DBNull.Value
         Else
@@ -446,7 +446,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="value">The object to be validated</param>
     ''' <returns>A string with length > 0 (the value) or nothing</returns>
-    Public Shared Function ObjectNotEmptyStringOrNothing(ByVal value As Object) As Object
+    Public Shared Function ObjectNotEmptyStringOrNothing(value As Object) As Object
         If value Is Nothing Then
             Return Nothing
         ElseIf value.GetType Is GetType(String) AndAlso CType(value, String) = "" Then
@@ -460,7 +460,7 @@ Public Class Utils
     '''     Return the value if there is a value or otherwise return DBNull.Value 
     ''' </summary>
     ''' <param name="value">The nullable type value to be validated</param>
-    Public Shared Function NullableTypeWithItsValueOrDBNull(Of T As Structure)(ByVal value As Nullable(Of T)) As Object
+    Public Shared Function NullableTypeWithItsValueOrDBNull(Of T As Structure)(value As Nullable(Of T)) As Object
         If value.HasValue = False Then
             Return DBNull.Value
         Else
@@ -472,7 +472,7 @@ Public Class Utils
     '''     Return the array which is not nothing or otherwise return DBNull.Value 
     ''' </summary>
     ''' <param name="values">The array to be validated</param>
-    Public Shared Function ArrayNotNothingOrDBNull(ByVal values As Array) As Object
+    Public Shared Function ArrayNotNothingOrDBNull(values As Array) As Object
         If values Is Nothing Then
             Return DBNull.Value
         Else
@@ -484,7 +484,7 @@ Public Class Utils
     '''     Return the array with at least 1 element or otherwise return DBNull.Value 
     ''' </summary>
     ''' <param name="values">The array to be validated</param>
-    Public Shared Function ArrayNotEmptyOrDBNull(ByVal values As Array) As Object
+    Public Shared Function ArrayNotEmptyOrDBNull(values As Array) As Object
         If values Is Nothing OrElse values.Length = 0 Then
             Return DBNull.Value
         Else
@@ -495,7 +495,7 @@ Public Class Utils
     '''     Return the array with at least 1 element or otherwise return Nothing
     ''' </summary>
     ''' <param name="values">The array to be validated</param>
-    Public Shared Function ArrayNotEmptyOrNothing(Of T)(ByVal values As T()) As T()
+    Public Shared Function ArrayNotEmptyOrNothing(Of T)(values As T()) As T()
         If values Is Nothing OrElse values.Length = 0 Then
             Return Nothing
         Else
@@ -506,7 +506,7 @@ Public Class Utils
     '''     Return the array with at least 0 elements in case it's Nothing
     ''' </summary>
     ''' <param name="values">The array to be validated</param>
-    Public Shared Function ArrayNotNothingOrEmpty(Of T)(ByVal values As T()) As T()
+    Public Shared Function ArrayNotNothingOrEmpty(Of T)(values As T()) As T()
         If values Is Nothing Then
             Return New T() {}
         Else
@@ -518,7 +518,7 @@ Public Class Utils
     '''     Return the string which is not nothing or otherwise return DBNull.Value 
     ''' </summary>
     ''' <param name="value">The string to be validated</param>
-    Public Shared Function StringNotNothingOrDBNull(ByVal value As String) As Object
+    Public Shared Function StringNotNothingOrDBNull(value As String) As Object
         If value Is Nothing Then
             Return DBNull.Value
         Else
@@ -530,7 +530,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="Expression">The expression to be converted</param>
     ''' <returns>The converted long value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
-    Public Shared Function TryCLng(ByVal Expression As Object) As Long
+    Public Shared Function TryCLng(Expression As Object) As Long
         Return TryCLng(Expression, Nothing)
     End Function
     ''' <summary>
@@ -539,7 +539,7 @@ Public Class Utils
     ''' <param name="Expression">The expression to be converted</param>
     ''' <param name="AlternativeValue">The alternative value in case of conversion errors</param>
     ''' <returns>The converted long value or the alternative value if the conversion was unsuccessfull</returns>
-    Public Shared Function TryCLng(ByVal Expression As Object, ByVal AlternativeValue As Long) As Long
+    Public Shared Function TryCLng(Expression As Object, AlternativeValue As Long) As Long
         Try
             Return CLng(Expression)
         Catch
@@ -551,7 +551,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="Expression">The expression to be converted</param>
     ''' <returns>The converted integer value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
-    Public Shared Function TryCInt(ByVal Expression As Object) As Integer
+    Public Shared Function TryCInt(Expression As Object) As Integer
         Return TryCInt(Expression, Nothing)
     End Function
     ''' <summary>
@@ -560,7 +560,7 @@ Public Class Utils
     ''' <param name="Expression">The expression to be converted</param>
     ''' <param name="AlternativeValue">The alternative value in case of conversion errors</param>
     ''' <returns>The converted integer value or the alternative value if the conversion was unsuccessfull</returns>
-    Public Shared Function TryCInt(ByVal Expression As Object, ByVal AlternativeValue As Integer) As Integer
+    Public Shared Function TryCInt(Expression As Object, AlternativeValue As Integer) As Integer
         Try
             Return CInt(Expression)
         Catch
@@ -572,7 +572,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="Expression">The expression to be converted</param>
     ''' <returns>The converted double value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
-    Public Shared Function TryCDbl(ByVal Expression As Object) As Double
+    Public Shared Function TryCDbl(Expression As Object) As Double
         Return TryCDbl(Expression, Nothing)
     End Function
     ''' <summary>
@@ -581,7 +581,7 @@ Public Class Utils
     ''' <param name="Expression">The expression to be converted</param>
     ''' <param name="AlternativeValue">The alternative value in case of conversion errors</param>
     ''' <returns>The converted double value or the alternative value if the conversion was unsuccessfull</returns>
-    Public Shared Function TryCDbl(ByVal Expression As Object, ByVal AlternativeValue As Integer) As Double
+    Public Shared Function TryCDbl(Expression As Object, AlternativeValue As Integer) As Double
         Try
             Return CDbl(Expression)
         Catch
@@ -593,7 +593,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="Expression">The expression to be converted</param>
     ''' <returns>The converted decimal value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
-    Public Shared Function TryCDec(ByVal Expression As Object) As Decimal
+    Public Shared Function TryCDec(Expression As Object) As Decimal
         Return TryCDec(Expression, Nothing)
     End Function
     ''' <summary>
@@ -602,7 +602,7 @@ Public Class Utils
     ''' <param name="Expression">The expression to be converted</param>
     ''' <param name="AlternativeValue">The alternative value in case of conversion errors</param>
     ''' <returns>The converted decimal value or the alternative value if the conversion was unsuccessfull</returns>
-    Public Shared Function TryCDec(ByVal Expression As Object, ByVal AlternativeValue As Integer) As Decimal
+    Public Shared Function TryCDec(Expression As Object, AlternativeValue As Integer) As Decimal
         Try
             Return CDec(Expression)
         Catch
@@ -614,7 +614,7 @@ Public Class Utils
 
 #Region "Hashing"
 
-    Friend Shared Function ComputeHash(ByVal value As String) As String
+    Friend Shared Function ComputeHash(value As String) As String
         'create Encrypted value for parameter 'value' and return it as string
         Dim result As Byte()
         Dim hashprovider As New System.Security.Cryptography.MD5CryptoServiceProvider
@@ -630,7 +630,7 @@ Public Class Utils
 #End Region
 
 #Region "String iterations"
-    Friend Shared Function StringArrayContainsValue(ByVal stringArray As String(), ByVal searchFor As String, ByVal ignoreCase As Boolean) As String
+    Friend Shared Function StringArrayContainsValue(stringArray As String(), searchFor As String, ignoreCase As Boolean) As String
         If stringArray Is Nothing Then Throw New ArgumentNullException("stringArray")
         For MyCounter As Integer = 0 To stringArray.Length - 1
             If ignoreCase Then
@@ -652,7 +652,7 @@ Public Class Utils
     ''' <remarks>
     ''' The byte encoding is based on UTF-8 encoding
     ''' </remarks>
-    Public Shared Function ConvertStringToBase64String(ByVal text As String) As String
+    Public Shared Function ConvertStringToBase64String(text As String) As String
         If text Is Nothing Then
             Return Nothing
         ElseIf text = Nothing Then
@@ -669,7 +669,7 @@ Public Class Utils
     ''' <remarks>
     ''' The byte encoding is based on UTF-8 encoding
     ''' </remarks>
-    Public Shared Function ConvertStringToBase64String(ByVal text As String, insertLineBreaks As Boolean) As String
+    Public Shared Function ConvertStringToBase64String(text As String, insertLineBreaks As Boolean) As String
         Return ConvertStringToBase64String(text, 70)
     End Function
     ''' <summary>
@@ -680,7 +680,7 @@ Public Class Utils
     ''' <remarks>
     ''' The byte encoding is based on UTF-8 encoding
     ''' </remarks>
-    Public Shared Function ConvertStringToBase64String(ByVal text As String, insertLineBreaksAfterNumberOfChars As Integer) As String
+    Public Shared Function ConvertStringToBase64String(text As String, insertLineBreaksAfterNumberOfChars As Integer) As String
         If text Is Nothing Then
             Return Nothing
         Else
@@ -701,7 +701,7 @@ Public Class Utils
     ''' <remarks>
     ''' The byte encoding is based on UTF-8 encoding
     ''' </remarks>
-    Public Shared Function ConvertBase64StringToString(ByVal base64String As String) As String
+    Public Shared Function ConvertBase64StringToString(base64String As String) As String
         If base64String Is Nothing Then
             Return Nothing
         Else
@@ -716,7 +716,7 @@ Public Class Utils
     ''' <remarks>
     ''' The byte encoding is based on UTF-8 encoding
     ''' </remarks>
-    Public Shared Function ConvertBase64StringToString(ByVal base64String As String, autoRemoveLineBreaks As Boolean) As String
+    Public Shared Function ConvertBase64StringToString(base64String As String, autoRemoveLineBreaks As Boolean) As String
         If base64String Is Nothing Then
             Return Nothing
         ElseIf base64String = Nothing Then
@@ -734,7 +734,7 @@ Public Class Utils
     ''' <returns>A normal string</returns>
     ''' <remarks>
     ''' </remarks>
-    Private Shared Function ConvertBase64StringToBytes(ByVal base64String As String) As Byte()
+    Private Shared Function ConvertBase64StringToBytes(base64String As String) As Byte()
         If base64String Is Nothing Then
             Return Nothing
         ElseIf base64String = Nothing Then
@@ -743,7 +743,7 @@ Public Class Utils
             Return System.Convert.FromBase64String(base64String)
         End If
     End Function
-    Private Shared Function ConvertBytesToString(ByVal data As Byte()) As String
+    Private Shared Function ConvertBytesToString(data As Byte()) As String
         If data Is Nothing Then
             Return Nothing
         ElseIf data.Length = 0 Then
@@ -755,7 +755,7 @@ Public Class Utils
             Return utf8encoder.GetString(data, 0, data.Length)
         End If
     End Function
-    Private Shared Function ConvertBytesToBase64String(ByVal byteData As Byte()) As String
+    Private Shared Function ConvertBytesToBase64String(byteData As Byte()) As String
         If byteData Is Nothing Then
             Return Nothing
         ElseIf byteData.Length = 0 Then
@@ -764,7 +764,7 @@ Public Class Utils
             Return System.Convert.ToBase64String(byteData)
         End If
     End Function
-    Private Shared Function ConvertStringToBytes(ByVal text As String) As Byte()
+    Private Shared Function ConvertStringToBytes(text As String) As Byte()
         If text Is Nothing Then
             Return Nothing
         ElseIf text = Nothing Then
@@ -788,7 +788,7 @@ Public Class Utils
     ''' <remarks>
     ''' If path2 starts with &quot;/&quot;, it is considered as root folder and will be the only return value.
     ''' </remarks>
-    Friend Shared Function CombineUnixPaths(ByVal path1 As String, ByVal path2 As String) As String
+    Friend Shared Function CombineUnixPaths(path1 As String, path2 As String) As String
         If path1 = Nothing OrElse (path2 <> Nothing AndAlso path2.StartsWith("/")) Then
             Return path2
         ElseIf path2 = Nothing Then
@@ -807,7 +807,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="removeParameters">Remove all values with this name form the query string</param>
     ''' <returns>A new string with all query string information without the starting questionmark character</returns>
-    Public Shared Function QueryStringWithoutSpecifiedParameters(ByVal removeParameters As String()) As String
+    Public Shared Function QueryStringWithoutSpecifiedParameters(removeParameters As String()) As String
         Return NameValueCollectionWithoutSpecifiedKeys(System.Web.HttpContext.Current.Request.QueryString, removeParameters)
     End Function
     ''' <summary>
@@ -816,7 +816,7 @@ Public Class Utils
     ''' <param name="collection">A NameValueCollection, e. g. Request.QueryString</param>
     ''' <param name="removeKeys">Names of keys which shall not be in the output</param>
     ''' <returns>A string of the collection data which can be appended to any URL (with url encoding)</returns>
-    Public Shared Function NameValueCollectionWithoutSpecifiedKeys(ByVal collection As System.Collections.Specialized.NameValueCollection, ByVal removeKeys As String()) As String
+    Public Shared Function NameValueCollectionWithoutSpecifiedKeys(collection As System.Collections.Specialized.NameValueCollection, removeKeys As String()) As String
         Dim RedirectionParams As String = ""
         For Each ParamItem As String In collection
             Dim RemoveThisParameter As Boolean = False
@@ -843,7 +843,7 @@ Public Class Utils
     ''' <param name="text"></param>
     ''' <param name="separator"></param>
     ''' <param name="exceptLeadingCharacter"></param>
-    Public Shared Function SplitString(ByVal text As String, ByVal separator As Char, ByVal exceptLeadingCharacter As Char) As String()
+    Public Shared Function SplitString(text As String, separator As Char, exceptLeadingCharacter As Char) As String()
         If text = Nothing Then
             Return New String() {}
         End If
@@ -876,7 +876,7 @@ Public Class Utils
     ''' <param name="text"></param>
     ''' <param name="separator"></param>
     ''' <remarks></remarks>
-    Public Shared Function SplitStringToInteger(ByVal text As String, ByVal separator As Char) As Integer()
+    Public Shared Function SplitStringToInteger(text As String, separator As Char) As Integer()
         If text Is Nothing Then
             Return New Integer() {}
         End If
@@ -895,7 +895,7 @@ Public Class Utils
     ''' <remarks>
     '''     Supported line breaks are linebreaks of Windows, MacOS as well as Linux/Unix.
     ''' </remarks>
-    Public Shared Function HTMLEncodeLineBreaks(ByVal text As String) As String
+    Public Shared Function HTMLEncodeLineBreaks(text As String) As String
         If text = Nothing Then
             Return text
         Else
@@ -907,7 +907,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="source">The string where to search in</param>
     ''' <param name="searchFor">The searched string (binary comparison)</param>
-    Public Shared Function CountOfOccurances(ByVal source As String, ByVal searchFor As String) As Integer
+    Public Shared Function CountOfOccurances(source As String, searchFor As String) As Integer
         Return CountOfOccurances(source, searchFor, CompareMethod.Binary)
     End Function
     ''' <summary>
@@ -916,7 +916,7 @@ Public Class Utils
     ''' <param name="source">The string where to search in</param>
     ''' <param name="searchFor">The searched string</param>
     ''' <param name="compareMethod">Binary or text search</param>
-    Public Shared Function CountOfOccurances(ByVal source As String, ByVal searchFor As String, ByVal compareMethod As Microsoft.VisualBasic.CompareMethod) As Integer
+    Public Shared Function CountOfOccurances(source As String, searchFor As String, compareMethod As Microsoft.VisualBasic.CompareMethod) As Integer
 
         If searchFor = "" Then
             Throw New ArgumentNullException("searchFor")
@@ -953,7 +953,7 @@ Public Class Utils
     '''     <para>Supported special character combinations are <code>\t</code>, <code>\r</code>, <code>\n</code>, <code>\\</code>, <code>\[</code></para>
     '''     <para>Supported placeholders are <code>[*]</code>, <code>[n:1..9]</code></para>
     ''' </remarks>
-    Public Shared Function sprintf(ByVal message As String, ByVal ParamArray values() As Object) As String
+    Public Shared Function sprintf(message As String, ParamArray values() As Object) As String
         Const errpfNoClosingBracket As Integer = vbObjectError + 1
         Const errpfMissingValue As Integer = vbObjectError + 2
         '*** Special chars ***
@@ -1038,7 +1038,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="values">An array of values</param>
     ''' <param name="delimiter">A delimiter which shall separate the values in the string</param>
-    Public Shared Function JoinArrayToString(ByVal values As Integer(), ByVal delimiter As String) As String
+    Public Shared Function JoinArrayToString(values As Integer(), delimiter As String) As String
         Dim result As New System.Text.StringBuilder
         If values Is Nothing Then
             Throw New ArgumentNullException("values")
@@ -1054,7 +1054,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="values">An array of values</param>
     ''' <param name="delimiter">A delimiter which shall separate the values in the string</param>
-    Friend Shared Function _JoinArrayToString(ByVal values As Long(), ByVal delimiter As String) As String
+    Friend Shared Function _JoinArrayToString(values As Long(), delimiter As String) As String
         Dim result As New System.Text.StringBuilder
         If values Is Nothing Then
             Throw New ArgumentNullException("values")
@@ -1073,7 +1073,7 @@ Public Class Utils
     ''' <param name="KeyValueSeparator">The string between key and value</param>
     ''' <param name="EndOfItem">The string to be placed at the end of a value</param>
     ''' <returns>A string containing all elements of the collection</returns>
-    Public Shared Function JoinNameValueCollectionToString(ByVal NameValueCollectionToString As Collections.Specialized.NameValueCollection, ByVal BeginningOfItem As String, ByVal KeyValueSeparator As String, ByVal EndOfItem As String) As String
+    Public Shared Function JoinNameValueCollectionToString(NameValueCollectionToString As Collections.Specialized.NameValueCollection, BeginningOfItem As String, KeyValueSeparator As String, EndOfItem As String) As String
         Dim Result As String = Nothing
         For Each ParamItem As String In NameValueCollectionToString
             Result &= BeginningOfItem & ParamItem & KeyValueSeparator & NameValueCollectionToString(ParamItem) & EndOfItem
@@ -1089,7 +1089,7 @@ Public Class Utils
     '''     If you need to read the values directly from the returned string, pay attention that all names and values might be UrlEncoded and you have to decode them, first.
     ''' </remarks>
     ''' <see also="FillNameValueCollectionWith" />
-    Public Shared Function JoinNameValueCollectionWithUrlEncodingToString(ByVal NameValueCollectionToString As Collections.Specialized.NameValueCollection) As String
+    Public Shared Function JoinNameValueCollectionWithUrlEncodingToString(NameValueCollectionToString As Collections.Specialized.NameValueCollection) As String
         Dim Result As String = Nothing
         For Each ParamItem As String In NameValueCollectionToString
             If Result <> Nothing Then
@@ -1108,7 +1108,7 @@ Public Class Utils
     '''     Please note: existing values in the collection won't be appended, they'll be overridden
     ''' </remarks>
     ''' <see also="JoinNameValueCollectionWithUrlEncodingToString" />
-    Public Shared Sub ReFillNameValueCollection(ByVal nameValueCollection As System.Collections.Specialized.NameValueCollection, ByVal nameValueCollectionWithUrlEncoding As String)
+    Public Shared Sub ReFillNameValueCollection(nameValueCollection As System.Collections.Specialized.NameValueCollection, nameValueCollectionWithUrlEncoding As String)
 
         If nameValueCollection Is Nothing Then
             Throw New ArgumentNullException("nameValueCollection")
@@ -1142,7 +1142,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="HTML">A string with HTML code</param>
     ''' <returns>The rendered output as plain text</returns>
-    Public Shared Function ConvertHTMLToText(ByVal HTML As String) As String
+    Public Shared Function ConvertHTMLToText(HTML As String) As String
         'TODO: 1. remove of all other HTML tags
         '      2. search case insensitive
         '      3. truncate content between <head> and </head>, <script> and </script>, <!-- and -->
@@ -1286,11 +1286,11 @@ Public Class Utils
         Return Result
     End Function
 
-    Friend Shared Function ReplaceByRegExIgnoringCase(ByVal text As String, ByVal searchForRegExpression As String, ByVal replaceBy As String) As String
+    Friend Shared Function ReplaceByRegExIgnoringCase(text As String, searchForRegExpression As String, replaceBy As String) As String
         Return ReplaceByRegExIgnoringCase(text, searchForRegExpression, replaceBy, System.Text.RegularExpressions.RegexOptions.IgnoreCase Or System.Text.RegularExpressions.RegexOptions.CultureInvariant Or System.Text.RegularExpressions.RegexOptions.Multiline)
     End Function
 
-    Friend Shared Function ReplaceByRegExIgnoringCase(ByVal text As String, ByVal searchForRegExpression As String, ByVal replaceBy As String, ByVal options As System.Text.RegularExpressions.RegexOptions) As String
+    Friend Shared Function ReplaceByRegExIgnoringCase(text As String, searchForRegExpression As String, replaceBy As String, options As System.Text.RegularExpressions.RegexOptions) As String
         Return System.Text.RegularExpressions.Regex.Replace(text, searchForRegExpression, replaceBy, options)
     End Function
 
@@ -1325,7 +1325,7 @@ Public Class Utils
     ''' <param name="comparisonType">The comparison type for searching for the pattern</param>
     ''' <returns>A new string with all replacements</returns>
     ''' <remarks></remarks>
-    Friend Shared Function ReplaceString(ByVal original As String, ByVal pattern As String, ByVal replacement As String, ByVal comparisonType As ReplaceComparisonTypes) As String
+    Friend Shared Function ReplaceString(original As String, pattern As String, replacement As String, comparisonType As ReplaceComparisonTypes) As String
         If original = Nothing OrElse pattern = Nothing Then
             Return original
         End If
@@ -1392,7 +1392,7 @@ Public Class Utils
     ''' <example language="vb">
     '''     Dim HTMLResult As String = ConvertProtocolAddressIntoHyperLink ("www.", Text, "http://")
     ''' </example>
-    Private Shared Function ConvertProtocolAddressIntoHyperLink(ByVal LinkInitiator As String, ByVal Msg As String, ByVal AdditionalProtocolInitiator As String) As String
+    Private Shared Function ConvertProtocolAddressIntoHyperLink(LinkInitiator As String, Msg As String, AdditionalProtocolInitiator As String) As String
         Dim OldEndPoint As Integer
         Dim LinkStartPos As Integer
         Dim LinkEndPos As Integer
@@ -1434,7 +1434,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="Msg">The string where to search in</param>
     ''' <returns>HTML with hyperlinks</returns>
-    Private Shared Function ConvertEMailAddressIntoHyperLink(ByVal Msg As String) As String
+    Private Shared Function ConvertEMailAddressIntoHyperLink(Msg As String) As String
         Dim OldEndPoint As Integer
         Dim LinkStartPos As Integer
         Dim LinkEndPos As Integer
@@ -1493,7 +1493,7 @@ Public Class Utils
         ConvertEMailAddressIntoHyperLink = Msg
 
     End Function
-    Private Shared Function ConvertNonProtocolAddressCurrentlyWOHyperLinkToHyperLink(ByVal SearchForTypicalString As String, ByVal Msg As String, ByVal ProtocolInitiator As String) As String
+    Private Shared Function ConvertNonProtocolAddressCurrentlyWOHyperLinkToHyperLink(SearchForTypicalString As String, Msg As String, ProtocolInitiator As String) As String
         Dim OldEndPoint As Integer
         Dim LinkAreaStartPos As Integer
         Dim LinkAreaStartPosByAnchorWithSpace As Integer
@@ -1517,7 +1517,7 @@ Public Class Utils
         ConvertNonProtocolAddressCurrentlyWOHyperLinkToHyperLink = Msg
 
     End Function
-    Private Shared Function ConvertEMailAddressCurrentlyWOHyperLinkToHyperLink(ByVal Msg As String) As String
+    Private Shared Function ConvertEMailAddressCurrentlyWOHyperLinkToHyperLink(Msg As String) As String
         Dim OldEndPoint As Integer
         Dim LinkAreaStartPos As Integer
         Dim LinkAreaStartPosByAnchorWithSpace As Integer
@@ -1546,7 +1546,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="Text">The standard text without any HTML</param>
     ''' <returns>HTML with hyperlinks</returns>
-    Public Shared Function HighlightLinksInMessage(ByVal Text As String) As String
+    Public Shared Function HighlightLinksInMessage(Text As String) As String
         Dim HTMLMsg As String = Text
 
         HTMLMsg = ConvertProtocolAddressIntoHyperLink("http://", HTMLMsg, "")
@@ -1569,7 +1569,7 @@ Public Class Utils
     ''' Remove a possibly trailing slash from an URL
     ''' </summary>
     ''' <param name="url">An URL address</param>
-    Friend Shared Function RemoveTrailingSlash(ByVal url As String) As String
+    Friend Shared Function RemoveTrailingSlash(url As String) As String
         If url.Length > 0 AndAlso Right(url, 1) = "/" Then
             Return Mid(url, 1, url.Length - 1)
         Else
@@ -1583,7 +1583,7 @@ Public Class Utils
     ''' <remarks>
     ''' All letters behind the last slash will be removed, so a path ending with a slash will never be modified.
     ''' </remarks>
-    Public Shared Function RemoveFilenameInUnixPath(ByVal path As String) As String
+    Public Shared Function RemoveFilenameInUnixPath(path As String) As String
         If path Is Nothing Then
             Return Nothing
         ElseIf path.EndsWith("/") Then
@@ -1598,7 +1598,7 @@ Public Class Utils
     '''     Return the full virtual path based on the given string
     ''' </summary>
     ''' <param name="virtualPath">A path like ~/images or images/styles or /images/</param>
-    Friend Shared Function FullyInterpretedVirtualPath(ByVal virtualPath As String) As String
+    Friend Shared Function FullyInterpretedVirtualPath(virtualPath As String) As String
         If virtualPath Is Nothing Then
             Throw New ArgumentNullException("virtualPath")
         End If
@@ -1627,7 +1627,7 @@ Public Class Utils
     ''' <remarks>
     '''     Requires execution on a web server (because HttpContext must be there)
     ''' </remarks>
-    Friend Shared Function FullyInterpredetPhysicalPath(ByVal virtualPath As String) As String
+    Friend Shared Function FullyInterpredetPhysicalPath(virtualPath As String) As String
         Return System.Web.HttpContext.Current.Server.MapPath(virtualPath)
     End Function
     ''' <summary>
@@ -1659,7 +1659,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="emailAddress">email address to be validated</param>
     ''' <returns>True if email address is syntactically valid else false</returns>
-    Public Shared Function ValidateEmailAddress(ByVal emailAddress As String) As Boolean
+    Public Shared Function ValidateEmailAddress(emailAddress As String) As Boolean
         If Trim(emailAddress) = Nothing Then
             Return False
         ElseIf emailAddress.IndexOf(" ") >= 0 Then
@@ -1688,7 +1688,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="url">URL to be validated</param>
     ''' <returns>True if URL is syntactically valid else false</returns>
-    Public Shared Function ValidateInternetUrl(ByVal url As String) As Boolean
+    Public Shared Function ValidateInternetUrl(url As String) As Boolean
         If Trim(url) = Nothing Then
             Return False
         Else
@@ -1715,7 +1715,7 @@ Public Class Utils
     ''' <param name="path">The file path for the output</param>
     ''' <param name="bytes">File output data</param>
     ''' <remarks>An existing file will be overwritten</remarks>
-    Friend Shared Sub WriteAllBytes(ByVal path As String, ByVal bytes As Byte())
+    Friend Shared Sub WriteAllBytes(path As String, bytes As Byte())
         If (bytes Is Nothing) Then
             Throw New ArgumentNullException("bytes")
         End If
@@ -1732,7 +1732,7 @@ Public Class Utils
     ''' </summary>
     ''' <param name="regularExpression"></param>
     ''' <param name="value"></param>
-    Private Shared Function IsRegExMatch(ByVal regularExpression As String, ByVal value As String) As Boolean
+    Private Shared Function IsRegExMatch(regularExpression As String, value As String) As Boolean
         Dim regEx As New System.Text.RegularExpressions.Regex(regularExpression)
         Return regEx.IsMatch(value)
     End Function
@@ -1750,7 +1750,7 @@ Public Class Utils
     ''' </remarks>
     ''' <history>
     ''' </history>
-    Friend Shared Function GetHtmlFromUri(ByVal uri As String) As String
+    Friend Shared Function GetHtmlFromUri(uri As String) As String
         Dim response As System.Net.HttpWebResponse = Nothing
         Dim dataStream As System.IO.Stream = Nothing
         Dim reader As System.IO.StreamReader = Nothing
@@ -1785,7 +1785,7 @@ Public Class Utils
     ''' </remarks>
     ''' <history>
     ''' </history>
-    Friend Shared Function GetHtmlFromUri(ByVal uri As String, ByVal method As String, ByVal postData As System.Collections.Specialized.NameValueCollection) As String
+    Friend Shared Function GetHtmlFromUri(uri As String, method As String, postData As System.Collections.Specialized.NameValueCollection) As String
         Return GetHtmlFromUri(uri, method, Utils.JoinNameValueCollectionWithUrlEncodingToString(postData))
     End Function
     ''' <summary>
@@ -1799,7 +1799,7 @@ Public Class Utils
     ''' </remarks>
     ''' <history>
     ''' </history>
-    Friend Shared Function GetHtmlFromUri(ByVal uri As String, ByVal method As String, ByVal postData As System.Collections.Specialized.NameValueCollection, ByVal requestContentType As String, ByVal requestEncoding As System.Text.Encoding, ByVal responseEncoding As System.Text.Encoding) As String
+    Friend Shared Function GetHtmlFromUri(uri As String, method As String, postData As System.Collections.Specialized.NameValueCollection, requestContentType As String, requestEncoding As System.Text.Encoding, responseEncoding As System.Text.Encoding) As String
         Return GetHtmlFromUri(uri, method, Utils.JoinNameValueCollectionWithUrlEncodingToString(postData), String.Empty, System.Text.Encoding.UTF8, System.Text.Encoding.UTF8)
     End Function
     ''' <summary>
@@ -1813,7 +1813,7 @@ Public Class Utils
     ''' </remarks>
     ''' <history>
     ''' </history>
-    Friend Shared Function GetHtmlFromUri(ByVal uri As String, ByVal method As String, ByVal postData As String) As String
+    Friend Shared Function GetHtmlFromUri(uri As String, method As String, postData As String) As String
         Return GetHtmlFromUri(uri, method, postData, String.Empty, System.Text.Encoding.UTF8, System.Text.Encoding.UTF8)
     End Function
     ''' <summary>
@@ -1827,7 +1827,7 @@ Public Class Utils
     ''' </remarks>
     ''' <history>
     ''' </history>
-    Friend Shared Function GetHtmlFromUri(ByVal uri As String, ByVal method As String, ByVal postData As String, ByVal requestContentType As String, ByVal requestEncoding As System.Text.Encoding, ByVal responseEncoding As System.Text.Encoding) As String
+    Friend Shared Function GetHtmlFromUri(uri As String, method As String, postData As String, requestContentType As String, requestEncoding As System.Text.Encoding, responseEncoding As System.Text.Encoding) As String
 
         If method = Nothing Then
             method = "GET"
@@ -1896,7 +1896,7 @@ Public Class Utils
             Zip
         End Enum
 
-        Private Shared Function OutputStream(ByVal InputStream As Stream, ByVal CompressionProvider As CompressionType) As Stream
+        Private Shared Function OutputStream(InputStream As Stream, CompressionProvider As CompressionType) As Stream
 
             Select Case CompressionProvider
                 Case CompressionType.BZip2
@@ -1914,7 +1914,7 @@ Public Class Utils
             End Select
         End Function
 
-        Private Shared Function InputStream(ByVal InStream As Stream, ByVal CompressionProvider As CompressionType) As Stream
+        Private Shared Function InputStream(InStream As Stream, CompressionProvider As CompressionType) As Stream
 
             Select Case CompressionProvider
                 Case CompressionType.BZip2
@@ -1933,7 +1933,7 @@ Public Class Utils
 
         End Function
 
-        Public Shared Function Compress(ByVal bytesToCompress As Byte(), ByVal CompressionProvider As CompressionType) As Byte()
+        Public Shared Function Compress(bytesToCompress As Byte(), CompressionProvider As CompressionType) As Byte()
             Dim ms As MemoryStream = New MemoryStream
             Dim s As Stream = OutputStream(ms, CompressionProvider)
             s.Write(bytesToCompress, 0, bytesToCompress.Length)
@@ -1941,18 +1941,18 @@ Public Class Utils
             Return ms.ToArray()
         End Function
 
-        Public Shared Function Compress(ByVal stringToCompress As String, ByVal CompressionProvider As CompressionType) As String
+        Public Shared Function Compress(stringToCompress As String, CompressionProvider As CompressionType) As String
             Dim compressedData As Byte() = CompressToByte(stringToCompress, CompressionProvider)
             Dim strOut As String = Convert.ToBase64String(compressedData)
             Return strOut
         End Function
 
-        Private Shared Function CompressToByte(ByVal stringToCompress As String, ByVal CompressionProvider As CompressionType) As Byte()
+        Private Shared Function CompressToByte(stringToCompress As String, CompressionProvider As CompressionType) As Byte()
             Dim bytData As Byte() = Encoding.Unicode.GetBytes(stringToCompress)
             Return Compress(bytData, CompressionProvider)
         End Function
 
-        Public Shared Function DeCompress(ByVal stringToDecompress As String, ByVal CompressionProvider As CompressionType) As String
+        Public Shared Function DeCompress(stringToDecompress As String, CompressionProvider As CompressionType) As String
             Dim outString As String = String.Empty
 
             If stringToDecompress = "" Then
@@ -1969,7 +1969,7 @@ Public Class Utils
 
         End Function
 
-        Public Shared Function DeCompress(ByVal bytesToDecompress As Byte(), ByVal CompressionProvider As CompressionType) As Byte()
+        Public Shared Function DeCompress(bytesToDecompress As Byte(), CompressionProvider As CompressionType) As Byte()
             Dim writeData(4096) As Byte
             Dim s2 As Stream = InputStream(New MemoryStream(bytesToDecompress), CompressionProvider)
             Dim outStream As MemoryStream = New MemoryStream
@@ -2011,7 +2011,7 @@ Public Class Utils
                 Get
                     Return _CompressedSize
                 End Get
-                Set(ByVal Value As Long)
+                Set(Value As Long)
                     _CompressedSize = Value
                 End Set
             End Property
@@ -2021,7 +2021,7 @@ Public Class Utils
                 Get
                     Return _IsDirectory
                 End Get
-                Set(ByVal Value As Boolean)
+                Set(Value As Boolean)
                     _IsDirectory = Value
                 End Set
             End Property
@@ -2031,7 +2031,7 @@ Public Class Utils
                 Get
                     Return _LastChange
                 End Get
-                Set(ByVal Value As Date)
+                Set(Value As Date)
                     _LastChange = Value
                 End Set
             End Property
@@ -2041,7 +2041,7 @@ Public Class Utils
                 Get
                     Return _Name
                 End Get
-                Set(ByVal Value As String)
+                Set(Value As String)
                     _Name = Value
                 End Set
             End Property
@@ -2051,7 +2051,7 @@ Public Class Utils
                 Get
                     Return _Size
                 End Get
-                Set(ByVal Value As Long)
+                Set(Value As Long)
                     _Size = Value
                 End Set
             End Property
@@ -2064,7 +2064,7 @@ Public Class Utils
                 Get
                     Return _ExtractedLocation
                 End Get
-                Set(ByVal Value As String)
+                Set(Value As String)
                     _ExtractedLocation = Value
                 End Set
             End Property
@@ -2076,7 +2076,7 @@ Public Class Utils
         ''' <param name="zipFile">The ZIP archive</param>
         ''' <param name="extractionPath">The path where the ZIP file shall be extracted to</param>
         ''' <remarks></remarks>
-        Public Shared Sub Extract(ByVal zipFile As String, ByVal extractionPath As String)
+        Public Shared Sub Extract(zipFile As String, extractionPath As String)
             If File.Exists(zipFile) = False Then Throw New FileNotFoundException("ZIP archive doesn't exist", zipFile)
 
             Dim zipFileStream As FileStream = Nothing
@@ -2137,7 +2137,7 @@ Public Class Utils
         ''' <remarks>
         ''' The extraction path must be absolute. There won't be any modifications to reflect a matching folder structure from the ZIP archive with the one on disc
         ''' </remarks>
-        Public Shared Sub Extract(ByVal zipFile As String, ByVal zipItem As ZipContentListItem, ByVal fullExtractionFilePath As String)
+        Public Shared Sub Extract(zipFile As String, zipItem As ZipContentListItem, fullExtractionFilePath As String)
             If File.Exists(zipFile) = False Then Throw New FileNotFoundException("ZIP archive doesn't exist", zipFile)
 
             Dim zipFileStream As FileStream = Nothing
@@ -2190,7 +2190,7 @@ Public Class Utils
 
         End Sub
 
-        Private Shared Function ConvertZipEntryToZipContentListItem(ByVal zipEntry As ICSharpCode.SharpZipLib.Zip.ZipEntry, ByVal newItem As ZipContentListItem) As ZipFileItem
+        Private Shared Function ConvertZipEntryToZipContentListItem(zipEntry As ICSharpCode.SharpZipLib.Zip.ZipEntry, newItem As ZipContentListItem) As ZipFileItem
             newItem.Name = zipEntry.Name.ToString
             newItem.Size = zipEntry.Size
             newItem.LastChange = zipEntry.DateTime
@@ -2203,7 +2203,7 @@ Public Class Utils
         ''' </summary>
         ''' <param name="zipFile">The ZIP archive</param>
         ''' <returns>An array of ZipContentListItems</returns>
-        Public Shared Function LoadListOfContent(ByVal zipFile As String) As ZipContentListItem()
+        Public Shared Function LoadListOfContent(zipFile As String) As ZipContentListItem()
             If File.Exists(zipFile) = False Then Throw New FileNotFoundException("ZIP archive doesn't exist", zipFile)
             Dim zipFileStream As FileStream = Nothing
             Dim strmZipInputStream As ICSharpCode.SharpZipLib.Zip.ZipInputStream = Nothing
@@ -2234,116 +2234,116 @@ End Class
 '''     Allow a string array property to be filled by a comma separated string
 ''' </summary>
 Friend Class StringArrayConverter
-        Inherits System.ComponentModel.CollectionConverter
+    Inherits System.ComponentModel.CollectionConverter
 
-        Public Sub New()
-        End Sub
+    Public Sub New()
+    End Sub
 
-        Public Overloads Overrides Function CanConvertFrom(ByVal context As System.ComponentModel.ITypeDescriptorContext, ByVal sourceType As Type) As Boolean
-            If (sourceType Is GetType(String)) Then
-                Return True
-            End If
-            Return MyBase.CanConvertFrom(context, sourceType)
-        End Function
+    Public Overloads Overrides Function CanConvertFrom(context As System.ComponentModel.ITypeDescriptorContext, sourceType As Type) As Boolean
+        If (sourceType Is GetType(String)) Then
+            Return True
+        End If
+        Return MyBase.CanConvertFrom(context, sourceType)
+    End Function
 
-        Public Overloads Overrides Function CanConvertTo(ByVal context As System.ComponentModel.ITypeDescriptorContext, ByVal destinationType As Type) As Boolean
-            If (destinationType Is GetType(String())) Then
-                Return True
-            End If
-            Return MyBase.CanConvertTo(context, destinationType)
-        End Function
+    Public Overloads Overrides Function CanConvertTo(context As System.ComponentModel.ITypeDescriptorContext, destinationType As Type) As Boolean
+        If (destinationType Is GetType(String())) Then
+            Return True
+        End If
+        Return MyBase.CanConvertTo(context, destinationType)
+    End Function
 
-        Public Overloads Overrides Function ConvertFrom(ByVal context As System.ComponentModel.ITypeDescriptorContext, ByVal culture As System.Globalization.CultureInfo, ByVal sourceObj As Object) As Object
-            If TypeOf sourceObj Is String Then
-                Dim chArray1 As Char() = New Char() {","c}
-                Return CType(sourceObj, String).Split(chArray1)
-            End If
-            Return MyBase.ConvertFrom(context, culture, sourceObj)
-        End Function
+    Public Overloads Overrides Function ConvertFrom(context As System.ComponentModel.ITypeDescriptorContext, culture As System.Globalization.CultureInfo, sourceObj As Object) As Object
+        If TypeOf sourceObj Is String Then
+            Dim chArray1 As Char() = New Char() {","c}
+            Return CType(sourceObj, String).Split(chArray1)
+        End If
+        Return MyBase.ConvertFrom(context, culture, sourceObj)
+    End Function
 
-        Public Overloads Overrides Function ConvertTo(ByVal context As System.ComponentModel.ITypeDescriptorContext, ByVal culture As System.Globalization.CultureInfo, ByVal destinationObj As Object, ByVal destinationType As Type) As Object
-            If TypeOf destinationObj Is String() Then
-                Dim text1 As String = String.Join(",", CType(destinationObj, String()))
-                If (destinationType Is GetType(System.ComponentModel.Design.Serialization.InstanceDescriptor)) Then
-                    Dim typeArray1 As Type() = New Type() {GetType(String)}
-                    Dim info1 As System.Reflection.ConstructorInfo = GetType(String).GetConstructor(typeArray1)
-                    If (info1 Is Nothing) Then
-                        GoTo Label_007B
-                    End If
-                    Dim objArray1 As Object() = New Object() {text1}
-                    Return New System.ComponentModel.Design.Serialization.InstanceDescriptor(info1, objArray1)
+    Public Overloads Overrides Function ConvertTo(context As System.ComponentModel.ITypeDescriptorContext, culture As System.Globalization.CultureInfo, destinationObj As Object, destinationType As Type) As Object
+        If TypeOf destinationObj Is String() Then
+            Dim text1 As String = String.Join(",", CType(destinationObj, String()))
+            If (destinationType Is GetType(System.ComponentModel.Design.Serialization.InstanceDescriptor)) Then
+                Dim typeArray1 As Type() = New Type() {GetType(String)}
+                Dim info1 As System.Reflection.ConstructorInfo = GetType(String).GetConstructor(typeArray1)
+                If (info1 Is Nothing) Then
+                    GoTo Label_007B
                 End If
-                If (destinationType Is GetType(String)) Then
-                    Return text1
-                End If
+                Dim objArray1 As Object() = New Object() {text1}
+                Return New System.ComponentModel.Design.Serialization.InstanceDescriptor(info1, objArray1)
             End If
+            If (destinationType Is GetType(String)) Then
+                Return text1
+            End If
+        End If
 Label_007B:
-            Return MyBase.ConvertTo(context, culture, destinationObj, destinationType)
-        End Function
-    End Class
+        Return MyBase.ConvertTo(context, culture, destinationObj, destinationType)
+    End Function
+End Class
 
-    ''' <summary>
-    '''     Allow an integer array property to be filled by a comma separated string
-    ''' </summary>
-    Friend Class IntegerArrayConverter
-        Inherits System.ComponentModel.CollectionConverter
+''' <summary>
+'''     Allow an integer array property to be filled by a comma separated string
+''' </summary>
+Friend Class IntegerArrayConverter
+    Inherits System.ComponentModel.CollectionConverter
 
-        Public Sub New()
-        End Sub
+    Public Sub New()
+    End Sub
 
-        Public Overloads Overrides Function CanConvertFrom(ByVal context As System.ComponentModel.ITypeDescriptorContext, ByVal sourceType As Type) As Boolean
-            If (sourceType Is GetType(String)) Then
-                Return True
+    Public Overloads Overrides Function CanConvertFrom(context As System.ComponentModel.ITypeDescriptorContext, sourceType As Type) As Boolean
+        If (sourceType Is GetType(String)) Then
+            Return True
+        End If
+        Return MyBase.CanConvertFrom(context, sourceType)
+    End Function
+
+    Public Overloads Overrides Function CanConvertTo(context As System.ComponentModel.ITypeDescriptorContext, destinationType As Type) As Boolean
+        If (destinationType Is GetType(Integer())) Then
+            Return True
+        End If
+        Return MyBase.CanConvertTo(context, destinationType)
+    End Function
+
+    Public Overloads Overrides Function ConvertFrom(context As System.ComponentModel.ITypeDescriptorContext, culture As System.Globalization.CultureInfo, sourceObj As Object) As Object
+        If TypeOf sourceObj Is String Then
+            Dim chArray1 As Char() = New Char() {","c}
+            Return ConvertStringArrayToIntegerArray(CType(sourceObj, String).Split(chArray1))
+        End If
+        Return MyBase.ConvertFrom(context, culture, sourceObj)
+    End Function
+
+    Private Function ConvertStringArrayToIntegerArray(values As String()) As Integer()
+        Dim Result As New ArrayList
+        For Each value As String In values
+            If value = "" Then
+                Result.Add(0)
+            Else
+                Result.Add(Integer.Parse(value))
             End If
-            Return MyBase.CanConvertFrom(context, sourceType)
-        End Function
+        Next
+        Return CType(Result.ToArray(GetType(Integer)), Integer())
+    End Function
 
-        Public Overloads Overrides Function CanConvertTo(ByVal context As System.ComponentModel.ITypeDescriptorContext, ByVal destinationType As Type) As Boolean
-            If (destinationType Is GetType(Integer())) Then
-                Return True
-            End If
-            Return MyBase.CanConvertTo(context, destinationType)
-        End Function
-
-        Public Overloads Overrides Function ConvertFrom(ByVal context As System.ComponentModel.ITypeDescriptorContext, ByVal culture As System.Globalization.CultureInfo, ByVal sourceObj As Object) As Object
-            If TypeOf sourceObj Is String Then
-                Dim chArray1 As Char() = New Char() {","c}
-                Return ConvertStringArrayToIntegerArray(CType(sourceObj, String).Split(chArray1))
-            End If
-            Return MyBase.ConvertFrom(context, culture, sourceObj)
-        End Function
-
-        Private Function ConvertStringArrayToIntegerArray(values As String()) As Integer()
-            Dim Result As New ArrayList
-            For Each value As String In values
-                If value = "" Then
-                    Result.Add(0)
-                Else
-                    Result.Add(Integer.Parse(value))
+    Public Overloads Overrides Function ConvertTo(context As System.ComponentModel.ITypeDescriptorContext, culture As System.Globalization.CultureInfo, destinationObj As Object, destinationType As Type) As Object
+        If TypeOf destinationObj Is Integer() Then
+            Dim text1 As String = String.Join(",", CType(destinationObj, String()))
+            If (destinationType Is GetType(System.ComponentModel.Design.Serialization.InstanceDescriptor)) Then
+                Dim typeArray1 As Type() = New Type() {GetType(Integer)}
+                Dim info1 As System.Reflection.ConstructorInfo = GetType(Integer).GetConstructor(typeArray1)
+                If (info1 Is Nothing) Then
+                    GoTo Label_007B
                 End If
-            Next
-            Return CType(Result.ToArray(GetType(Integer)), Integer())
-        End Function
-
-        Public Overloads Overrides Function ConvertTo(ByVal context As System.ComponentModel.ITypeDescriptorContext, ByVal culture As System.Globalization.CultureInfo, ByVal destinationObj As Object, ByVal destinationType As Type) As Object
-            If TypeOf destinationObj Is Integer() Then
-                Dim text1 As String = String.Join(",", CType(destinationObj, String()))
-                If (destinationType Is GetType(System.ComponentModel.Design.Serialization.InstanceDescriptor)) Then
-                    Dim typeArray1 As Type() = New Type() {GetType(Integer)}
-                    Dim info1 As System.Reflection.ConstructorInfo = GetType(Integer).GetConstructor(typeArray1)
-                    If (info1 Is Nothing) Then
-                        GoTo Label_007B
-                    End If
-                    Dim objArray1 As Object() = New Object() {text1}
-                    Return New System.ComponentModel.Design.Serialization.InstanceDescriptor(info1, objArray1)
-                End If
-                If (destinationType Is GetType(Integer)) Then
-                    Return text1
-                End If
+                Dim objArray1 As Object() = New Object() {text1}
+                Return New System.ComponentModel.Design.Serialization.InstanceDescriptor(info1, objArray1)
             End If
+            If (destinationType Is GetType(Integer)) Then
+                Return text1
+            End If
+        End If
 Label_007B:
-            Return MyBase.ConvertTo(context, culture, destinationObj, destinationType)
-        End Function
-    End Class
+        Return MyBase.ConvertTo(context, culture, destinationObj, destinationType)
+    End Function
+End Class
 
 #End Region
