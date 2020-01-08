@@ -234,7 +234,7 @@ Public Class SmtpWorker
                 Next
 
                 'Send the mail and return the success/error status
-                If ErrorFound IsNot Nothing Then
+                If ErrorFound Is Nothing Then
                     Smtp.Send(MyMail)
                     Result = New SmtpSendResult()
                 Else
