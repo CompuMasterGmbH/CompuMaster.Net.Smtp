@@ -55,13 +55,17 @@ Public Class SmtpWorker
     ''' <param name="RequestTransmissionConfirmation">Request a transmission confirmation</param>
     ''' <param name="RequestReadingConfirmation">Request a reading confirmation</param>
     ''' <param name="AdditionalHeaders">Additional headers for the e-mail</param>
-    ''' <returns>True if successfull, false for failures (also see bufErrorDetails)</returns>
-    ''' <remarks>
-    '''     Requires the existance of the CDO.Message object on MS platforms, otherwise this method will fail
-    '''     This component only allows to send the e-mail either in plain text or html code format
-    ''' </remarks>
-    Public Function SendToSingeRecipient(ByVal RcptName As String, ByVal RcptAddress As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, Optional ByVal MsgCharset As String = Nothing, Optional ByVal Attachments As EMailAttachment() = Nothing, Optional ByVal Priority As EMails.Priority = Nothing, Optional ByVal Sensitivity As EMails.Sensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing) As SmtpSendResult
-        Return SendToMultipleRecipients(EMailRecipient.CreateRecipientString(RcptName, RcptAddress), Nothing, Nothing, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, MsgCharset, Attachments, CType(Priority, EMails.Priority), CType(Sensitivity, EMails.Sensitivity), RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders)
+    ''' <returns>A result of SmtpSendResult containing success status and if failed the occured exception</returns>
+    Public Function SendToSingleRecipient(ByVal RcptName As String, ByVal RcptAddress As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, Optional ByVal MsgCharset As String = Nothing, Optional ByVal Attachments As EMailAttachment() = Nothing, Optional ByVal Priority As EMails.Priority = Nothing, Optional ByVal Sensitivity As EMails.Sensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing) As SmtpSendResult
+        'Validate and auto-complete receipient information
+        If RcptAddress = Nothing Then
+            Throw New ArgumentNullException(NameOf(RcptAddress))
+        End If
+        If RcptName = Nothing Then
+            RcptName = RcptAddress
+        End If
+        'Call SendToMultipleRecipients method
+        Return SendToMultipleRecipients(EMailRecipient.CreateRecipientString(RcptName, RcptAddress), CType(Nothing, String), CType(Nothing, String), MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, MsgCharset, Attachments, Priority, Sensitivity, RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders)
     End Function
 
     ''' <summary>
@@ -82,8 +86,17 @@ Public Class SmtpWorker
     ''' <param name="RequestTransmissionConfirmation">Request a transmission confirmation</param>
     ''' <param name="RequestReadingConfirmation">Request a reading confirmation</param>
     ''' <param name="AdditionalHeaders">Additional headers for the e-mail</param>
-    ''' <returns>True if successfull, false for failures (also see bufErrorDetails)</returns>
+    ''' <returns>A result of SmtpSendResult containing success status and if failed the occured exception</returns>
     Public Function SendToMultipleRecipients(ByVal RcptAddresses_To As String, ByVal RcptAddresses_CC As String, ByVal RcptAddresses_BCC As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, Optional ByVal MsgCharset As String = Nothing, Optional ByVal Attachments As EMailAttachment() = Nothing, Optional ByVal Priority As EMails.Priority = Nothing, Optional ByVal Sensitivity As EMails.Sensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing) As SmtpSendResult
+        'Auto-complete sender information
+        If SenderName = Nothing Then
+            SenderName = SenderAddress
+        End If
+
+        If MsgCharset = Nothing Then
+            MsgCharset = "UTF-8"
+        End If
+
         Dim Result As SmtpSendResult
         Using MyMail As New System.Net.Mail.MailMessage()
             Dim ErrorFound As String = Nothing
@@ -149,10 +162,10 @@ Public Class SmtpWorker
             Dim plainView As System.Net.Mail.AlternateView = Nothing
             Dim htmlView As System.Net.Mail.AlternateView = Nothing
             If MsgTextBody <> Nothing Then
-                plainView = System.Net.Mail.AlternateView.CreateAlternateViewFromString(MsgTextBody, Nothing, "text/plain")
+                plainView = System.Net.Mail.AlternateView.CreateAlternateViewFromString(MsgTextBody, CType(Nothing, Text.Encoding), "text/plain")
             End If
             If MsgHTMLBody <> Nothing Then
-                htmlView = System.Net.Mail.AlternateView.CreateAlternateViewFromString(MsgHTMLBody, Nothing, "text/html")
+                htmlView = System.Net.Mail.AlternateView.CreateAlternateViewFromString(MsgHTMLBody, CType(Nothing, Text.Encoding), "text/html")
             End If
 
             MyMail.From = New System.Net.Mail.MailAddress(SenderAddress, SenderName)
@@ -317,6 +330,178 @@ Public Class SmtpWorker
 
         Return Result
 
+    End Function
+
+    ''' <summary>
+    '''     Send an e-mail
+    ''' </summary>
+    ''' <param name="rcptName">The name of the receipient</param>
+    ''' <param name="rcptAddress">The e-mail address of the receipient</param>
+    ''' <param name="msgSubject">A subject for the new e-mail</param>
+    ''' <param name="msgTextBody">The message text as plain text</param>
+    ''' <param name="msgHtmlBody">The message text as HTML code</param>
+    ''' <param name="senderName">The name of the sender</param>
+    ''' <param name="senderAddress">The e-mail address of the sender</param>
+    ''' <returns>A result of SmtpSendResult containing success status and if failed the occured exception</returns>
+    Public Function SendToSingleRecipient(ByVal rcptName As String, ByVal rcptAddress As String, ByVal msgSubject As String, ByVal msgTextBody As String, ByVal msgHtmlBody As String, ByVal senderName As String, ByVal senderAddress As String) As SmtpSendResult
+        Return SendToSingleRecipient(rcptName, rcptAddress, msgSubject, msgTextBody, msgHtmlBody, senderName, senderAddress, CType(Nothing, String), CType(Nothing, String), CType(Nothing, String), CType(Nothing, EMailAttachment()), EMails.Priority.Normal, EMails.Sensitivity.Normal, False, False, CType(Nothing, Specialized.NameValueCollection))
+    End Function
+
+    ''' <summary>
+    '''     Send an e-mail
+    ''' </summary>
+    ''' <param name="rcptName">The name of the receipient</param>
+    ''' <param name="rcptAddress">The e-mail address of the receipient</param>
+    ''' <param name="msgSubject">A subject for the new e-mail</param>
+    ''' <param name="msgTextBody">The message text as plain text</param>
+    ''' <param name="msgHtmlBody">The message text as HTML code</param>
+    ''' <param name="senderName">The name of the sender</param>
+    ''' <param name="senderAddress">The e-mail address of the sender</param>
+    ''' <param name="replyToName">The name of the person who should receive the reply</param>
+    ''' <param name="replyToAddress">The e-mail address of the person who should receive the reply</param>
+    ''' <returns>A result of SmtpSendResult containing success status and if failed the occured exception</returns>
+    Public Function SendToSingleRecipient(ByVal rcptName As String, ByVal rcptAddress As String, ByVal msgSubject As String, ByVal msgTextBody As String, ByVal msgHtmlBody As String, ByVal senderName As String, ByVal senderAddress As String, ByVal replyToName As String, ByVal replyToAddress As String) As SmtpSendResult
+        Return SendToSingleRecipient(rcptName, rcptAddress, msgSubject, msgTextBody, msgHtmlBody, senderName, senderAddress, replyToName, replyToAddress, CType(Nothing, String), CType(Nothing, EMailAttachment()), EMails.Priority.Normal, EMails.Sensitivity.Normal, False, False, CType(Nothing, Specialized.NameValueCollection))
+    End Function
+
+    ''' <summary>
+    '''     Sends an e-mail
+    ''' </summary>
+    ''' <param name="rcptName">The name of the receipient</param>
+    ''' <param name="rcptAddress">The e-mail address of the receipient</param>
+    ''' <param name="msgSubject">A subject for the new e-mail</param>
+    ''' <param name="msgTextBody">The message text as plain text</param>
+    ''' <param name="msgHtmlBody">The message text as HTML code</param>
+    ''' <param name="senderName">The name of the sender</param>
+    ''' <param name="senderAddress">The e-mail address of the sender</param>
+    ''' <param name="replyToName">The name of the person who should receive the reply</param>
+    ''' <param name="replyToAddress">The e-mail address of the person who should receive the reply</param>
+    ''' <param name="priority">The priority of the e-mail</param>
+    ''' <param name="attachments">An array of optional attachments</param>
+    ''' <param name="sensitivity">The sensitivity of the e-mail</param>
+    ''' <param name="requestTransmissionConfirmation">Ask for a confirmation notice for the successfull transmission</param>
+    ''' <param name="requestReadingConfirmation">Ask for a confirmation notice when the message has been read by the receipient</param>
+    ''' <param name="additionalHeaders">A collection of optinally additional e-mail headers</param>
+    ''' <param name="msgCharset">IF empty it's UTF-8, there shouldn't be a need for changing this</param>
+    ''' <returns>A result of SmtpSendResult containing success status and if failed the occured exception</returns>
+    Public Function SendToSingleRecipient(ByVal rcptName As String, ByVal rcptAddress As String, ByVal msgSubject As String, ByVal msgTextBody As String, ByVal msgHtmlBody As String, ByVal senderName As String, ByVal senderAddress As String, ByVal replyToName As String, ByVal replyToAddress As String, Optional ByVal msgCharset As String = Nothing, Optional ByVal attachments As EMailAttachment() = Nothing, Optional ByVal priority As EMails.Priority = Nothing, Optional ByVal sensitivity As EMails.Sensitivity = Nothing, Optional ByVal requestTransmissionConfirmation As Boolean = False, Optional ByVal requestReadingConfirmation As Boolean = False, Optional ByVal additionalHeaders As System.Collections.Specialized.NameValueCollection = Nothing) As SmtpSendResult
+        If additionalHeaders Is Nothing Then additionalHeaders = New System.Collections.Specialized.NameValueCollection
+        additionalHeaders("Reply-To") = EMailRecipient.CreateRecipientString(replyToName, replyToAddress)
+        Return SendToSingleRecipient(rcptName, rcptAddress, msgSubject, msgTextBody, msgHtmlBody, senderName, senderAddress, msgCharset, attachments, priority, sensitivity, requestTransmissionConfirmation, requestReadingConfirmation, additionalHeaders)
+    End Function
+
+    ''' <summary>
+    '''     Sends an e-mail to multiple receipients
+    ''' </summary>
+    ''' <param name="rcptAddresses_To">The receipients comma-separated with format "Complete Name &lt;somebody@yourcompany.com&gt;" or only a simple e-mail address in the format "somebody@yourcompany.com"</param>
+    ''' <param name="rcptAddresses_Cc">The copy receipients comma-separated with format "Complete Name &lt;somebody@yourcompany.com&gt;" or only a simple e-mail address in the format "somebody@yourcompany.com"</param>
+    ''' <param name="rcptAddresses_Bcc">The blind copy receipients comma-separated with format "Complete Name &lt;somebody@yourcompany.com&gt;" or only a simple e-mail address in the format "somebody@yourcompany.com"</param>
+    ''' <param name="msgSubject">A subject for the new e-mail</param>
+    ''' <param name="msgTextBody">The message text as plain text</param>
+    ''' <param name="msgHtmlBody">The message text as HTML code</param>
+    ''' <param name="senderName">The name of the sender</param>
+    ''' <param name="senderAddress">The e-mail address of the sender</param>
+    ''' <returns>A result of SmtpSendResult containing success status and if failed the occured exception</returns>
+    ''' <seealso>CreateReceipientString</seealso>
+    Public Function SendToMultipleRecipients(ByVal rcptAddresses_To As String, ByVal rcptAddresses_Cc As String, ByVal RcptAddresses_Bcc As String, ByVal msgSubject As String, ByVal msgTextBody As String, ByVal msgHtmlBody As String, ByVal senderName As String, ByVal senderAddress As String) As SmtpSendResult
+        Return SendToMultipleRecipients(rcptAddresses_To, rcptAddresses_Cc, RcptAddresses_Bcc, msgSubject, msgTextBody, msgHtmlBody, senderName, senderAddress, CType(Nothing, EMailAttachment()), EMails.Priority.Normal, EMails.Sensitivity.Normal, False, False, CType(Nothing, Specialized.NameValueCollection), CType(Nothing, String))
+    End Function
+
+    ''' <summary>
+    '''     Sends an e-mail to multiple receipients
+    ''' </summary>
+    ''' <param name="rcptAddresses_To">The receipients comma-separated with format "Complete Name &lt;somebody@yourcompany.com&gt;" or only a simple e-mail address in the format "somebody@yourcompany.com"</param>
+    ''' <param name="rcptAddresses_Cc">The copy receipients comma-separated with format "Complete Name &lt;somebody@yourcompany.com&gt;" or only a simple e-mail address in the format "somebody@yourcompany.com"</param>
+    ''' <param name="rcptAddresses_Bcc">The blind copy receipients comma-separated with format "Complete Name &lt;somebody@yourcompany.com&gt;" or only a simple e-mail address in the format "somebody@yourcompany.com"</param>
+    ''' <param name="msgSubject">A subject for the new e-mail</param>
+    ''' <param name="msgTextBody">The message text as plain text</param>
+    ''' <param name="msgHtmlBody">The message text as HTML code</param>
+    ''' <param name="senderName">The name of the sender</param>
+    ''' <param name="senderAddress">The e-mail address of the sender</param>
+    ''' <param name="replyToName">The name of the person who should receive the reply</param>
+    ''' <param name="replyToAddress">The e-mail address of the person who should receive the reply</param>
+    ''' <returns>A result of SmtpSendResult containing success status and if failed the occured exception</returns>
+    ''' <seealso>CreateReceipientString</seealso>
+    Public Function SendToMultipleRecipients(ByVal rcptAddresses_To As String, ByVal rcptAddresses_Cc As String, ByVal RcptAddresses_Bcc As String, ByVal msgSubject As String, ByVal msgTextBody As String, ByVal msgHtmlBody As String, ByVal senderName As String, ByVal senderAddress As String, ByVal replyToName As String, ByVal replyToAddress As String) As SmtpSendResult
+        Return SendToMultipleRecipients(rcptAddresses_To, rcptAddresses_Cc, RcptAddresses_Bcc, msgSubject, msgTextBody, msgHtmlBody, senderName, senderAddress, replyToName, replyToAddress, CType(Nothing, EMailAttachment()), EMails.Priority.Normal, EMails.Sensitivity.Normal, False, False, CType(Nothing, Specialized.NameValueCollection), CType(Nothing, String))
+    End Function
+
+    ''' <summary>
+    '''     Sends an e-mail to multiple receipients
+    ''' </summary>
+    ''' <param name="rcptAddresses_To">The receipients comma-separated with format "Complete Name &lt;somebody@yourcompany.com&gt;" or only a simple e-mail address in the format "somebody@yourcompany.com"</param>
+    ''' <param name="rcptAddresses_Cc">The copy receipients comma-separated with format "Complete Name &lt;somebody@yourcompany.com&gt;" or only a simple e-mail address in the format "somebody@yourcompany.com"</param>
+    ''' <param name="rcptAddresses_Bcc">The blind copy receipients comma-separated with format "Complete Name &lt;somebody@yourcompany.com&gt;" or only a simple e-mail address in the format "somebody@yourcompany.com"</param>
+    ''' <param name="msgSubject">A subject for the new e-mail</param>
+    ''' <param name="msgTextBody">The message text as plain text</param>
+    ''' <param name="msgHtmlBody">The message text as HTML code</param>
+    ''' <param name="senderName">The name of the sender</param>
+    ''' <param name="senderAddress">The e-mail address of the sender</param>
+    ''' <param name="replyToName">The name of the person who should receive the reply</param>
+    ''' <param name="replyToAddress">The e-mail address of the person who should receive the reply</param>
+    ''' <param name="attachments">An array of optional attachments</param>
+    ''' <param name="priority">The priority of the e-mail</param>
+    ''' <param name="sensitivity">The sensitivity of the e-mail</param>
+    ''' <param name="requestTransmissionConfirmation">Ask for a confirmation notice for the successfull transmission</param>
+    ''' <param name="requestReadingConfirmation">Ask for a confirmation notice when the message has been read by the receipient</param>
+    ''' <param name="additionalHeaders">A collection of optinally additional e-mail headers</param>
+    ''' <param name="msgCharset">IF empty it's UTF-8, there shouldn't be a need for changing this</param>
+    ''' <returns>A result of SmtpSendResult containing success status and if failed the occured exception</returns>
+    ''' <seealso>CreateReceipientString</seealso>
+    Public Function SendToMultipleRecipients(ByVal RcptAddresses_To As String, ByVal RcptAddresses_CC As String, ByVal RcptAddresses_BCC As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal replyToName As String, ByVal replyToAddress As String, ByVal Attachments As EMailAttachment(), Optional ByVal Priority As EMails.Priority = Nothing, Optional ByVal Sensitivity As EMails.Sensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing, Optional ByVal MsgCharset As String = Nothing) As SmtpSendResult
+        If AdditionalHeaders Is Nothing Then
+            AdditionalHeaders = New System.Collections.Specialized.NameValueCollection
+        End If
+        If replyToAddress <> Nothing Then
+            AdditionalHeaders("Reply-To") = EMailRecipient.CreateRecipientString(replyToName, replyToAddress)
+        ElseIf replyToName <> Nothing Then
+            'Error situation since name exists but no address
+            Throw New ArgumentException("replyToAddress must be set when replyToName is set")
+        Else
+            'No information regarding a reply-to --> do nothing
+        End If
+        Return SendToMultipleRecipients(RcptAddresses_To, RcptAddresses_CC, RcptAddresses_BCC, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, Attachments, Priority, Sensitivity, RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders, MsgCharset)
+    End Function
+
+    ''' <summary>
+    '''     Sends an e-mail to multiple receipients
+    ''' </summary>
+    ''' <param name="rcptAddresses_To">The receipients comma-separated with format "Complete Name &lt;somebody@yourcompany.com&gt;" or only a simple e-mail address in the format "somebody@yourcompany.com"</param>
+    ''' <param name="rcptAddresses_Cc">The copy receipients comma-separated with format "Complete Name &lt;somebody@yourcompany.com&gt;" or only a simple e-mail address in the format "somebody@yourcompany.com"</param>
+    ''' <param name="rcptAddresses_Bcc">The blind copy receipients comma-separated with format "Complete Name &lt;somebody@yourcompany.com&gt;" or only a simple e-mail address in the format "somebody@yourcompany.com"</param>
+    ''' <param name="msgSubject">A subject for the new e-mail</param>
+    ''' <param name="msgTextBody">The message text as plain text</param>
+    ''' <param name="msgHtmlBody">The message text as HTML code</param>
+    ''' <param name="senderName">The name of the sender</param>
+    ''' <param name="senderAddress">The e-mail address of the sender</param>
+    ''' <param name="attachments">An array of optional attachments</param>
+    ''' <param name="priority">The priority of the e-mail</param>
+    ''' <param name="sensitivity">The sensitivity of the e-mail</param>
+    ''' <param name="requestTransmissionConfirmation">Ask for a confirmation notice for the successfull transmission</param>
+    ''' <param name="requestReadingConfirmation">Ask for a confirmation notice when the message has been read by the receipient</param>
+    ''' <param name="additionalHeaders">A collection of optinally additional e-mail headers</param>
+    ''' <param name="msgCharset">IF empty it's UTF-8, there shouldn't be a need for changing this</param>
+    ''' <returns>A result of SmtpSendResult containing success status and if failed the occured exception</returns>
+    ''' <seealso>CreateReceipientString</seealso>
+    Friend Function SendToMultipleRecipients(ByVal rcptAddresses_To As String, ByVal rcptAddresses_Cc As String, ByVal rcptAddresses_Bcc As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal attachments As EMailAttachment(), Optional ByVal priority As EMails.Priority = Nothing, Optional ByVal sensitivity As EMails.Sensitivity = Nothing, Optional ByVal requestTransmissionConfirmation As Boolean = False, Optional ByVal requestReadingConfirmation As Boolean = False, Optional ByVal additionalHeaders As Collections.Specialized.NameValueCollection = Nothing, Optional ByVal msgCharset As String = Nothing) As SmtpSendResult
+        Dim Result As SmtpSendResult
+
+        If rcptAddresses_To = Nothing AndAlso rcptAddresses_Cc = Nothing AndAlso rcptAddresses_Bcc = Nothing Then
+            Throw New ArgumentNullException("rcptAddresses_To, rcptAddresses_Cc, rcptAddresses_Bcc")
+        End If
+
+        'Auto-complete sender information
+        If SenderName = Nothing Then
+            SenderName = SenderAddress
+        End If
+
+        If msgCharset = Nothing Then
+            msgCharset = "UTF-8"
+        End If
+
+        Result = SendToMultipleRecipients(rcptAddresses_To, rcptAddresses_Cc, rcptAddresses_Bcc, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, msgCharset, attachments, priority, sensitivity, requestTransmissionConfirmation, requestReadingConfirmation, additionalHeaders)
+
+        Return Result
     End Function
 
 End Class

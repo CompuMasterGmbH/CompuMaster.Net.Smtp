@@ -116,7 +116,7 @@ Public Class MailQueue
     ''' <param name="AdditionalHeaders">Additional headers for the e-mail</param>
     ''' <returns>True if successfull, false for failures (also see bufErrorDetails)</returns>
     Private Function SendViaQueue(ByVal RcptName As String, ByVal RcptAddress As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal MsgCharset As String, ByVal connection As IDbConnection, ByRef bufErrorDetails As String, ByVal Attachments() As EMailAttachment, ByVal Priority As EMails.Priority, ByVal Sensitivity As EMails.Sensitivity, ByVal RequestTransmissionConfirmation As Boolean, ByVal RequestReadingConfirmation As Boolean, ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection) As Boolean
-        Return SendViaQueue(CreateReceipientString(RcptName, RcptAddress), Nothing, Nothing, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, MsgCharset, connection, bufErrorDetails, Attachments, Priority, Sensitivity, RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders)
+        Return SendViaQueue(CreateReceipientString(RcptName, RcptAddress), CType(Nothing, String), CType(Nothing, String), MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, MsgCharset, connection, bufErrorDetails, Attachments, Priority, Sensitivity, RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders)
     End Function
     ''' <summary>
     '''     Sends an e-mail to multiple receipients via the mail queue

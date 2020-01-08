@@ -3,6 +3,42 @@ Option Explicit On
 
 Public Class EMailRecipient
 
+    Public Sub New(ByVal address As String)
+        Me.New(CType(Nothing, String), address)
+    End Sub
+
+    Public Sub New(ByVal name As String, ByVal address As String)
+        If address Is Nothing Then
+            Throw New ArgumentNullException(NameOf(address))
+        End If
+        Me.Name = name
+        Me.Address = address
+    End Sub
+
+    Private _Address As String
+
+    Public Property Address() As String
+        Get
+            Return _Address
+        End Get
+        Set(ByVal value As String)
+            If value Is Nothing Then
+                Throw New ArgumentNullException("Address")
+            End If
+            _Address = value
+        End Set
+    End Property
+
+    Private _Name As String
+    Public Property Name() As String
+        Get
+            Return _Name
+        End Get
+        Set(ByVal value As String)
+            _Name = value
+        End Set
+    End Property
+
     ''' <summary>
     '''     Create a valid receipient string for the address lists parameters of method SendEMail
     ''' </summary>
@@ -95,23 +131,23 @@ Public Class EMailRecipient
     ''' <param name="emailAddressInSmtpFormat"></param>
     ''' <remarks></remarks>
     Friend Shared Function SplitEMailAddressesIntoAddressParts(ByVal emailAddressInSmtpFormat As String) As EMailRecipient
-        Dim Receipient As New EMailRecipient
-
+        Dim Address As String
         If Not emailAddressInSmtpFormat.LastIndexOf("<") = -1 Then
-            Receipient.Address = emailAddressInSmtpFormat.Substring(emailAddressInSmtpFormat.LastIndexOf("<"), emailAddressInSmtpFormat.Length - emailAddressInSmtpFormat.LastIndexOf("<"))
-            Receipient.Address = Receipient.Address.Replace("<", "").Replace(">", "")
+            Address = emailAddressInSmtpFormat.Substring(emailAddressInSmtpFormat.LastIndexOf("<"), emailAddressInSmtpFormat.Length - emailAddressInSmtpFormat.LastIndexOf("<"))
+            Address = Address.Replace("<", "").Replace(">", "")
         Else
-            Receipient.Address = emailAddressInSmtpFormat
+            Address = emailAddressInSmtpFormat
         End If
 
+        Dim Name As String
         If emailAddressInSmtpFormat.LastIndexOf(" ") > 0 AndAlso emailAddressInSmtpFormat.LastIndexOf(" ") = emailAddressInSmtpFormat.LastIndexOf("<") - 1 Then
-            Receipient.Name = emailAddressInSmtpFormat.Substring(0, emailAddressInSmtpFormat.LastIndexOf(" "))
-            Receipient.Name = Receipient.Name.Replace("<", "").Replace(">", "")
+            Name = emailAddressInSmtpFormat.Substring(0, emailAddressInSmtpFormat.LastIndexOf(" "))
+            Name = Name.Replace("<", "").Replace(">", "")
         Else
-            Receipient.Name = String.Empty
+            Name = String.Empty
         End If
 
-        Return Receipient
+        Return New EMailRecipient(Name, Address)
     End Function
 
     ''' <summary>
@@ -128,37 +164,4 @@ Public Class EMailRecipient
         Return EmailReceipient
     End Function
 
-    Public Sub New()
-    End Sub
-
-    Public Sub New(ByVal name As String, ByVal address As String)
-        If address Is Nothing Then
-            Throw New ArgumentNullException(NameOf(address))
-        End If
-        Me.Name = name
-        Me.Address = address
-    End Sub
-
-    Private _Name As String
-    Private _Address As String
-
-    Public Property Address() As String
-        Get
-            Return _Address
-        End Get
-        Set(ByVal value As String)
-            If value Is Nothing Then
-                Throw New ArgumentNullException("Address")
-            End If
-            _Address = value
-        End Set
-    End Property
-    Public Property Name() As String
-        Get
-            Return _Name
-        End Get
-        Set(ByVal value As String)
-            _Name = value
-        End Set
-    End Property
 End Class
