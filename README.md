@@ -15,9 +15,9 @@ MySmtpWorker.SmtpPassword = "password"
 ```vb.net
 Dim MyAttachment As New EMailAttachment("logo_64x64.png", "logo")
 Dim Attachments As New List(Of EMailAttachment)(New EMailAttachment() {MyAttachment})
-Dim Recipient As New EMailRecipient(My.Settings.TestRecipientName, My.Settings.TestRecipientAddress)
-Dim Sender As New EMailRecipient(My.Settings.TestSenderName, My.Settings.TestSenderAddress)
-Dim ReplyToAddress As EMailRecipient = Sender
+Dim Recipient As New EMailAddress(My.Settings.TestRecipientName, My.Settings.TestRecipientAddress)
+Dim Sender As New EMailAddress(My.Settings.TestSenderName, My.Settings.TestSenderAddress)
+Dim ReplyToAddress As EMailAddress = Sender
 Dim MyMessage As New EMailMessage(Recipient,
                                           "TestSubject",
                                           "Plain body",
