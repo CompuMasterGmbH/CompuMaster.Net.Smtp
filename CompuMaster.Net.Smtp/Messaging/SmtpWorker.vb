@@ -86,13 +86,13 @@ Public Class SmtpWorker
 
             Try
                 'Add all recepients
-                For Each rcpt As EMailRecipient In message.To
+                For Each rcpt As EMailAddress In message.To
                     MyMail.To.Add(New System.Net.Mail.MailAddress(rcpt.Address, rcpt.Name))
                 Next
-                For Each rcpt As EMailRecipient In message.Cc
+                For Each rcpt As EMailAddress In message.Cc
                     MyMail.CC.Add(New System.Net.Mail.MailAddress(rcpt.Address, rcpt.Name))
                 Next
-                For Each rcpt As EMailRecipient In message.Bcc
+                For Each rcpt As EMailAddress In message.Bcc
                     MyMail.Bcc.Add(New System.Net.Mail.MailAddress(rcpt.Address, rcpt.Name))
                 Next
             Catch ex As Exception

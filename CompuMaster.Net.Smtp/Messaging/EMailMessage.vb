@@ -18,19 +18,19 @@ Public Class EMailMessage
         Me.LoadFromXml(messageXml)
     End Sub
 
-    Public Sub New(recipient As EMailRecipient, subject As String, plainTextBody As String, htmlBody As String, sender As EMailRecipient, replyTo As EMailRecipient)
-        Me.New(New List(Of EMailRecipient)(New EMailRecipient() {recipient}), New List(Of EMailRecipient), New List(Of EMailRecipient), subject, plainTextBody, htmlBody, sender, replyTo, System.Text.Encoding.GetEncoding("UTF-8"), New List(Of EMailAttachment), EMails.Priority.Normal, EMails.Sensitivity.Normal, False, False, New Specialized.NameValueCollection)
+    Public Sub New(recipient As EMailAddress, subject As String, plainTextBody As String, htmlBody As String, sender As EMailAddress, replyTo As EMailAddress)
+        Me.New(New List(Of EMailAddress)(New EMailAddress() {recipient}), New List(Of EMailAddress), New List(Of EMailAddress), subject, plainTextBody, htmlBody, sender, replyTo, System.Text.Encoding.GetEncoding("UTF-8"), New List(Of EMailAttachment), EMails.Priority.Normal, EMails.Sensitivity.Normal, False, False, New Specialized.NameValueCollection)
     End Sub
 
-    Public Sub New(recipientsTo As List(Of EMailRecipient), recipientsCc As List(Of EMailRecipient), recipientsBcc As List(Of EMailRecipient), subject As String, plainTextBody As String, htmlBody As String, sender As EMailRecipient, replyTo As EMailRecipient)
+    Public Sub New(recipientsTo As List(Of EMailAddress), recipientsCc As List(Of EMailAddress), recipientsBcc As List(Of EMailAddress), subject As String, plainTextBody As String, htmlBody As String, sender As EMailAddress, replyTo As EMailAddress)
         Me.New(recipientsTo, recipientsCc, recipientsBcc, subject, plainTextBody, htmlBody, sender, replyTo, System.Text.Encoding.GetEncoding("UTF-8"), New List(Of EMailAttachment), EMails.Priority.Normal, EMails.Sensitivity.Normal, False, False, New Specialized.NameValueCollection)
     End Sub
 
-    Public Sub New(recipient As EMailRecipient, subject As String, plainTextBody As String, htmlBody As String, sender As EMailRecipient, replyTo As EMailRecipient, messageEncoding As System.Text.Encoding, attachments As List(Of EMailAttachment), priority As EMails.Priority, sensitivity As EMails.Sensitivity, requestTransmissionConfirmation As Boolean, requestReadingConfirmation As Boolean, additionalHeaders As Collections.Specialized.NameValueCollection)
-        Me.New(New List(Of EMailRecipient)(New EMailRecipient() {recipient}), New List(Of EMailRecipient), New List(Of EMailRecipient), subject, plainTextBody, htmlBody, sender, replyTo, messageEncoding, attachments, priority, sensitivity, requestTransmissionConfirmation, requestReadingConfirmation, additionalHeaders)
+    Public Sub New(recipient As EMailAddress, subject As String, plainTextBody As String, htmlBody As String, sender As EMailAddress, replyTo As EMailAddress, messageEncoding As System.Text.Encoding, attachments As List(Of EMailAttachment), priority As EMails.Priority, sensitivity As EMails.Sensitivity, requestTransmissionConfirmation As Boolean, requestReadingConfirmation As Boolean, additionalHeaders As Collections.Specialized.NameValueCollection)
+        Me.New(New List(Of EMailAddress)(New EMailAddress() {recipient}), New List(Of EMailAddress), New List(Of EMailAddress), subject, plainTextBody, htmlBody, sender, replyTo, messageEncoding, attachments, priority, sensitivity, requestTransmissionConfirmation, requestReadingConfirmation, additionalHeaders)
     End Sub
 
-    Public Sub New(recipientsTo As List(Of EMailRecipient), recipientsCc As List(Of EMailRecipient), recipientsBcc As List(Of EMailRecipient), subject As String, plainTextBody As String, htmlBody As String, sender As EMailRecipient, replyTo As EMailRecipient, messageEncoding As System.Text.Encoding, attachments As List(Of EMailAttachment), priority As EMails.Priority, sensitivity As EMails.Sensitivity, requestTransmissionConfirmation As Boolean, requestReadingConfirmation As Boolean, additionalHeaders As Collections.Specialized.NameValueCollection)
+    Public Sub New(recipientsTo As List(Of EMailAddress), recipientsCc As List(Of EMailAddress), recipientsBcc As List(Of EMailAddress), subject As String, plainTextBody As String, htmlBody As String, sender As EMailAddress, replyTo As EMailAddress, messageEncoding As System.Text.Encoding, attachments As List(Of EMailAttachment), priority As EMails.Priority, sensitivity As EMails.Sensitivity, requestTransmissionConfirmation As Boolean, requestReadingConfirmation As Boolean, additionalHeaders As Collections.Specialized.NameValueCollection)
         Me.To = recipientsTo
         Me.Cc = recipientsCc
         Me.Bcc = recipientsBcc
@@ -67,11 +67,11 @@ Public Class EMailMessage
     Public Property AdditionalHeaders() As System.Collections.Specialized.NameValueCollection
     Public Property Sensitivity() As EMails.Sensitivity
     Public Property Priority() As EMails.Priority
-    Public Property From() As EMailRecipient
-    Public Property ReplyTo() As EMailRecipient
-    Public Property [To]() As New List(Of EMailRecipient)
-    Public Property Cc() As New List(Of EMailRecipient)
-    Public Property Bcc() As New List(Of EMailRecipient)
+    Public Property From() As EMailAddress
+    Public Property ReplyTo() As EMailAddress
+    Public Property [To]() As New List(Of EMailAddress)
+    Public Property Cc() As New List(Of EMailAddress)
+    Public Property Bcc() As New List(Of EMailAddress)
     Public Property Subject() As String
     Public Property BodyPlainText() As String
     Public Property BodyHtml() As String
@@ -148,9 +148,9 @@ Public Class EMailMessage
         Dim MessageDataCollection As New Collections.Specialized.NameValueCollection
         MessageDataCollection.Add("From", Me.From.ToString)
         MessageDataCollection.Add("ReplyTo", Me.ReplyTo.ToString)
-        MessageDataCollection.Add("To", EMailRecipient.JoinToListWithSmtpFormat(Me.To))
-        MessageDataCollection.Add("Cc", EMailRecipient.JoinToListWithSmtpFormat(Me.Cc))
-        MessageDataCollection.Add("Bcc", EMailRecipient.JoinToListWithSmtpFormat(Me.Bcc))
+        MessageDataCollection.Add("To", EMailAddress.JoinToListWithSmtpFormat(Me.To))
+        MessageDataCollection.Add("Cc", EMailAddress.JoinToListWithSmtpFormat(Me.Cc))
+        MessageDataCollection.Add("Bcc", EMailAddress.JoinToListWithSmtpFormat(Me.Bcc))
         MessageDataCollection.Add("Subject", Me.Subject)
         MessageDataCollection.Add("MessageEncoding", Me.MessageEncoding.EncodingName)
         MessageDataCollection.Add("TextBody", Me.BodyPlainText)
@@ -193,15 +193,15 @@ Public Class EMailMessage
         For MyCounter As Integer = 0 To MessageData.Rows.Count - 1
             Select Case LCase(CType(MessageData.Rows(MyCounter)("key"), String))
                 Case "from"
-                    Me.From = EMailRecipient.CreateFromSmtpFormat(Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String)))
+                    Me.From = EMailAddress.CreateFromSmtpFormat(Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String)))
                 Case "replyto"
-                    Me.ReplyTo = EMailRecipient.CreateFromSmtpFormat(Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String)))
+                    Me.ReplyTo = EMailAddress.CreateFromSmtpFormat(Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String)))
                 Case "to"
-                    Me.To = EMailRecipient.SplitEMailAddressesIntoEMailRecipientsFromRecipientsList(Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String)))
+                    Me.To = EMailAddress.SplitEMailAddressesIntoEMailRecipientsFromRecipientsList(Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String)))
                 Case "cc"
-                    Me.Cc = EMailRecipient.SplitEMailAddressesIntoEMailRecipientsFromRecipientsList(Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String)))
+                    Me.Cc = EMailAddress.SplitEMailAddressesIntoEMailRecipientsFromRecipientsList(Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String)))
                 Case "bcc"
-                    Me.Bcc = EMailRecipient.SplitEMailAddressesIntoEMailRecipientsFromRecipientsList(Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String)))
+                    Me.Bcc = EMailAddress.SplitEMailAddressesIntoEMailRecipientsFromRecipientsList(Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String)))
                 Case "subject"
                     Me.Subject = Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String))
                 Case "messageencoding"
@@ -229,9 +229,9 @@ Public Class EMailMessage
         EMailAttachment.FixHtmlContentIDs(Me.BodyHtml, Me.EMailAttachments)
         'Init missing list instances
         If Me.AdditionalHeaders Is Nothing Then Me.AdditionalHeaders = New Specialized.NameValueCollection
-        If Me.To Is Nothing Then Me.To = New List(Of EMailRecipient)
-        If Me.Cc Is Nothing Then Me.Cc = New List(Of EMailRecipient)
-        If Me.Bcc Is Nothing Then Me.Bcc = New List(Of EMailRecipient)
+        If Me.To Is Nothing Then Me.To = New List(Of EMailAddress)
+        If Me.Cc Is Nothing Then Me.Cc = New List(Of EMailAddress)
+        If Me.Bcc Is Nothing Then Me.Bcc = New List(Of EMailAddress)
         If Me.EMailAttachments Is Nothing Then Me.EMailAttachments = New List(Of EMailAttachment)
         'Validate assigned values
         Select Case Me.Priority

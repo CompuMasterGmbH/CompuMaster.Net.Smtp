@@ -1,7 +1,11 @@
 ﻿Option Strict On
 Option Explicit On
 
-Public Class EMailRecipient
+Public Class EMailAddress
+
+    Public Sub New(address As System.Net.Mail.MailAddress)
+        Me.New(address.DisplayName, address.Address)
+    End Sub
 
     Public Sub New(address As String)
         Me.New(CType(Nothing, String), address)
@@ -38,10 +42,10 @@ Public Class EMailRecipient
         Return CreateRecipientString(Me.Name, Me.Address)
     End Function
 
-    Friend Shared Function JoinToListWithSmtpFormat(recipients As List(Of EMailRecipient)) As String
+    Friend Shared Function JoinToListWithSmtpFormat(recipients As List(Of EMailAddress)) As String
         If recipients Is Nothing Then Return Nothing
         Dim Result As New System.Text.StringBuilder
-        For Each recipient As EMailRecipient In recipients
+        For Each recipient As EMailAddress In recipients
             If Result.Length <> 0 Then
                 Result.Append(",")
             End If
@@ -96,7 +100,7 @@ Public Class EMailRecipient
     ''' </summary>
     ''' <param name="emailAddressInSmtpFormat"></param>
     ''' <remarks></remarks>
-    Public Shared Function CreateFromSmtpFormat(emailAddressInSmtpFormat As String) As EMailRecipient
+    Public Shared Function CreateFromSmtpFormat(emailAddressInSmtpFormat As String) As EMailAddress
         Dim Address As String
         If Not emailAddressInSmtpFormat.LastIndexOf("<") = -1 Then
             Address = emailAddressInSmtpFormat.Substring(emailAddressInSmtpFormat.LastIndexOf("<"), emailAddressInSmtpFormat.Length - emailAddressInSmtpFormat.LastIndexOf("<"))
@@ -113,7 +117,7 @@ Public Class EMailRecipient
             Name = String.Empty
         End If
 
-        Return New EMailRecipient(Name, Address)
+        Return New EMailAddress(Name, Address)
     End Function
 
     ''' <summary>
@@ -166,9 +170,9 @@ Public Class EMailRecipient
     ''' </summary>
     ''' <param name="emailAddressesInSmtpFormat"></param>
     ''' <remarks></remarks>
-    Friend Shared Function SplitEMailAddressesIntoEMailRecipientsFromRecipientsList(emailAddressesInSmtpFormat As String) As List(Of EMailRecipient)
+    Friend Shared Function SplitEMailAddressesIntoEMailRecipientsFromRecipientsList(emailAddressesInSmtpFormat As String) As List(Of EMailAddress)
         Dim Addresses As String() = SmtpUtils.SplitString(emailAddressesInSmtpFormat, ","c, "\"c)
-        Dim EmailReceipients As New List(Of EMailRecipient)
+        Dim EmailReceipients As New List(Of EMailAddress)
         For MyCounter As Integer = 0 To Addresses.Length - 1
             EmailReceipients.Add(CreateFromSmtpFormat(Addresses(MyCounter)))
         Next

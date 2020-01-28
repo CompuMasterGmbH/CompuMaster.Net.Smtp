@@ -6,15 +6,15 @@ Imports CompuMaster.Net.Smtp
     <Test> Public Sub AddressTest()
         Dim Name As String
         Dim Address As String
-        Dim Recipient As EMailRecipient
+        Dim Recipient As EMailAddress
         Name = "#äaflaeÄ'LP""ELÄPLóËךכףגךשדחכaöjfsdöl@afei"
         Address = "test@domain.invalid"
-        Recipient = New EMailRecipient(Name, Address)
+        Recipient = New EMailAddress(Name, Address)
         Assert.AreEqual(Name, Recipient.Name)
         Assert.AreEqual(Address, Recipient.Address)
         Dim SmtpAddress As String = Recipient.ToString
         Assert.AreEqual("", SmtpAddress)
-        Dim RecipientReloaded As EMailRecipient = EMailRecipient.CreateFromSmtpFormat(SmtpAddress)
+        Dim RecipientReloaded As EMailAddress = EMailAddress.CreateFromSmtpFormat(SmtpAddress)
         Assert.AreEqual(Name, RecipientReloaded.Name)
         Assert.AreEqual(Address, RecipientReloaded.Address)
     End Sub
