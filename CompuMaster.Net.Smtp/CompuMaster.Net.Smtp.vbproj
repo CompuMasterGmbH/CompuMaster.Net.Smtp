@@ -96,7 +96,7 @@
     <Compile Include="AssemblyInfo.vb" />
     <Compile Include="GlobalSuppressions.vb" />
     <Compile Include="Messaging\EMailAttachment.vb" />
-    <Compile Include="Messaging\EMaiRecipient.vb" />
+    <Compile Include="Messaging\EMaiAddress.vb" />
     <Compile Include="Messaging\SmtpSendResult.vb" />
     <Compile Include="Messaging\SmtpWorker.vb" />
     <Compile Include="Messaging\EMails.vb" />

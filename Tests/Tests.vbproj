@@ -71,9 +71,10 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EMailAddressTest.vb" />
     <Compile Include="EMailMessageTest.vb" />
     <Compile Include="EMailRecipientTest.vb" />
-    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>

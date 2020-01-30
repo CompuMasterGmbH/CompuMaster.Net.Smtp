@@ -179,4 +179,16 @@ Public Class EMailAddress
         Return EmailReceipients
     End Function
 
+    Public Overrides Function GetHashCode() As Integer
+        Return Me.ToString.GetHashCode()
+    End Function
+
+    Public Overrides Function Equals(obj As Object) As Boolean
+        If obj Is Nothing OrElse GetType(EMailAddress).IsInstanceOfType(obj) = False Then
+            Return False
+        Else
+            Return Me.ToString = CType(obj, EMailAddress).ToString
+        End If
+    End Function
+
 End Class
