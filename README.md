@@ -1,6 +1,11 @@
 # CompuMaster.Network.Smtp
 SMTP messaging with support for alternative body and embedded images
 
+## Simple download/installation using NuGet
+```nuget
+Install-Package CompuMaster.Console
+```
+
 ## Sample: Quick initialization of SMTP component
 ```vb.net
 Dim MySmtpWorker As New SmtpWorker()
