@@ -40,14 +40,40 @@ Public Class EMailAttachment
 
     Private _AttachmentData_Filename As String
     ''' <summary>
-    '''     The filename for the binary data
+    '''     The filename for the binary data as used in e-mail (might be a content ID)
     ''' </summary>
     Public Property RawDataFilename() As String
         Get
+            If _AttachmentData_Filename = Nothing Then
+                _AttachmentData_Filename = _RawDataOriginFilename
+            End If
             Return _AttachmentData_Filename
         End Get
         Set(Value As String)
             _AttachmentData_Filename = Value
+            If _RawDataOriginFilename = Nothing Then
+                _RawDataOriginFilename = Value
+            End If
+        End Set
+    End Property
+
+    Private _RawDataOriginFilename As String
+    ''' <summary>
+    ''' The origin filename for the binary data (as used on disk)
+    ''' </summary>
+    ''' <returns></returns>
+    Public Property RawDataOriginFilename As String
+        Get
+            If _RawDataOriginFilename = Nothing Then
+                _RawDataOriginFilename = _AttachmentData_Filename
+            End If
+            Return _RawDataOriginFilename
+        End Get
+        Set(value As String)
+            _RawDataOriginFilename = value
+            If _AttachmentData_Filename = Nothing Then
+                _AttachmentData_Filename = value
+            End If
         End Set
     End Property
 
@@ -91,14 +117,18 @@ Public Class EMailAttachment
                 If attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID <> Nothing Then
                     'Ensure working content-ID in all encodings
                     'If suggested Content-ID is not possible for usage without a working encoding (at least it's unknown how to do it, currently), then replace the Content-ID by another value and also do this replacement in the html message part
-                    Dim newContentIDName As String = Guid.NewGuid.ToString
-                    'Replace exact matches
-                    htmlBody = SmtpUtils.ReplaceString(htmlBody, attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID, newContentIDName, SmtpUtils.ReplaceComparisonTypes.InvariantCultureIgnoreCase)
-                    'Replace html- and url-encoded matches
-                    htmlBody = SmtpUtils.ReplaceString(htmlBody, System.Net.WebUtility.UrlEncode(attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID), newContentIDName, SmtpUtils.ReplaceComparisonTypes.InvariantCultureIgnoreCase)
-                    htmlBody = SmtpUtils.ReplaceString(htmlBody, System.Net.WebUtility.HtmlEncode(attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID), newContentIDName, SmtpUtils.ReplaceComparisonTypes.InvariantCultureIgnoreCase)
-                    htmlBody = SmtpUtils.ReplaceString(htmlBody, System.Net.WebUtility.HtmlEncode(System.Net.WebUtility.UrlEncode(attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID)), newContentIDName, SmtpUtils.ReplaceComparisonTypes.InvariantCultureIgnoreCase)
-                    attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID = newContentIDName
+                    Dim IsGuid As Boolean = attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID <> Nothing AndAlso Guid.TryParse(attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID, Nothing) AndAlso Guid.Parse(attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID) <> Nothing
+                    Dim newContentIDName As String
+                    If IsGuid = False Then
+                        newContentIDName = Guid.NewGuid.ToString
+                        'Replace exact matches
+                        htmlBody = SmtpUtils.ReplaceString(htmlBody, attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID, newContentIDName, SmtpUtils.ReplaceComparisonTypes.InvariantCultureIgnoreCase)
+                        'Replace html- and url-encoded matches
+                        htmlBody = SmtpUtils.ReplaceString(htmlBody, System.Net.WebUtility.UrlEncode(attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID), newContentIDName, SmtpUtils.ReplaceComparisonTypes.InvariantCultureIgnoreCase)
+                        htmlBody = SmtpUtils.ReplaceString(htmlBody, System.Net.WebUtility.HtmlEncode(attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID), newContentIDName, SmtpUtils.ReplaceComparisonTypes.InvariantCultureIgnoreCase)
+                        htmlBody = SmtpUtils.ReplaceString(htmlBody, System.Net.WebUtility.HtmlEncode(System.Net.WebUtility.UrlEncode(attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID)), newContentIDName, SmtpUtils.ReplaceComparisonTypes.InvariantCultureIgnoreCase)
+                        attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID = newContentIDName
+                    End If
                 End If
             Next
 

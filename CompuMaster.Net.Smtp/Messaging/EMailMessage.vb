@@ -183,6 +183,7 @@ Public Class EMailMessage
         For MyCounter As Integer = 0 To Attachments.Rows.Count - 1
             Dim EMailAttachment As New EMailAttachment With {
                 .PlaceholderInMhtmlToBeReplacedByContentID = Data.Utils.NoDBNull(Attachments.Rows(MyCounter)("Placeholder"), CType(Nothing, String)),
+                .RawDataOriginFilename = Data.Utils.NoDBNull(Attachments.Rows(MyCounter)("OriginFileNameBeforePlaceholderValue"), CType(Nothing, String)),
                 .RawData = CType(Data.Utils.NoDBNull(Attachments.Rows(MyCounter)("FileData")), Byte()),
                 .RawDataFilename = Data.Utils.NoDBNull(Attachments.Rows(MyCounter)("FileName"), CType(Nothing, String))
             }
@@ -206,11 +207,19 @@ Public Class EMailMessage
                     Me.Subject = Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String))
                 Case "messageencoding"
                     Dim Charset As String = Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String))
-                    If Charset <> Nothing Then Me.MessageEncoding = System.Text.Encoding.GetEncoding(Charset)
+                    If Charset <> Nothing Then Me.MessageEncoding = Me.GetEncodingFromName(Charset)
                 Case "textbody"
                     Me.BodyPlainText = Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String))
                 Case "htmlbody"
                     Me.BodyHtml = Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String))
+                Case "priority"
+                    Me.Priority = Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, EMails.Priority))
+                Case "sensitivity"
+                    Me.Sensitivity = Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, EMails.Sensitivity))
+                Case "requesttransmissionconfirmation"
+                    Me.RequestTransmissionConfirmation = Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), False)
+                Case "requestreadingconfirmation"
+                    Me.RequestReadingConfirmation = Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), False)
                 Case Else
                     Throw New NotSupportedException("Invalid messagedata key: " & CType(MessageData.Rows(MyCounter)("key"), String))
             End Select
@@ -220,6 +229,19 @@ Public Class EMailMessage
         Me.EMailAttachments = mailAttachments
         Me.AdditionalHeaders = additionalHeaders
     End Sub
+
+    Private Function GetEncodingFromName(name As String) As System.Text.Encoding
+        If name.Contains(" ") OrElse name.Contains("(") OrElse name.Contains(".") OrElse name.Contains("Unicode") Then
+            'It's an encoding (display) name, System.Text.Encoding.GetEncoding(name) won't work
+            Return System.Array.Find(Of System.Text.EncodingInfo)(System.Text.Encoding.GetEncodings(), Function(value As System.Text.EncodingInfo) As Boolean
+                                                                                                           If value.Name = name OrElse value.DisplayName = name OrElse value.GetEncoding().EncodingName = name Then
+                                                                                                               Return True
+                                                                                                           End If
+                                                                                                       End Function).GetEncoding
+        Else
+            Return System.Text.Encoding.GetEncoding(name)
+        End If
+    End Function
 
     ''' <summary>
     ''' Prepare HTML and attachments for embedded images feature, initialize all list fields if null/Nothing

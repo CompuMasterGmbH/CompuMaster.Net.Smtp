@@ -81,7 +81,7 @@ Public Class EMailAddress
             Next
             name = name.Replace(ChrW(127), " "c)
         End If
-        Return SmtpUtils.IIf(Of String)(name <> Nothing, name & " ", "") & "<" & address & ">"
+        Return SmtpUtils.IIf(Of String)(name <> Nothing, """" & name & """ ", "") & "<" & address & ">"
     End Function
 
     ''' <summary>
@@ -113,6 +113,10 @@ Public Class EMailAddress
         If emailAddressInSmtpFormat.LastIndexOf(" ") > 0 AndAlso emailAddressInSmtpFormat.LastIndexOf(" ") = emailAddressInSmtpFormat.LastIndexOf("<") - 1 Then
             Name = emailAddressInSmtpFormat.Substring(0, emailAddressInSmtpFormat.LastIndexOf(" "))
             Name = Name.Replace("<", "").Replace(">", "")
+            If Name.StartsWith("""") AndAlso Name.EndsWith("""") Then
+                Name = Name.Substring(1, Name.Length - 2)
+            End If
+            Name = Name.Replace("\\", ChrW(0)).Replace("\", "").Replace(ChrW(0), "\") 'Unencode all "\*" but preserve "\\" as "\"
         Else
             Name = String.Empty
         End If
