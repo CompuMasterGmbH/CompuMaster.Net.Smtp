@@ -34,6 +34,16 @@ Imports CompuMaster.Net.Smtp
         Assert.AreEqual(Address, EMailAddress.CreateFromSmtpFormat(TestAddressStyle2).Address)
         Assert.AreEqual(Name.Replace("\", ""), EMailAddress.CreateFromSmtpFormat(TestAddressStyle3).Name)
         Assert.AreEqual(Address, EMailAddress.CreateFromSmtpFormat(TestAddressStyle3).Address)
+        Assert.AreEqual(Nothing, EMailAddress.CreateFromSmtpFormat(CType(Nothing, String())))
+        Assert.AreEqual(0, EMailAddress.CreateFromSmtpFormat(New String() {}).Count)
+        Dim ConvertedAddressList As List(Of EMailAddress) = EMailAddress.CreateFromSmtpFormat(New String() {TestAddressStyle1, TestAddressStyle2, TestAddressStyle3})
+        Assert.AreEqual(3, ConvertedAddressList.Count)
+        Assert.AreEqual(Address, ConvertedAddressList(0).Address)
+        Assert.AreEqual(Address, ConvertedAddressList(1).Address)
+        Assert.AreEqual(Address, ConvertedAddressList(2).Address)
+        Assert.AreEqual(Name.Replace("""", "'"), ConvertedAddressList(0).Name)
+        Assert.AreEqual(Name.Replace("""", "'"), ConvertedAddressList(1).Name)
+        Assert.AreEqual(Name.Replace("\", ""), ConvertedAddressList(2).Name)
     End Sub
 
 End Class

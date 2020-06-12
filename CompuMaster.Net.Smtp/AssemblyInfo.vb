@@ -16,4 +16,4 @@ Imports System.Runtime.InteropServices
 <Assembly: System.Security.AllowPartiallyTrustedCallers()>
 <Assembly: Guid("6CEA55C3-8ACA-450D-91A1-1FB38AE0F2E6")>
 
-<Assembly: AssemblyVersion("2020.06.01.100")>
+<Assembly: AssemblyVersion("2020.06.12.100")>

@@ -100,6 +100,23 @@ Public Class EMailAddress
     ''' </summary>
     ''' <param name="emailAddressInSmtpFormat"></param>
     ''' <remarks></remarks>
+    Public Shared Function CreateFromSmtpFormat(emailAddressInSmtpFormat As String()) As List(Of EMailAddress)
+        If emailAddressInSmtpFormat Is Nothing Then
+            Return Nothing
+        Else
+            Dim Result As New List(Of EMailAddress)
+            For Each Address As String In emailAddressInSmtpFormat
+                Result.Add(CreateFromSmtpFormat(Address))
+            Next
+            Return Result
+        End If
+    End Function
+
+    ''' <summary>
+    ''' Split an e-mail address in typical encoding for SMTP protocol into the two parts e-mail address and receipient name
+    ''' </summary>
+    ''' <param name="emailAddressInSmtpFormat"></param>
+    ''' <remarks></remarks>
     Public Shared Function CreateFromSmtpFormat(emailAddressInSmtpFormat As String) As EMailAddress
         Dim Address As String
         If Not emailAddressInSmtpFormat.LastIndexOf("<") = -1 Then
@@ -127,7 +144,7 @@ Public Class EMailAddress
     ''' <summary>
     '''     Extract e-mail addresses from a receipients list constructed by method CreateReceipientString or manually
     ''' </summary>
-    ''' <param name="receipientsCommaSeparated"></param>
+    ''' <param name="recipientsCommaSeparated"></param>
     ''' <remarks>
     '''     Valid parameter values are e. g. 
     ''' <list>
@@ -136,8 +153,8 @@ Public Class EMailAddress
     ''' <item>my-company@my-webmailer-company.com,jon.doe@my-company.com</item>
     ''' </list>
     ''' </remarks>
-    Friend Shared Function SplitEMailAddressesFromRecipientsList(receipientsCommaSeparated As String) As String()
-        Dim Result As String() = SmtpUtils.SplitString(receipientsCommaSeparated, ","c, "\"c)
+    Friend Shared Function SplitEMailAddressesFromRecipientsList(recipientsCommaSeparated As String) As String()
+        Dim Result As String() = SmtpUtils.SplitString(recipientsCommaSeparated, ","c, "\"c)
         For MyCounter As Integer = 0 To Result.Length - 1
             'Now we got strings like
             '"l?nc\,\.\:\;\@\[\]\(\)ma9\'\\\<\>kljkj <my-company@my-webmailer-company.com>"
