@@ -3,7 +3,7 @@ SMTP messaging with support for alternative body and embedded images
 
 ## Simple download/installation using NuGet
 ```nuget
-Install-Package CompuMaster.Console
+Install-Package CompuMaster.Network.Smtp
 ```
 
 ## Sample: Quick initialization of SMTP component
