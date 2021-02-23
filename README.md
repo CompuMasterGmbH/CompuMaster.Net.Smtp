@@ -24,18 +24,19 @@ Dim Recipient As New EMailAddress(My.Settings.TestRecipientName, My.Settings.Tes
 Dim Sender As New EMailAddress(My.Settings.TestSenderName, My.Settings.TestSenderAddress)
 Dim ReplyToAddress As EMailAddress = Sender
 Dim MyMessage As New EMailMessage(Recipient,
-                                          "TestSubject",
-                                          "Plain body",
-                                          "<h1>HTML body with embedded image</h1><img src=""cid:" & MyAttachment.PlaceholderInMhtmlToBeReplacedByContentID & """>",
-                                          Sender,
-                                          ReplyToAddress,
-                                          System.Text.Encoding.UTF8,
-                                          Attachments,
-                                          EMails.Priority.High,
-                                          EMails.Sensitivity.Normal,
-                                          False,
-                                          False,
-                                          CType(Nothing, Specialized.NameValueCollection))
+         "TestSubject",
+         "Plain body",
+         "<h1>HTML body with embedded image</h1><img src=""cid:" & MyAttachment.PlaceholderInMhtmlToBeReplacedByContentID & """>",
+         Sender,
+         ReplyToAddress,
+         System.Text.Encoding.UTF8,
+         Attachments,
+         EMails.Priority.High,
+         EMails.Sensitivity.Normal,
+         False,
+         False,
+         CType(Nothing, Specialized.NameValueCollection)
+         )
 ```
 
 ## Sample: Send demo e-mail and check for exceptions
