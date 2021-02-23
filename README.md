@@ -10,6 +10,9 @@ Install-Package CompuMaster.Network.Smtp
 
 ### C#
 ```c#
+using System.Collections.Generic;
+using CompuMaster.Net.Smtp;
+...
 SmtpWorker MySmtpWorker = new SmtpWorker();
 MySmtpWorker.SmtpServerName = "localhost";
 MySmtpWorker.SmtpServerPort = 465;
@@ -20,6 +23,9 @@ MySmtpWorker.SmtpPassword = "password";
 
 ### VB.NET
 ```vb.net
+Imports System.Collections.Generic
+Imports CompuMaster.Net.Smtp
+...
 Dim MySmtpWorker As New SmtpWorker()
 MySmtpWorker.SmtpServerName = "localhost"
 MySmtpWorker.SmtpServerPort = 465
