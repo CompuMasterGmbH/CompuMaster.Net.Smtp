@@ -13,7 +13,7 @@ Install-Package CompuMaster.Network.Smtp
 SmtpWorker MySmtpWorker = new SmtpWorker();
 MySmtpWorker.SmtpServerName = "localhost";
 MySmtpWorker.SmtpServerPort = 465;
-MySmtpWorker.SmtpAuthType = SmtpWorker.SmtpAuthTypes.LoginSsl;/* TODO ERROR: Skipped SkippedTokensTrivia */
+MySmtpWorker.SmtpAuthType = SmtpWorker.SmtpAuthTypes.LoginSsl;
 MySmtpWorker.SmtpUserName = "user";
 MySmtpWorker.SmtpPassword = "password";
 ```
@@ -23,7 +23,7 @@ MySmtpWorker.SmtpPassword = "password";
 Dim MySmtpWorker As New SmtpWorker()
 MySmtpWorker.SmtpServerName = "localhost"
 MySmtpWorker.SmtpServerPort = 465
-MySmtpWorker.SmtpAuthType = SmtpWorker.SmtpAuthTypes.LoginSsl,
+MySmtpWorker.SmtpAuthType = SmtpWorker.SmtpAuthTypes.LoginSsl
 MySmtpWorker.SmtpUserName = "user"
 MySmtpWorker.SmtpPassword = "password"
 ```
