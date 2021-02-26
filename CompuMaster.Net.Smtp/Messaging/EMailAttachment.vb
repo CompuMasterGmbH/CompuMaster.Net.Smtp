@@ -112,7 +112,7 @@ Public Class EMailAttachment
     ''' <param name="htmlBody">The e-mail HTML body</param>
     ''' <param name="attachments">The attachments of the e-mail</param>
     Friend Shared Sub FixHtmlContentIDs(ByRef htmlBody As String, attachments As List(Of EMailAttachment))
-        If Not attachments Is Nothing Then
+        If attachments IsNot Nothing Then
             For MyCounter As Integer = 0 To attachments.Count - 1
                 If attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID <> Nothing Then
                     'Ensure working content-ID in all encodings

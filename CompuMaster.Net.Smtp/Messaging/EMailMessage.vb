@@ -104,7 +104,7 @@ Public Class EMailMessage
         AttachedFiles.Columns.Add("FileName", GetType(String))
         AttachedFiles.Columns.Add("FileData", GetType(Byte()))
         AttachedFiles.Columns.Add("OriginFileNameBeforePlaceholderValue", GetType(String)) 'to allow an attachment with only content-id in filename to be saved to disc with correct file type again (e.g. for mail queue monitor e-mail preview dialog)
-        If Not Me.EMailAttachments Is Nothing Then
+        If Me.EMailAttachments IsNot Nothing Then
             For MyCounter As Integer = 0 To Me.EMailAttachments.Count - 1
                 If Me.EMailAttachments(MyCounter).FilePath <> Nothing AndAlso Not System.IO.File.Exists(Me.EMailAttachments(MyCounter).FilePath) Then
                     Throw New System.IO.FileNotFoundException("Attachment file not found: " & Me.EMailAttachments(MyCounter).FilePath)
@@ -121,7 +121,7 @@ Public Class EMailMessage
                     Finally
                         fs.Close()
                     End Try
-                ElseIf Not Me.EMailAttachments(MyCounter).RawData Is Nothing AndAlso Me.EMailAttachments(MyCounter).RawDataFilename <> Nothing Then
+                ElseIf Me.EMailAttachments(MyCounter).RawData IsNot Nothing AndAlso Me.EMailAttachments(MyCounter).RawDataFilename <> Nothing Then
                     'Just add the binary data
                 Else
                     Throw New Exception("Empty or invalid email attachment")
@@ -145,20 +145,21 @@ Public Class EMailMessage
 
         'Basic message data
         Dim MessageData As DataTable
-        Dim MessageDataCollection As New Collections.Specialized.NameValueCollection
-        MessageDataCollection.Add("From", Me.From.ToString)
-        MessageDataCollection.Add("ReplyTo", Me.ReplyTo.ToString)
-        MessageDataCollection.Add("To", EMailAddress.JoinToListWithSmtpFormat(Me.To))
-        MessageDataCollection.Add("Cc", EMailAddress.JoinToListWithSmtpFormat(Me.Cc))
-        MessageDataCollection.Add("Bcc", EMailAddress.JoinToListWithSmtpFormat(Me.Bcc))
-        MessageDataCollection.Add("Subject", Me.Subject)
-        MessageDataCollection.Add("MessageEncoding", Me.MessageEncoding.EncodingName)
-        MessageDataCollection.Add("TextBody", Me.BodyPlainText)
-        MessageDataCollection.Add("HtmlBody", Me.BodyHtml)
-        MessageDataCollection.Add("Priority", CType(Me.Priority, Byte).ToString)
-        MessageDataCollection.Add("Sensitivity", CType(Me.Sensitivity, Byte).ToString)
-        MessageDataCollection.Add("RequestTransmissionConfirmation", Me.RequestTransmissionConfirmation.ToString)
-        MessageDataCollection.Add("RequestReadingConfirmation", Me.RequestReadingConfirmation.ToString)
+        Dim MessageDataCollection As New Collections.Specialized.NameValueCollection From {
+            {"From", Me.From.ToString},
+            {"ReplyTo", Me.ReplyTo.ToString},
+            {"To", EMailAddress.JoinToListWithSmtpFormat(Me.To)},
+            {"Cc", EMailAddress.JoinToListWithSmtpFormat(Me.Cc)},
+            {"Bcc", EMailAddress.JoinToListWithSmtpFormat(Me.Bcc)},
+            {"Subject", Me.Subject},
+            {"MessageEncoding", Me.MessageEncoding.EncodingName},
+            {"TextBody", Me.BodyPlainText},
+            {"HtmlBody", Me.BodyHtml},
+            {"Priority", CType(Me.Priority, Byte).ToString},
+            {"Sensitivity", CType(Me.Sensitivity, Byte).ToString},
+            {"RequestTransmissionConfirmation", Me.RequestTransmissionConfirmation.ToString},
+            {"RequestReadingConfirmation", Me.RequestReadingConfirmation.ToString}
+        }
         MessageData = Data.DataTables.ConvertNameValueCollectionToDataTable(MessageDataCollection)
         MessageData.TableName = "message"
         MailData.Tables.Add(MessageData)
