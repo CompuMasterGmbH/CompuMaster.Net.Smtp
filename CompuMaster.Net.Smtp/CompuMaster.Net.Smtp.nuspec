@@ -12,7 +12,7 @@
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
 		<description>CompuMaster.Net.Smtp</description>
 		<releaseNotes/>
-		<copyright>2001-2020 CompuMaster GmbH</copyright>
+		<copyright>2001-2021 CompuMaster GmbH</copyright>
 		<tags>CompuMaster camm Smtp CompuMaster.Net.Smtp</tags>
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.Web" />	

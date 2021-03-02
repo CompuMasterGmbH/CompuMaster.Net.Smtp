@@ -50,4 +50,17 @@ Imports CompuMaster.Net.Smtp
         Assert.AreEqual(Msg5Export1, Msg2Export1)
     End Sub
 
+    <Ignore("Manual test call only - requires opened Adobe Reader with opened test file")>
+    <Test> Public Sub ExportXmlWithOpenedAttachment()
+        Dim TestPdfPath As String = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location), "AttachmentTest.pdf")
+        System.Diagnostics.Process.Start(TestPdfPath)
+        System.Threading.Thread.Sleep(5000)
+        Dim MyAttachments As New List(Of EMailAttachment)(New EMailAttachment() {New EMailAttachment(TestPdfPath)})
+        Dim MyMessage As New EMailMessage(New EMailAddress("Jon Doe", "jon.doe@domain.invalid"), "Test with embedded image attachment", "plain body", "<h1>html body</h1>", New EMailAddress("Sender Doe", "sender.doe@domain.invalid"), New EMailAddress("Reply Doe", "reply.doe@domain.invalid"), System.Text.Encoding.UTF32, MyAttachments, EMails.Priority.High, EMails.Sensitivity.CompanyConfidential, True, True, Nothing)
+        Assert.AreEqual(1, MyMessage.EMailAttachments.Count)
+        Dim MyMessageSerialized As String = MyMessage.ExportToXml
+        Assert.AreEqual(1, MyMessage.EMailAttachments.Count)
+        Assert.Pass()
+    End Sub
+
 End Class

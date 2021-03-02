@@ -8,7 +8,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("CompuMaster.Net.Smtp")>
 <Assembly: AssemblyCompany("CompuMaster GmbH")>
 <Assembly: AssemblyProduct("CompuMaster.Net.Smtp")>
-<Assembly: AssemblyCopyright("2001-2020 CompuMaster GmbH")>
+<Assembly: AssemblyCopyright("2001-2021 CompuMaster GmbH")>
 <Assembly: AssemblyTrademark("camm")>
 
 <Assembly: CLSCompliant(True)>
@@ -16,4 +16,4 @@ Imports System.Runtime.InteropServices
 <Assembly: System.Security.AllowPartiallyTrustedCallers()>
 <Assembly: Guid("6CEA55C3-8ACA-450D-91A1-1FB38AE0F2E6")>
 
-<Assembly: AssemblyVersion("2020.06.12.100")>
+<Assembly: AssemblyVersion("2021.03.02.100")>

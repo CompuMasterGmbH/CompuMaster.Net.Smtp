@@ -110,7 +110,7 @@ Public Class EMailMessage
                     Throw New System.IO.FileNotFoundException("Attachment file not found: " & Me.EMailAttachments(MyCounter).FilePath)
                 ElseIf (Me.EMailAttachments(MyCounter).RawData Is Nothing OrElse Me.EMailAttachments(MyCounter).RawDataFilename = Nothing) AndAlso Me.EMailAttachments(MyCounter).FilePath <> Nothing AndAlso System.IO.File.Exists(Me.EMailAttachments(MyCounter).FilePath) Then
                     'Load file system data into memory as raw binary data
-                    Dim fs As System.IO.FileStream = New System.IO.FileStream(Me.EMailAttachments(MyCounter).FilePath, IO.FileMode.Open)
+                    Dim fs As System.IO.FileStream = New System.IO.FileStream(Me.EMailAttachments(MyCounter).FilePath, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read)
                     Try
                         Dim fi As IO.FileInfo = New IO.FileInfo(Me.EMailAttachments(MyCounter).FilePath)
                         Dim byteArr(CType(fi.Length, Integer) - 1) As Byte
