@@ -1,6 +1,8 @@
 ﻿Option Strict On
 Option Explicit On
 
+Imports CompuMaster.VisualBasicCompatibility.Strings
+
 Public Class EMailAddress
 
     Public Sub New(address As System.Net.Mail.MailAddress)

@@ -87,6 +87,7 @@
 	  <Import Include="System.Data.SqlTypes" />
 	</ItemGroup>
 	<ItemGroup>
+	  <PackageReference Include="CompuMaster.Data" Version="3.0.2021.714" />
 	  <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
 	</ItemGroup>
 </Project>
