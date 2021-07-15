@@ -132,6 +132,8 @@ Public Class EMailAttachment
                 End If
             Next
 
+#Disable Warning IDE0079 ' Unnötige Unterdrückung entfernen
+#Disable Warning CA2249 ' Erwägen Sie die Verwendung von "string.Contains" anstelle von "string.IndexOf"
             'remove attachments with missing references
             For MyCounter As Integer = attachments.Count - 1 To 0 Step -1
                 If attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID <> Nothing AndAlso htmlBody.IndexOf(attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID) = -1 Then
@@ -139,6 +141,8 @@ Public Class EMailAttachment
                     attachments.RemoveAt(MyCounter)
                 End If
             Next
+#Enable Warning CA2249 ' Erwägen Sie die Verwendung von "string.Contains" anstelle von "string.IndexOf"
+#Enable Warning IDE0079 ' Unnötige Unterdrückung entfernen
         End If
     End Sub
 

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "CompuMaster.Net.Smtp", "CompuMaster.Net.Smtp\CompuMaster.Net.Smtp.vbproj", "{2113697D-CA74-48D7-A638-8B56EC072AED}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "CompuMaster.Net.Smtp", "CompuMaster.Net.Smtp\CompuMaster.Net.Smtp.vbproj", "{DA3FE988-C378-453E-B5CF-5662961ACE55}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Demo", "Demo\Demo.vbproj", "{1617C70F-901C-49F7-B204-144B7012B992}"
 EndProject
@@ -11,34 +11,27 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Tests", "Tests\Tests.vbproj
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug 2 Linux|Any CPU = Debug 2 Linux|Any CPU
+		CI_CD|Any CPU = CI_CD|Any CPU
 		Debug|Any CPU = Debug|Any CPU
-		NAnt Release|Any CPU = NAnt Release|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2113697D-CA74-48D7-A638-8B56EC072AED}.Debug 2 Linux|Any CPU.ActiveCfg = Debug|Any CPU
-		{2113697D-CA74-48D7-A638-8B56EC072AED}.Debug 2 Linux|Any CPU.Build.0 = Debug|Any CPU
-		{2113697D-CA74-48D7-A638-8B56EC072AED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2113697D-CA74-48D7-A638-8B56EC072AED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2113697D-CA74-48D7-A638-8B56EC072AED}.NAnt Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2113697D-CA74-48D7-A638-8B56EC072AED}.NAnt Release|Any CPU.Build.0 = Release|Any CPU
-		{2113697D-CA74-48D7-A638-8B56EC072AED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2113697D-CA74-48D7-A638-8B56EC072AED}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1617C70F-901C-49F7-B204-144B7012B992}.Debug 2 Linux|Any CPU.ActiveCfg = Debug|Any CPU
-		{1617C70F-901C-49F7-B204-144B7012B992}.Debug 2 Linux|Any CPU.Build.0 = Debug|Any CPU
+		{DA3FE988-C378-453E-B5CF-5662961ACE55}.CI_CD|Any CPU.ActiveCfg = CI_CD|Any CPU
+		{DA3FE988-C378-453E-B5CF-5662961ACE55}.CI_CD|Any CPU.Build.0 = CI_CD|Any CPU
+		{DA3FE988-C378-453E-B5CF-5662961ACE55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA3FE988-C378-453E-B5CF-5662961ACE55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA3FE988-C378-453E-B5CF-5662961ACE55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA3FE988-C378-453E-B5CF-5662961ACE55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1617C70F-901C-49F7-B204-144B7012B992}.CI_CD|Any CPU.ActiveCfg = CI_CD|Any CPU
+		{1617C70F-901C-49F7-B204-144B7012B992}.CI_CD|Any CPU.Build.0 = CI_CD|Any CPU
 		{1617C70F-901C-49F7-B204-144B7012B992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1617C70F-901C-49F7-B204-144B7012B992}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1617C70F-901C-49F7-B204-144B7012B992}.NAnt Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1617C70F-901C-49F7-B204-144B7012B992}.NAnt Release|Any CPU.Build.0 = Release|Any CPU
 		{1617C70F-901C-49F7-B204-144B7012B992}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1617C70F-901C-49F7-B204-144B7012B992}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Debug 2 Linux|Any CPU.ActiveCfg = Debug|Any CPU
-		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Debug 2 Linux|Any CPU.Build.0 = Debug|Any CPU
+		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.CI_CD|Any CPU.ActiveCfg = CI_CD|Any CPU
+		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.CI_CD|Any CPU.Build.0 = CI_CD|Any CPU
 		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.NAnt Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.NAnt Release|Any CPU.Build.0 = Release|Any CPU
 		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

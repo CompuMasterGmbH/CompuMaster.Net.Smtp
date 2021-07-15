@@ -51,8 +51,8 @@ Public Class SmtpWorker
     Public Function SendMessage(message As EMailMessage) As SmtpSendResult
         If message Is Nothing Then Throw New ArgumentNullException(NameOf(message))
         If message.To.Count = 0 AndAlso message.Cc.Count = 0 AndAlso message.Bcc.Count = 0 Then Throw New ArgumentException("At least one recipient must be provided")
-        If message.From Is Nothing Then Throw New ArgumentNullException(NameOf(message.From))
-        If Me.SmtpServerName = Nothing Then Throw New ArgumentNullException(NameOf(Me.SmtpServerName))
+        If message.From Is Nothing Then Throw New ArgumentNullException(NameOf(message), NameOf(message.From))
+        If Me.SmtpServerName = Nothing Then Throw New ArgumentNullException(NameOf(message), NameOf(Me.SmtpServerName))
 
         Dim Result As SmtpSendResult
         Using MyMail As New System.Net.Mail.MailMessage()
@@ -66,6 +66,8 @@ Public Class SmtpWorker
                 smtp.Port = Me.SmtpServerPort
             End If
 
+#Disable Warning IDE0079 ' Unnötige Unterdrückung entfernen
+#Disable Warning CA2208 ' Argumentausnahmen korrekt instanziieren
             Select Case Me.SmtpAuthType
                 Case SmtpAuthTypes.LoginPlainText
                     If Me.SmtpUserName = Nothing Then Throw New ArgumentNullException("SmtpUserName")
@@ -83,6 +85,8 @@ Public Class SmtpWorker
                 Case Else
                     'SmtpAuthMethod = "NONE"
             End Select
+#Enable Warning CA2208 ' Argumentausnahmen korrekt instanziieren
+#Enable Warning IDE0079 ' Unnötige Unterdrückung entfernen
 
             Try
                 'Add all recepients
@@ -125,7 +129,7 @@ Public Class SmtpWorker
                 Dim MyAttachment As System.Net.Mail.Attachment = Nothing
                 Dim MyEmbeddedImg As System.Net.Mail.LinkedResource = Nothing
 
-                If Not message.EMailAttachments(MyCounter).RawData Is Nothing OrElse message.EMailAttachments(MyCounter).RawDataFilename <> Nothing Then
+                If message.EMailAttachments(MyCounter).RawData IsNot Nothing OrElse message.EMailAttachments(MyCounter).RawDataFilename <> Nothing Then
                     Try
                         'Create a temporary file, store the data there and add that file as attachment before removing again
                         Dim tempFile As String = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid.ToString("n"))
@@ -148,7 +152,7 @@ Public Class SmtpWorker
                         'Don't return immediately for there might be some temp files to be cleaned up, first
                         ErrorFound = ex
                     End Try
-                ElseIf message.emailAttachments(MyCounter).FilePath <> Nothing Then
+                ElseIf message.EMailAttachments(MyCounter).FilePath <> Nothing Then
                     Dim fi As New IO.FileInfo(message.EMailAttachments(MyCounter).FilePath)
                     If fi.Exists Then
                         Try
@@ -168,11 +172,11 @@ Public Class SmtpWorker
                 Else
                     'empty attachment - ignore
                 End If
-                If Not MyEmbeddedImg Is Nothing Then
+                If MyEmbeddedImg IsNot Nothing Then
                     'add the LinkedResource to the appropriate view
                     htmlView.LinkedResources.Add(MyEmbeddedImg)
                 End If
-                If Not MyAttachment Is Nothing Then
+                If MyAttachment IsNot Nothing Then
                     MyMail.Attachments.Add(MyAttachment)
                 End If
             Next

@@ -1,6 +1,8 @@
 ﻿Option Strict On
 Option Explicit On
 
+Imports CompuMaster.Net.Smtp.Strings
+
 Public Class EMailAddress
 
     Public Sub New(address As System.Net.Mail.MailAddress)
@@ -47,7 +49,7 @@ Public Class EMailAddress
         Dim Result As New System.Text.StringBuilder
         For Each recipient As EMailAddress In recipients
             If Result.Length <> 0 Then
-                Result.Append(",")
+                Result.Append(","c)
             End If
             Result.Append(recipient.ToString)
         Next

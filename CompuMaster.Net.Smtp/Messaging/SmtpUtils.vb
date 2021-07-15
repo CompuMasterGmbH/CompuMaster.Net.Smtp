@@ -1,6 +1,8 @@
 ﻿Option Explicit On
 Option Strict On
 
+#Disable Warning IDE0079 ' Unnötige Unterdrückung entfernen
+#Disable Warning CA1825 ' Avoid zero-length array allocations.
 Friend Class SmtpUtils
 
     ''' <summary>
@@ -158,3 +160,5 @@ Friend Class SmtpUtils
     End Function
 
 End Class
+#Enable Warning CA1825 ' Avoid zero-length array allocations.
+#Enable Warning IDE0079 ' Unnötige Unterdrückung entfernen
