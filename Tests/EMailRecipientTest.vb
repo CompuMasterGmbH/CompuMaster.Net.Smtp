@@ -35,8 +35,12 @@ Imports CompuMaster.Net.Smtp
         Assert.AreEqual(Name.Replace("\", ""), EMailAddress.CreateFromSmtpFormat(TestAddressStyle3).Name)
         Assert.AreEqual(Address, EMailAddress.CreateFromSmtpFormat(TestAddressStyle3).Address)
         Assert.AreEqual(Nothing, EMailAddress.CreateFromSmtpFormat(CType(Nothing, String())))
-        Assert.AreEqual(0, EMailAddress.CreateFromSmtpFormat(Array.Empty(Of String)).Count)
+#Disable Warning IDE0079 ' Unnötige Unterdrückung entfernen
+#Disable Warning CA1825 ' Avoid zero-length array allocations.
+        Assert.AreEqual(0, EMailAddress.CreateFromSmtpFormat(New String() {}).Count)
         Dim ConvertedAddressList As List(Of EMailAddress) = EMailAddress.CreateFromSmtpFormat(New String() {TestAddressStyle1, TestAddressStyle2, TestAddressStyle3})
+#Enable Warning CA1825 ' Avoid zero-length array allocations.
+#Enable Warning IDE0079 ' Unnötige Unterdrückung entfernen
         Assert.AreEqual(3, ConvertedAddressList.Count)
         Assert.AreEqual(Address, ConvertedAddressList(0).Address)
         Assert.AreEqual(Address, ConvertedAddressList(1).Address)
