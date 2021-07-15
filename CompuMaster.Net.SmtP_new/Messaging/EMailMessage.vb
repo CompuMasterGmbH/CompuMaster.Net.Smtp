@@ -1,6 +1,7 @@
 Option Explicit On
 Option Strict On
 
+Imports CompuMaster.Net.Smtp.Strings
 Imports CompuMaster.Data
 
 ''' <summary>

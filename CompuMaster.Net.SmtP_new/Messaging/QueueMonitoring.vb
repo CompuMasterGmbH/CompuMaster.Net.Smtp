@@ -1,7 +1,6 @@
 Option Explicit On
 Option Strict On
 
-Imports System.Data.SqlClient
 Imports System.Net.Mail
 Imports CompuMaster.Data
 

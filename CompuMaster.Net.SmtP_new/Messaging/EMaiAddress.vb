@@ -1,7 +1,7 @@
 ﻿Option Strict On
 Option Explicit On
 
-Imports CompuMaster.VisualBasicCompatibility.Strings
+Imports CompuMaster.Net.Smtp.Strings
 
 Public Class EMailAddress
 

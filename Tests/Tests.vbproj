@@ -114,12 +114,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CompuMaster.Net.Smtp\CompuMaster.Net.Smtp.vbproj">
-      <Project>{2113697d-ca74-48d7-a638-8b56ec072aed}</Project>
-      <Name>CompuMaster.Net.Smtp</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="logo_64x64.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
