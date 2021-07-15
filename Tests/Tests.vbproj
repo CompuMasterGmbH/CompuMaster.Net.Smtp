@@ -7,6 +7,7 @@
     <PackageId>CompuMaster.Net.Smtp.Tests</PackageId>
     <Company>CompuMaster GmbH</Company>
     <Authors>Jochen Wezel</Authors>
+    <IsTestProject>true</IsTestProject>
     <Version>2021.07.15.100</Version>
     <Copyright>2001-2020 CompuMaster GmbH</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -45,7 +46,9 @@
 
   <ItemGroup>
     <PackageReference Include="JUnitTestLogger4GitHub" Version="1.1.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
     <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
   </ItemGroup>
 
   <ItemGroup>
