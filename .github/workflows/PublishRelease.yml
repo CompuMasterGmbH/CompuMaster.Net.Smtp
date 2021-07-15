@@ -23,7 +23,7 @@ env:
   # Name of build project which creates required output for packaging/deployment
   BUILD_PROJECT: CompuMaster.Net.Smtp/CompuMaster.Net.Smtp.vbproj
   # Name of directory (e.g. "bin") containing the subdirectory (e.g. "CI_CD") with all output files (*.dll)
-  BUILD_OUTPUT_BASEDIR: CompuMaster.Net.Smtp/bin/CI_CD
+  BUILD_OUTPUT_BASEDIR: CompuMaster.Net.Smtp/bin
 
 
 jobs:
