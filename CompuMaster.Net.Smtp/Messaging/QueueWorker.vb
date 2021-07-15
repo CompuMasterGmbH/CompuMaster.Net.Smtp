@@ -2,6 +2,7 @@
 Option Strict On
 
 Imports System.Data.SqlClient
+Imports CompuMaster.Data
 
 Public Class MailQueue
 
@@ -189,10 +190,10 @@ Public Class MailQueue
             'Execute the command
             If ReUseExistingConnection Then
                 'Use open connection, never close it
-                Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.None)
+                DataQuery.AnyIDataProvider.ExecuteNonQuery(MyCmd, DataQuery.AnyIDataProvider.Automations.None)
             Else
                 'Open and close connection as required
-                Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+                DataQuery.AnyIDataProvider.ExecuteNonQuery(MyCmd, DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
             End If
             'Add ID to collection for transaction handling
             If Not Me.QueueTransactionData Is Nothing Then

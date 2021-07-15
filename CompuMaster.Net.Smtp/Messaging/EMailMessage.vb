@@ -1,6 +1,7 @@
 Option Explicit On
 Option Strict On
 
+Imports CompuMaster.Net.Smtp.Strings
 Imports CompuMaster.Data
 
 ''' <summary>
@@ -110,9 +111,9 @@ Public Class EMailMessage
                     Throw New System.IO.FileNotFoundException("Attachment file not found: " & Me.EMailAttachments(MyCounter).FilePath)
                 ElseIf (Me.EMailAttachments(MyCounter).RawData Is Nothing OrElse Me.EMailAttachments(MyCounter).RawDataFilename = Nothing) AndAlso Me.EMailAttachments(MyCounter).FilePath <> Nothing AndAlso System.IO.File.Exists(Me.EMailAttachments(MyCounter).FilePath) Then
                     'Load file system data into memory as raw binary data
-                    Dim fs As System.IO.FileStream = New System.IO.FileStream(Me.EMailAttachments(MyCounter).FilePath, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read)
+                    Dim fs As New System.IO.FileStream(Me.EMailAttachments(MyCounter).FilePath, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read)
                     Try
-                        Dim fi As IO.FileInfo = New IO.FileInfo(Me.EMailAttachments(MyCounter).FilePath)
+                        Dim fi As New IO.FileInfo(Me.EMailAttachments(MyCounter).FilePath)
                         Dim byteArr(CType(fi.Length, Integer) - 1) As Byte
                         fs.Read(byteArr, 0, CType(fi.Length, Integer))
                         Me.EMailAttachments(MyCounter).RawData = byteArr
@@ -208,7 +209,7 @@ Public Class EMailMessage
                     Me.Subject = Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String))
                 Case "messageencoding"
                     Dim Charset As String = Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String))
-                    If Charset <> Nothing Then Me.MessageEncoding = Me.GetEncodingFromName(Charset)
+                    If Charset <> Nothing Then Me.MessageEncoding = GetEncodingFromName(Charset)
                 Case "textbody"
                     Me.BodyPlainText = Data.Utils.NoDBNull(MessageData.Rows(MyCounter)("value"), CType(Nothing, String))
                 Case "htmlbody"
@@ -231,12 +232,14 @@ Public Class EMailMessage
         Me.AdditionalHeaders = additionalHeaders
     End Sub
 
-    Private Function GetEncodingFromName(name As String) As System.Text.Encoding
+    Private Shared Function GetEncodingFromName(name As String) As System.Text.Encoding
         If name.Contains(" ") OrElse name.Contains("(") OrElse name.Contains(".") OrElse name.Contains("Unicode") Then
             'It's an encoding (display) name, System.Text.Encoding.GetEncoding(name) won't work
             Return System.Array.Find(Of System.Text.EncodingInfo)(System.Text.Encoding.GetEncodings(), Function(value As System.Text.EncodingInfo) As Boolean
                                                                                                            If value.Name = name OrElse value.DisplayName = name OrElse value.GetEncoding().EncodingName = name Then
                                                                                                                Return True
+                                                                                                           Else
+                                                                                                               Return False
                                                                                                            End If
                                                                                                        End Function).GetEncoding
         Else

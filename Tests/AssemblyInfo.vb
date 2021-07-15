@@ -13,7 +13,7 @@ Imports System.Runtime.InteropServices
 
 <Assembly: CLSCompliant(True)>
 <Assembly: ComVisibleAttribute(False)>
-<Assembly: System.Security.AllowPartiallyTrustedCallers()>
+'<Assembly: System.Security.AllowPartiallyTrustedCallers()>
 <Assembly: Guid("7a8c1c16-7733-4671-a6b6-f68beb4a0ded")>
 
 <Assembly: AssemblyVersion("2020.01.30.100")>
