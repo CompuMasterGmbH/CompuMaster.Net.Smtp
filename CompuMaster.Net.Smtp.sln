@@ -9,6 +9,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Demo", "Demo\Demo.vbproj", 
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Tests", "Tests\Tests.vbproj", "{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Demo_multi", "Demo_multi\Demo_multi.vbproj", "{0BB27D2D-7EE7-4C51-8015-E7D4FD248427}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CI_CD|Any CPU = CI_CD|Any CPU
@@ -33,12 +35,12 @@ Global
 		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9BC12A23-D447-48B7-8033-4C7D3FA07890}.CI_CD|Any CPU.ActiveCfg = CI_CD|Any CPU
-		{9BC12A23-D447-48B7-8033-4C7D3FA07890}.CI_CD|Any CPU.Build.0 = CI_CD|Any CPU
-		{9BC12A23-D447-48B7-8033-4C7D3FA07890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9BC12A23-D447-48B7-8033-4C7D3FA07890}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9BC12A23-D447-48B7-8033-4C7D3FA07890}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9BC12A23-D447-48B7-8033-4C7D3FA07890}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BB27D2D-7EE7-4C51-8015-E7D4FD248427}.CI_CD|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BB27D2D-7EE7-4C51-8015-E7D4FD248427}.CI_CD|Any CPU.Build.0 = Debug|Any CPU
+		{0BB27D2D-7EE7-4C51-8015-E7D4FD248427}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BB27D2D-7EE7-4C51-8015-E7D4FD248427}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BB27D2D-7EE7-4C51-8015-E7D4FD248427}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BB27D2D-7EE7-4C51-8015-E7D4FD248427}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
