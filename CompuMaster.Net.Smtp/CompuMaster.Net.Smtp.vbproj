@@ -53,6 +53,9 @@
 		<OptionCompare>Binary</OptionCompare>
 	</PropertyGroup>
 	<PropertyGroup>
+		<NoWarn>CA1031, CA1819</NoWarn>
+	</PropertyGroup>
+	<PropertyGroup>
 		<OptionStrict>Off</OptionStrict>
 		<PackageId>CompuMaster.Net.Smtp</PackageId>
 		<Product>CompuMaster.Net.Smtp</Product>
