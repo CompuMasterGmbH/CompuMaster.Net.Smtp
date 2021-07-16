@@ -1,7 +1,8 @@
 Option Explicit On
 Option Strict On
 
-Imports System.Data.SqlClient
+Imports System.Net.Mail
+Imports CompuMaster.Data
 
 ''' <summary>
 '''     Methods for the mail queue manager
@@ -15,9 +16,9 @@ Public Class QueueMonitoring
     ''' </summary>
     Public Function MailsInQueue() As Integer
         Dim Result As Object
-        Result = Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New SqlConnection(Me.ConnectionString),
-                            "SELECT COUNT(*) AS NumberOfItems FROM [dbo].[Log_eMailMessages] WHERE State = " & CType(QueueStates.Queued, Byte).ToString & " OR (State = " & CType(QueueStates.FailureAfter1Trial, Byte).ToString & " AND DATEDIFF (mi,[DateTime],GetDate()) > 15) OR (State IN (" & CType(QueueStates.FailureAfter2Trials, Byte) & "," & CType(QueueStates.Sending, Byte) & ") AND DATEDIFF (d,[DateTime],GetDate()) > 1)", CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
-        SetLastActivityDate(New SqlConnection(Me.ConnectionString), Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+        Result = DataQuery.AnyIDataProvider.ExecuteScalar(New SqlConnection(Me.ConnectionString),
+                            "SELECT COUNT(*) AS NumberOfItems FROM [dbo].[Log_eMailMessages] WHERE State = " & CType(QueueStates.Queued, Byte).ToString & " OR (State = " & CType(QueueStates.FailureAfter1Trial, Byte).ToString & " AND DATEDIFF (mi,[DateTime],GetDate()) > 15) OR (State IN (" & CType(QueueStates.FailureAfter2Trials, Byte) & "," & CType(QueueStates.Sending, Byte) & ") AND DATEDIFF (d,[DateTime],GetDate()) > 1)", CommandType.Text, Nothing, DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+        SetLastActivityDate(New SqlConnection(Me.ConnectionString), DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         Return Data.Utils.NoDBNull(Result, 0)
     End Function
     ''' <summary>
@@ -32,7 +33,7 @@ Public Class QueueMonitoring
         Dim MyReader As IDataReader = Nothing
         Dim MyMailID As Integer, MyMailData As String, MyMailState As QueueStates, MyMailDateTime As DateTime
         Try
-            MyReader = Tools.Data.DataQuery.AnyIDataProvider.ExecuteReader(
+            MyReader = DataQuery.AnyIDataProvider.ExecuteReader(
                         MyConn,
                         "declare @ID int, @OriginState int" & vbNewLine &
                             "SELECT TOP 1 @ID = [ID], @OriginState = State FROM [dbo].[Log_eMailMessages] WHERE State = " & CType(QueueStates.Queued, Byte).ToString & " OR (State = " & CType(QueueStates.FailureAfter1Trial, Byte).ToString & " AND DATEDIFF (mi,[DateTime],GetDate()) > 15) OR (State IN (" & CType(QueueStates.FailureAfter2Trials, Byte) & "," & CType(QueueStates.Sending, Byte) & ") AND DATEDIFF (d,[DateTime],GetDate()) > 1) ORDER BY State" & vbNewLine &
@@ -40,11 +41,11 @@ Public Class QueueMonitoring
                             "SELECT [ID], [UserID], [data], [State], [DateTime], @OriginState As OriginState FROM [dbo].[Log_eMailMessages] WHERE ID = @ID",
                         CommandType.Text,
                         Nothing,
-                        Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenConnection)
+                        DataQuery.AnyIDataProvider.Automations.AutoOpenConnection)
             'Read one data row
             If Not MyReader.Read Then
                 'Nothing to do; return immediately
-                Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeConnection(MyConn)
+                DataQuery.AnyIDataProvider.CloseAndDisposeConnection(MyConn)
                 Return
             Else
                 MyMailID = CType(MyReader("ID"), Integer)
@@ -53,7 +54,7 @@ Public Class QueueMonitoring
                 MyMailDateTime = CType(MyReader("DateTime"), DateTime)
             End If
         Catch
-            Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeConnection(MyConn)
+            DataQuery.AnyIDataProvider.CloseAndDisposeConnection(MyConn)
             Throw
         Finally
             MyReader.Close()
@@ -64,7 +65,7 @@ Public Class QueueMonitoring
         Try
             Success = SendMail(MyMailData, MyMailID, MyConn)
         Catch ex As Exception
-            SetLastErrorDetails(ex.ToString, MyMailID, MyConn, Tools.Data.DataQuery.AnyIDataProvider.Automations.None)
+            SetLastErrorDetails(ex.ToString, MyMailID, MyConn, DataQuery.AnyIDataProvider.Automations.None)
             Success = False
         End Try
 
@@ -84,20 +85,20 @@ Public Class QueueMonitoring
         End If
         Try
             'Update this single mail
-            Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyConn, "UPDATE [dbo].[Log_eMailMessages] SET State = " & CType(NewState, Byte).ToString & ", [DateTime] = GETDATE() WHERE ID = " & MyMailID.ToString, CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.None)
+            DataQuery.AnyIDataProvider.ExecuteNonQuery(MyConn, "UPDATE [dbo].[Log_eMailMessages] SET State = " & CType(NewState, Byte).ToString & ", [DateTime] = GETDATE() WHERE ID = " & MyMailID.ToString, CommandType.Text, Nothing, DataQuery.AnyIDataProvider.Automations.None)
             'Cleanup all queued elements never commited or cancelled and cancel them after 1 day
-            Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyConn, "UPDATE [dbo].[Log_eMailMessages] SET State = " & CType(QueueStates.Cancelled, Byte).ToString & ", [DateTime] = GETDATE() WHERE State = " & CType(QueueStates.WaitingForReleaseBeforeQueuing, Byte).ToString & " AND DateAdd(dd, 1, [DateTime]) < GETDATE()", CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.None)
+            DataQuery.AnyIDataProvider.ExecuteNonQuery(MyConn, "UPDATE [dbo].[Log_eMailMessages] SET State = " & CType(QueueStates.Cancelled, Byte).ToString & ", [DateTime] = GETDATE() WHERE State = " & CType(QueueStates.WaitingForReleaseBeforeQueuing, Byte).ToString & " AND DateAdd(dd, 1, [DateTime]) < GETDATE()", CommandType.Text, Nothing, DataQuery.AnyIDataProvider.Automations.None)
         Catch
-            Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeConnection(MyConn)
+            DataQuery.AnyIDataProvider.CloseAndDisposeConnection(MyConn)
             Throw
         End Try
 
         'Trigger activity and queue truncation
         Try
-            SetLastActivityDate(MyConn, Tools.Data.DataQuery.AnyIDataProvider.Automations.None)
+            SetLastActivityDate(MyConn, DataQuery.AnyIDataProvider.Automations.None)
             CleanUpOldQueueElementsWhenNotDoneTooLongTime(MyConn)
         Finally
-            Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeConnection(MyConn)
+            DataQuery.AnyIDataProvider.CloseAndDisposeConnection(MyConn)
         End Try
 
     End Sub
@@ -111,9 +112,9 @@ Public Class QueueMonitoring
 
         Dim MailData As New MailMessage(xml, _WebManager)
         Dim Errors As String = String.Empty
-        Dim Result As Boolean = MessagingEMails.SendEMail(False, MailData.To, MailData.Cc, MailData.Bcc, MailData.Subject, MailData.BodyPlainText, MailData.BodyHtml, MailData.FromName, MailData.FromAddress, MailData.EMailAttachments, MailData.Priority, MailData.Sensitivity, MailData.RequestTransmissionConfirmation, MailData.RequestReadingConfirmation, MailData.AdditionalHeaders, MailData.Charset, Errors)
+        Dim Result As Boolean = MessagingEMails.SendEMail(False, MailData.To, MailData.CC, MailData.Bcc, MailData.Subject, MailData.BodyPlainText, MailData.BodyHtml, MailData.FromName, MailData.FromAddress, MailData.EMailAttachments, MailData.Priority, MailData.Sensitivity, MailData.RequestTransmissionConfirmation, MailData.RequestReadingConfirmation, MailData.AdditionalHeaders, MailData.Charset, Errors)
         If Errors <> Nothing Then
-            SetLastErrorDetails(Errors, mailQueueID, dbConnection, Tools.Data.DataQuery.AnyIDataProvider.Automations.None)
+            SetLastErrorDetails(Errors, mailQueueID, dbConnection, DataQuery.AnyIDataProvider.Automations.None)
             'System.Environment.StackTrace doesn't work with medium-trust --> work around it using a new exception class
             Dim WorkaroundEx As New Exception("")
             Dim WorkaroundStackTrace As String = WorkaroundEx.StackTrace 'contains only last few lines of stacktrace
@@ -242,7 +243,7 @@ Public Class QueueMonitoring
     ''' <summary>
     '''     Set the last error information by the mail queue processor
     ''' </summary>
-    Private Sub SetLastErrorDetails(errorDetails As String, mailQueueID As Integer, connection As SqlConnection, automations As Tools.Data.DataQuery.AnyIDataProvider.Automations)
+    Private Sub SetLastErrorDetails(errorDetails As String, mailQueueID As Integer, connection As SqlConnection, automations As DataQuery.AnyIDataProvider.Automations)
         Dim _DBBuildNo As Integer = Setup.DatabaseUtils.Version(Me._WebManager, True).Build
         If _DBBuildNo >= 155 Then
             Try
@@ -253,7 +254,7 @@ Public Class QueueMonitoring
                     MyCmd.Parameters.Add("@ErrDetails", SqlDbType.NText).Value = errorDetails
                 End If
                 MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = mailQueueID
-                Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyCmd, automations)
+                DataQuery.AnyIDataProvider.ExecuteNonQuery(MyCmd, automations)
             Catch
             End Try
         End If
@@ -261,9 +262,9 @@ Public Class QueueMonitoring
     ''' <summary>
     '''     Set the last activity information by the mail queue processor
     ''' </summary>
-    Private Sub SetLastActivityDate(connection As SqlConnection, automations As Tools.Data.DataQuery.AnyIDataProvider.Automations)
+    Private Sub SetLastActivityDate(connection As SqlConnection, automations As DataQuery.AnyIDataProvider.Automations)
         Try
-            Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(
+            DataQuery.AnyIDataProvider.ExecuteNonQuery(
                         connection,
                         "DECLARE @RowNumber int" & vbNewLine &
                             "SELECT @RowNumber = COUNT(*)" & vbNewLine &
@@ -292,14 +293,14 @@ Public Class QueueMonitoring
 
         Dim Result As Integer
         Try
-            Result = CType(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(
+            Result = CType(DataQuery.AnyIDataProvider.ExecuteScalar(
                         New SqlConnection(_WebManager.ConnectionString),
                             "SELECT COUNT(*)" & vbNewLine &
                             "FROM [dbo].[System_GlobalProperties]" & vbNewLine &
                             "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = N'LastMailQueueProcessing' AND DATEDIFF (mi,[ValueDateTime],GetDate()) < 30",
                         CommandType.Text,
                         Nothing,
-                        Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Integer)
+                        DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Integer)
         Catch
             Result = 0
         End Try
@@ -329,15 +330,15 @@ Public Class QueueMonitoring
         Dim PerformCleanup As Boolean
         If LastCleanUp = Nothing Then
             PerformCleanup = True
-        ElseIf Now.Subtract(LastCleanUp).TotalHours > 4 Then
+        ElseIf DateTime.Now.Subtract(LastCleanUp).TotalHours > 4 Then
             PerformCleanup = True
         End If
         If PerformCleanup = True Then
             Me.CleanUpOldQueueElements(connection)
             If HttpContext.Current Is Nothing Then
-                LastCleanUpCached = Now
+                LastCleanUpCached = DateTime.Now
             Else
-                HttpContext.Current.Application("EMailQueue.LastCleanUp") = Now
+                HttpContext.Current.Application("EMailQueue.LastCleanUp") = DateTime.Now
             End If
         End If
 
@@ -349,10 +350,10 @@ Public Class QueueMonitoring
     '''     An additional new log entry will be created to log the truncation
     ''' </remarks>
     Private Sub CleanUpOldQueueElements(connection As SqlConnection)
-        Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(
+        DataQuery.AnyIDataProvider.ExecuteNonQuery(
                         connection,
                         "DELETE [dbo].[Log_eMailMessages] FROM (SELECT ID FROM [dbo].[Log_eMailMessages] WHERE State IN (" & CType(QueueStates.Cancelled, Byte) & "," & CType(QueueStates.Successfull, Byte) & "," & CType(QueueStates.FailureAfterLastTrial, Byte) & "," & CType(QueueStates.FailureAccepted, Byte) & ") AND DATEDIFF (d,[DateTime],GetDate()) > 90) AS toremove WHERE dbo.Log_eMailMessages.ID = toremove.ID",
-                        CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.None, 300)
+                        CommandType.Text, Nothing, DataQuery.AnyIDataProvider.Automations.None, 300)
     End Sub
 #End Region
 
