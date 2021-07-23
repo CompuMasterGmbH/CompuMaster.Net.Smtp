@@ -1,12 +1,11 @@
 ﻿Imports CompuMaster.Net.Smtp
-
 Public Module DemoApp
 
     Public Sub Main()
 
         'Ask user of DemoApp for most important settings (optionally add more if required for your demo environment)
-        My.Settings.SmtpServerName = InputBox("SmtpServerName",, My.Settings.SmtpServerName)
-        My.Settings.TestRecipientAddress = InputBox("TestRecipientAddress",, My.Settings.TestRecipientAddress)
+        My.Settings.SmtpServerName = Console.ReadLine("SmtpServerName: " + My.Settings.SmtpServerName)
+        My.Settings.TestRecipientAddress = Console.ReadLine("TestRecipientAddress: " + My.Settings.TestRecipientAddress)
         My.Settings.Save()
 
         'Setup SmtpWorker settings
