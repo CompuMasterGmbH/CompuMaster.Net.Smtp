@@ -33,6 +33,12 @@ Public Class SmtpWorker
     Public Property SmtpPassword() As String
 
     ''' <summary>
+    ''' The timeout in seconds
+    ''' </summary>
+    ''' <returns></returns>
+    Public Property SmtpTimeout As Integer = 100
+
+    ''' <summary>
     '''     Configures the authentication methods for the SMTP server
     ''' </summary>
     Public Property SmtpAuthType() As SmtpAuthTypes
@@ -66,6 +72,8 @@ Public Class SmtpWorker
                 smtp.Port = Me.SmtpServerPort
             End If
 
+            Smtp.Timeout = Me.SmtpTimeout * 1000 'in ms
+
 #Disable Warning IDE0079 ' Unnötige Unterdrückung entfernen
 #Disable Warning CA2208 ' Argumentausnahmen korrekt instanziieren
             Select Case Me.SmtpAuthType
@@ -74,14 +82,12 @@ Public Class SmtpWorker
                     If Me.SmtpPassword = Nothing Then Throw New ArgumentNullException("SmtpPassword")
                     Smtp.Credentials = New System.Net.NetworkCredential(Me.SmtpUserName, Me.SmtpPassword)
                     Smtp.EnableSsl = False
-                    Smtp.Timeout = 10 * 1000 'in ms
                 Case SmtpAuthTypes.LoginSsl
                     If Me.SmtpUserName = Nothing Then Throw New ArgumentNullException("SmtpUserName")
                     If Me.SmtpPassword = Nothing Then Throw New ArgumentNullException("SmtpPassword")
                     Smtp.UseDefaultCredentials = False
                     Smtp.Credentials = New System.Net.NetworkCredential(Me.SmtpUserName, Me.SmtpPassword)
                     Smtp.EnableSsl = True
-                    Smtp.Timeout = 10 * 1000 'in ms
                 Case Else
                     'SmtpAuthMethod = "NONE"
             End Select

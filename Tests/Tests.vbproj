@@ -8,8 +8,8 @@
     <Company>CompuMaster GmbH</Company>
     <Authors>Jochen Wezel</Authors>
     <IsTestProject>true</IsTestProject>
-    <Version>2021.07.15.100</Version>
-    <Copyright>2001-2020 CompuMaster GmbH</Copyright>
+    <Version>2021.08.26.100</Version>
+    <Copyright>2001-2021 CompuMaster GmbH</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Configurations>Debug;Release;CI_CD</Configurations>
   </PropertyGroup>
