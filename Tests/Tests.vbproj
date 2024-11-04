@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <RootNamespace>Smtp.Tests</RootNamespace>
-    <TargetFrameworks>netcoreapp3.1;net6.0;net48;net45</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net8.0;net48;net45</TargetFrameworks>
     <AssemblyName>CompuMaster.Net.Smtp.Tests</AssemblyName>
     <PackageId>CompuMaster.Net.Smtp.Tests</PackageId>
     <Company>CompuMaster GmbH</Company>
