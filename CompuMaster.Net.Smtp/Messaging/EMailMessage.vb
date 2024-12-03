@@ -248,9 +248,9 @@ Public Class EMailMessage
     End Function
 
     ''' <summary>
-    ''' Prepare HTML and attachments for embedded images feature, initialize all list fields if null/Nothing
+    ''' Prepare HTML and attachments for embedded images feature, cleanup attachments with placeholder but without reference from BodyHtml, initialize all list fields if null/Nothing
     ''' </summary>
-    Friend Sub PrepareForSending()
+    Public Sub PrepareForSending()
         'Fix HTML and attachments
         EMailAttachment.FixHtmlContentIDs(Me.BodyHtml, Me.EMailAttachments)
         'Init missing list instances

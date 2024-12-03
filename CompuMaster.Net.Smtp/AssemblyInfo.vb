@@ -1,0 +1,1 @@
+﻿<Assembly: Runtime.CompilerServices.InternalsVisibleTo("CompuMaster.Net.Smtp.Tests")>

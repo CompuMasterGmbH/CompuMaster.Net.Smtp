@@ -2,23 +2,49 @@ Option Explicit On
 Option Strict On
 
 ''' <summary>
-'''     An e-mail attachment
+''' An e-mail attachment
 ''' </summary>
 Public Class EMailAttachment
     Public Sub New()
         'Do nothing
     End Sub
+
+    ''' <summary>
+    ''' Create an attachment from local file path
+    ''' </summary>
+    ''' <param name="filepath"></param>
     Public Sub New(filepath As String)
         Me.FilePath = filepath
     End Sub
+
+    ''' <summary>
+    ''' Create an attachment from local file path for reference by placeholder ID in HtmlBody
+    ''' - WARNING: Attachments with placeholder ID and without reference in BodyHtml will be removed from message before sending
+    ''' </summary>
+    ''' <param name="filepath"></param>
+    ''' <param name="placeholderName">A placeholder ID</param>
     Public Sub New(filepath As String, placeholderName As String)
         Me.FilePath = filepath
         Me.PlaceholderInMhtmlToBeReplacedByContentID = placeholderName
     End Sub
+
+    ''' <summary>
+    ''' Create an attachment from in-memory data
+    ''' </summary>
+    ''' <param name="data"></param>
+    ''' <param name="filename"></param>
     Public Sub New(data As Byte(), filename As String)
         Me.RawData = data
         Me.RawDataFilename = filename
     End Sub
+
+    ''' <summary>
+    ''' Create an attachment from in-memory data for reference by placeholder ID in HtmlBody
+    ''' - WARNING: Attachments with placeholder ID and without reference in BodyHtml will be removed from message before sending
+    ''' </summary>
+    ''' <param name="data"></param>
+    ''' <param name="filename"></param>
+    ''' <param name="placeholderName"></param>
     Public Sub New(data As Byte(), filename As String, placeholderName As String)
         Me.RawData = data
         Me.RawDataFilename = filename
@@ -92,7 +118,8 @@ Public Class EMailAttachment
 
     Private _PlaceholderInMHTML_ToReplaceWithCID As String ' <Obsolete("Use ContentID instead", False), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
     ''' <summary>
-    '''     A placeholder string (without prefix "cid:") in the HTML code of the message (there it must be with prefix "cid:") which shall be replaced by the CID code of the attachment
+    ''' A placeholder string (without prefix "cid:") in the HTML code of the message (there it must be with prefix "cid:") which shall be replaced by the CID code of the attachment 
+    ''' - WARNING: Attachments with placeholder ID and without reference in BodyHtml will be removed from message before sending
     ''' </summary>
     ''' <remarks>
     ''' <para>Define the placeholder which shall be replaced by the Content-ID for the contents of a file to the email. Emails formatted in HTML can include images with this information and internally reference the image through a "cid" hyperlink.</para>
@@ -136,7 +163,7 @@ Public Class EMailAttachment
 #Disable Warning CA2249 ' Erwägen Sie die Verwendung von "string.Contains" anstelle von "string.IndexOf"
             'remove attachments with missing references
             For MyCounter As Integer = attachments.Count - 1 To 0 Step -1
-                If attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID <> Nothing AndAlso htmlBody.IndexOf(attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID) = -1 Then
+                If attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID <> Nothing AndAlso If(htmlBody, "").IndexOf(attachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID) = -1 Then
                     'html doesn't contain any reference to the embedded object - removing attachment
                     attachments.RemoveAt(MyCounter)
                 End If

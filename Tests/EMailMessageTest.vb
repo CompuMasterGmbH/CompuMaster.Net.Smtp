@@ -63,4 +63,104 @@ Imports CompuMaster.Net.Smtp
         Assert.Pass()
     End Sub
 
+    <Test> Public Sub FixHtmlContentIDs()
+        Dim Attachments As List(Of CompuMaster.Net.Smtp.EMailAttachment)
+
+        EMailAttachment.FixHtmlContentIDs("", Nothing)
+
+        Attachments = New List(Of CompuMaster.Net.Smtp.EMailAttachment)
+        EMailAttachment.FixHtmlContentIDs("", Attachments)
+        Assert.That(Attachments.Count, [Is].EqualTo(0))
+
+        Attachments = New List(Of CompuMaster.Net.Smtp.EMailAttachment)
+        Attachments.Add(New CompuMaster.Net.Smtp.EMailAttachment())
+        EMailAttachment.FixHtmlContentIDs(Nothing, Attachments)
+        Assert.That(Attachments.Count, [Is].EqualTo(1))
+
+        Attachments = CreateEMailAttachmentsSample1()
+        EMailAttachment.FixHtmlContentIDs(Nothing, Attachments)
+        Assert.That(Attachments.Count, [Is].EqualTo(0))
+
+        Attachments = CreateEMailAttachmentsSample1()
+        EMailAttachment.FixHtmlContentIDs("<html>" &
+                                          "<img src=""cid:" & Attachments(0).PlaceholderInMhtmlToBeReplacedByContentID & """/>" &
+                                          "<img src=""cid:" & Attachments(1).PlaceholderInMhtmlToBeReplacedByContentID & """/>" &
+                                          "<img src=""cid:" & Attachments(2).PlaceholderInMhtmlToBeReplacedByContentID & """/>" &
+                                          "<img src=""cid:" & Attachments(3).PlaceholderInMhtmlToBeReplacedByContentID & """/>" &
+                                          "<img src=""cid:" & Attachments(4).PlaceholderInMhtmlToBeReplacedByContentID & """/>" &
+                                          "</html>", Attachments)
+        Assert.That(Attachments.Count, [Is].EqualTo(5))
+
+        Attachments = CreateEMailAttachmentsSample1()
+        EMailAttachment.FixHtmlContentIDs("<html>" &
+                                          "<img src=""cid:" & Attachments(0).PlaceholderInMhtmlToBeReplacedByContentID & """/>" &
+                                          "</html>", Attachments)
+        Assert.That(Attachments.Count, [Is].EqualTo(1))
+
+        Attachments = CreateEMailAttachmentsSample2()
+        EMailAttachment.FixHtmlContentIDs("<html>" &
+                                          "</html>", Attachments)
+        Assert.That(Attachments.Count, [Is].EqualTo(2))
+
+        Attachments = CreateEMailAttachmentsSample2()
+        EMailAttachment.FixHtmlContentIDs("<html>" &
+                                          "<img src=""cid:" & Attachments(0).PlaceholderInMhtmlToBeReplacedByContentID & """/>" &
+                                          "<img src=""cid:" & Attachments(3).PlaceholderInMhtmlToBeReplacedByContentID & """/>" &
+                                          "</html>", Attachments)
+        Assert.That(Attachments.Count, [Is].EqualTo(4))
+    End Sub
+
+    Private Function CreateEMailAttachmentsSample1() As List(Of CompuMaster.Net.Smtp.EMailAttachment)
+        Dim Attachments As New List(Of CompuMaster.Net.Smtp.EMailAttachment)
+        Attachments.Add(New CompuMaster.Net.Smtp.EMailAttachment() With {
+            .FilePath = Nothing,
+            .RawDataFilename = "ProjectDetails_CM-4825_Fachhandwerk360 Dreier+Herber GbR (DEB300336) _ Helpdesk _ IT Management + Support.pdf.pdf",
+            .RawDataOriginFilename = "ProjectDetails_CM-4825_Fachhandwerk360 Dreier+Herber GbR (DEB300336) _ Helpdesk _ IT Management + Support.pdf.pdf",
+            .RawData = New Byte() {1, 2, 3},
+            .PlaceholderInMhtmlToBeReplacedByContentID = "ed642552-3e6c-41ac-8984-85b24ff2ba0c"
+        })
+        Attachments.Add(New CompuMaster.Net.Smtp.EMailAttachment() With {
+            .FilePath = Nothing,
+            .RawDataFilename = "ProjectDetails_CM-4825_Overview_Fachhandwerk360 Dreier+Herber GbR (DEB300336) _ Helpdesk _ IT Management + Support.pdf.pdf",
+            .RawDataOriginFilename = "ProjectDetails_CM-4825_Overview_Fachhandwerk360 Dreier+Herber GbR (DEB300336) _ Helpdesk _ IT Management + Support.pdf.pdf",
+            .RawData = New Byte() {1, 2, 3},
+            .PlaceholderInMhtmlToBeReplacedByContentID = "62ac3106-82c2-44dd-bc03-cc29f674fc0b"
+        })
+        Attachments.Add(New CompuMaster.Net.Smtp.EMailAttachment() With {
+            .FilePath = Nothing,
+            .RawDataFilename = "ProjectDetails_CM-4825_MainCategories_Fachhandwerk360 Dreier+Herber GbR (DEB300336) _ Helpdesk _ IT Management + Support.pdf.pdf",
+            .RawDataOriginFilename = "ProjectDetails_CM-4825_MainCategories_Fachhandwerk360 Dreier+Herber GbR (DEB300336) _ Helpdesk _ IT Management + Support.pdf.pdf",
+            .RawData = New Byte() {1, 2, 3},
+            .PlaceholderInMhtmlToBeReplacedByContentID = "4ff43e11-fa0a-49f7-984c-7bd2869d87f2"
+        })
+        Attachments.Add(New CompuMaster.Net.Smtp.EMailAttachment() With {
+            .FilePath = "RE559902886.pdf",
+            .RawDataFilename = Nothing,
+            .RawDataOriginFilename = Nothing,
+            .RawData = Nothing,
+            .PlaceholderInMhtmlToBeReplacedByContentID = "4b38e763-79b0-470f-80bd-d493c6b2eb9f"
+        })
+        Attachments.Add(New CompuMaster.Net.Smtp.EMailAttachment() With {
+            .FilePath = "RE559902886_printer.pdf",
+            .RawDataFilename = Nothing,
+            .RawDataOriginFilename = Nothing,
+            .RawData = Nothing,
+            .PlaceholderInMhtmlToBeReplacedByContentID = "676fdb55-af32-4c13-b70a-933e4d20dedf"
+        })
+        Return Attachments
+    End Function
+
+    ''' <summary>
+    ''' Sample attachments: 2 with placeholder + 2 without placeholder
+    ''' </summary>
+    ''' <returns></returns>
+    Private Function CreateEMailAttachmentsSample2() As List(Of CompuMaster.Net.Smtp.EMailAttachment)
+        Dim Attachments As New List(Of CompuMaster.Net.Smtp.EMailAttachment)
+        Attachments.Add(New CompuMaster.Net.Smtp.EMailAttachment(New Byte() {1, 2, 3}, "ProjectDetails_CM-4825_Fachhandwerk360 Dreier+Herber GbR (DEB300336) _ Helpdesk _ IT Management + Support.pdf.pdf", "ed642552-3e6c-41ac-8984-85b24ff2ba0c"))
+        Attachments.Add(New CompuMaster.Net.Smtp.EMailAttachment(New Byte() {1, 2, 3}, "ProjectDetails_CM-4825_Overview_Fachhandwerk360 Dreier+Herber GbR (DEB300336) _ Helpdesk _ IT Management + Support.pdf.pdf"))
+        Attachments.Add(New CompuMaster.Net.Smtp.EMailAttachment("RE559902886.pdf"))
+        Attachments.Add(New CompuMaster.Net.Smtp.EMailAttachment("RE559902886_printer.pdf", "676fdb55-af32-4c13-b70a-933e4d20dedf"))
+        Return Attachments
+    End Function
+
 End Class
