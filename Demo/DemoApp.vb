@@ -4,19 +4,21 @@ Public Module DemoApp
 
     Public Sub Main()
 
+        Dim MySmtpWorker As New SmtpWorker
+
         'Ask user of DemoApp for most important settings (optionally add more if required for your demo environment)
         My.Settings.SmtpServerName = InputBox("SmtpServerName",, My.Settings.SmtpServerName)
+        If My.Settings.SmtpServerName = Nothing Then Return
         My.Settings.TestRecipientAddress = InputBox("TestRecipientAddress",, My.Settings.TestRecipientAddress)
+        If My.Settings.TestRecipientAddress = Nothing Then Return
         My.Settings.Save()
 
         'Setup SmtpWorker settings
-        Dim MySmtpWorker As New SmtpWorker With {
-            .SmtpServerName = My.Settings.SmtpServerName,
-            .SmtpServerPort = My.Settings.SmtpServerPort,
-            .SmtpAuthType = My.Settings.SmtpAuthType,
-            .SmtpUserName = My.Settings.SmtpUsername,
-            .SmtpPassword = My.Settings.SmtpPassword
-        }
+        MySmtpWorker.SmtpServerName = My.Settings.SmtpServerName
+        MySmtpWorker.SmtpServerPort = My.Settings.SmtpServerPort
+        MySmtpWorker.SmtpAuthType = My.Settings.SmtpAuthType
+        MySmtpWorker.SmtpUserName = My.Settings.SmtpUsername
+        MySmtpWorker.SmtpPassword = My.Settings.SmtpPassword
 
         'Prepare email message
         Dim MyAttachment As New EMailAttachment("logo_64x64.png", "logo")
