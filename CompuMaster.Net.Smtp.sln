@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29509.3
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "CompuMaster.Net.Smtp", "CompuMaster.Net.Smtp\CompuMaster.Net.Smtp.vbproj", "{DA3FE988-C378-453E-B5CF-5662961ACE55}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Demo", "Demo\Demo.vbproj", "{1617C70F-901C-49F7-B204-144B7012B992}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Tests", "Tests\Tests.vbproj", "{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projektmappenelemente", "Projektmappenelemente", "{F4DEDB30-9EF6-4998-A89E-466A6EEEFDD0}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,12 +38,6 @@ Global
 		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CBFB20B-E747-434D-A9AE-8DDD0618F53E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9BC12A23-D447-48B7-8033-4C7D3FA07890}.CI_CD|Any CPU.ActiveCfg = CI_CD|Any CPU
-		{9BC12A23-D447-48B7-8033-4C7D3FA07890}.CI_CD|Any CPU.Build.0 = CI_CD|Any CPU
-		{9BC12A23-D447-48B7-8033-4C7D3FA07890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9BC12A23-D447-48B7-8033-4C7D3FA07890}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9BC12A23-D447-48B7-8033-4C7D3FA07890}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9BC12A23-D447-48B7-8033-4C7D3FA07890}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
