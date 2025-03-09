@@ -77,6 +77,11 @@ Imports CompuMaster.Net.Smtp
         EMailAttachment.FixHtmlContentIDs(Nothing, Attachments)
         Assert.That(Attachments.Count, [Is].EqualTo(1))
 
+        Attachments = New List(Of CompuMaster.Net.Smtp.EMailAttachment)
+        Attachments.Add(New CompuMaster.Net.Smtp.EMailAttachment() With {.PlaceholderInMhtmlToBeReplacedByContentID = Guid.NewGuid.ToString})
+        EMailAttachment.FixHtmlContentIDs(Nothing, Attachments)
+        Assert.That(Attachments.Count, [Is].EqualTo(0))
+
         Attachments = CreateEMailAttachmentsSample1()
         EMailAttachment.FixHtmlContentIDs(Nothing, Attachments)
         Assert.That(Attachments.Count, [Is].EqualTo(0))
