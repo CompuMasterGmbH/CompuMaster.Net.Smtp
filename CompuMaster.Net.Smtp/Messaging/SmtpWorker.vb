@@ -1,5 +1,8 @@
-Option Explicit On
+ï»¿Option Explicit On
 Option Strict On
+Imports System.IO
+Imports System.Net.Mail
+Imports System.Net.Mime
 
 ''' <summary>
 '''     Mail delivery methods
@@ -74,7 +77,7 @@ Public Class SmtpWorker
 
             Smtp.Timeout = Me.SmtpTimeout * 1000 'in ms
 
-#Disable Warning IDE0079 ' Unnötige Unterdrückung entfernen
+#Disable Warning IDE0079 ' UnnÃ¶tige UnterdrÃ¼ckung entfernen
 #Disable Warning CA2208 ' Argumentausnahmen korrekt instanziieren
             Select Case Me.SmtpAuthType
                 Case SmtpAuthTypes.LoginPlainText
@@ -92,7 +95,7 @@ Public Class SmtpWorker
                     'SmtpAuthMethod = "NONE"
             End Select
 #Enable Warning CA2208 ' Argumentausnahmen korrekt instanziieren
-#Enable Warning IDE0079 ' Unnötige Unterdrückung entfernen
+#Enable Warning IDE0079 ' UnnÃ¶tige UnterdrÃ¼ckung entfernen
 
             Try
                 'Add all recepients
@@ -159,21 +162,33 @@ Public Class SmtpWorker
                         ErrorFound = ex
                     End Try
                 ElseIf message.EMailAttachments(MyCounter).FilePath <> Nothing Then
-                    Dim fi As New IO.FileInfo(message.EMailAttachments(MyCounter).FilePath)
+                    Dim LocalFilePath As String = message.EMailAttachments(MyCounter).FilePath
+                    Dim fi As New IO.FileInfo(LocalFilePath)
                     If fi.Exists Then
                         Try
                             If message.EMailAttachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID <> Nothing Then
-                                MyEmbeddedImg = New System.Net.Mail.LinkedResource(message.EMailAttachments(MyCounter).FilePath) With {
+                                MyEmbeddedImg = New System.Net.Mail.LinkedResource(LocalFilePath) With {
                                     .ContentId = message.EMailAttachments(MyCounter).PlaceholderInMhtmlToBeReplacedByContentID
                                 }
                             Else
-                                MyAttachment = New System.Net.Mail.Attachment(message.EMailAttachments(MyCounter).FilePath)
+                                Try
+                                    MyAttachment = New System.Net.Mail.Attachment(LocalFilePath)
+                                Catch ex As System.IO.IOException
+                                    Using fs As New FileStream(LocalFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
+                                        Dim ms As New MemoryStream()
+                                        fs.CopyTo(ms)
+                                        ms.Position = 0
+                                        Dim name As String = Path.GetFileName(LocalFilePath)
+                                        Dim ct As New ContentType(Me.GetFallbackMimeTypeFromExtension(Path.GetExtension(LocalFilePath)))
+                                        MyAttachment = New System.Net.Mail.Attachment(ms, name, ct.MediaType)
+                                    End Using
+                                End Try
                             End If
                         Catch ex As Exception
                             Return New SmtpSendResult(ex)
                         End Try
                     Else
-                        Return New SmtpSendResult(New Exception("Attachment not found: " & message.EMailAttachments(MyCounter).FilePath))
+                        Return New SmtpSendResult(New Exception("Attachment not found: " & LocalFilePath))
                     End If
                 Else
                     'empty attachment - ignore
@@ -225,13 +240,13 @@ Public Class SmtpWorker
 
                 'Setup mail receipt confirmations
                 If message.RequestReadingConfirmation Then
-                    'Disposition-Notification-To: "Jon Doe" <jon.doe@my-webmailer-company.com> 'Lesebestätigung
+                    'Disposition-Notification-To: "Jon Doe" <jon.doe@my-webmailer-company.com> 'LesebestÃ¤tigung
                     MyMail.Headers.Add("Disposition-Notification-To", message.From.ToString)
                 End If
 
                 'MIGHT BE FIXED OR IS STILL TODO: The bug is that nothing happens :( 
                 If message.RequestTransmissionConfirmation Then
-                    'Return-Receipt-To: "Jochen Wezel" <my-company@my-webmailer-company.com> 'Übermittlungsbestätigung
+                    'Return-Receipt-To: "Jochen Wezel" <my-company@my-webmailer-company.com> 'ÃœbermittlungsbestÃ¤tigung
                     'MyMail.Headers.Add("Return-Receipt-To", SenderAddress)
                     MyMail.DeliveryNotificationOptions = System.Net.Mail.DeliveryNotificationOptions.OnSuccess
                 End If
@@ -265,6 +280,99 @@ Public Class SmtpWorker
 
         Return Result
 
+    End Function
+
+    ''' <summary>
+    ''' In case of a local locked file from another process, this method will be involved to try to get the file content with a MemoryStream, but this workaround needs to provide a MIME type for the file.
+    ''' </summary>
+    ''' <param name="ext"></param>
+    ''' <returns></returns>
+    Protected Overridable Function GetFallbackMimeTypeFromExtension(ext As String) As String
+        If String.IsNullOrWhiteSpace(ext) Then Return MediaTypeNames.Application.Octet
+        If Not ext.StartsWith(".") Then ext = "." & ext
+
+        Select Case ext.ToLowerInvariant()
+        ' --- Text/Markup ---
+            Case ".txt", ".text", ".log", ".ini", ".cfg", ".conf" : Return MediaTypeNames.Text.Plain
+            Case ".md", ".markdown" : Return "text/markdown"
+            Case ".htm", ".html" : Return MediaTypeNames.Text.Html
+            Case ".xml" : Return "application/xml"
+            Case ".json" : Return "application/json"
+            Case ".yaml", ".yml" : Return "application/yaml"
+            Case ".csv" : Return "text/csv"
+            Case ".tsv" : Return "text/tab-separated-values"
+            Case ".rtf" : Return "application/rtf"
+            Case ".pdf" : Return MediaTypeNames.Application.Pdf
+
+        ' --- Microsoft Office ---
+            Case ".doc" : Return "application/msword"
+            Case ".docx" : Return "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            Case ".dotx" : Return "application/vnd.openxmlformats-officedocument.wordprocessingml.template"
+            Case ".docm" : Return "application/vnd.ms-word.document.macroEnabled.12"
+            Case ".dotm" : Return "application/vnd.ms-word.template.macroEnabled.12"
+
+            Case ".xls" : Return "application/vnd.ms-excel"
+            Case ".xlsx" : Return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            Case ".xlsm" : Return "application/vnd.ms-excel.sheet.macroEnabled.12"
+            Case ".xltx" : Return "application/vnd.openxmlformats-officedocument.spreadsheetml.template"
+            Case ".xltm" : Return "application/vnd.ms-excel.template.macroEnabled.12"
+            Case ".xlsb" : Return "application/vnd.ms-excel.sheet.binary.macroEnabled.12"
+
+            Case ".ppt" : Return "application/vnd.ms-powerpoint"
+            Case ".pptx" : Return "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+            Case ".pptm" : Return "application/vnd.ms-powerpoint.presentation.macroEnabled.12"
+            Case ".pps" : Return "application/vnd.ms-powerpoint"
+            Case ".ppsx" : Return "application/vnd.openxmlformats-officedocument.presentationml.slideshow"
+
+        ' --- OpenDocument ---
+            Case ".odt" : Return "application/vnd.oasis.opendocument.text"
+            Case ".ods" : Return "application/vnd.oasis.opendocument.spreadsheet"
+            Case ".odp" : Return "application/vnd.oasis.opendocument.presentation"
+
+        ' --- Bilder ---
+            Case ".jpg", ".jpeg" : Return "image/jpeg"
+            Case ".png" : Return "image/png"
+            Case ".gif" : Return "image/gif"
+            Case ".svg" : Return "image/svg+xml"
+            Case ".webp" : Return "image/webp"
+            Case ".bmp" : Return "image/bmp"
+            Case ".tif", ".tiff" : Return "image/tiff"
+            Case ".ico" : Return "image/x-icon"
+
+        ' --- Archive ---
+            Case ".zip" : Return "application/zip"
+            Case ".7z" : Return "application/x-7z-compressed"
+            Case ".rar" : Return "application/vnd.rar"
+            Case ".tar" : Return "application/x-tar"
+            Case ".gz" : Return "application/gzip"
+            Case ".bz2" : Return "application/x-bzip2"
+            Case ".xz" : Return "application/x-xz"
+
+        ' --- E-Mail / Kalender / Kontakte ---
+            Case ".eml" : Return "message/rfc822"
+            Case ".msg" : Return "application/vnd.ms-outlook"
+            Case ".ics" : Return "text/calendar"
+            Case ".vcf" : Return "text/vcard"
+
+        ' --- Audio ---
+            Case ".mp3" : Return "audio/mpeg"
+            Case ".wav" : Return "audio/wav"
+            Case ".flac" : Return "audio/flac"
+            Case ".m4a" : Return "audio/mp4"
+            Case ".ogg", ".oga" : Return "audio/ogg"
+            Case ".opus" : Return "audio/opus"
+            Case ".aac" : Return "audio/aac"
+
+        ' --- Video ---
+            Case ".mp4" : Return "video/mp4"
+            Case ".mkv" : Return "video/x-matroska"
+            Case ".mov" : Return "video/quicktime"
+            Case ".avi" : Return "video/x-msvideo"
+            Case ".webm" : Return "video/webm"
+
+            Case Else
+                Return MediaTypeNames.Application.Octet
+        End Select
     End Function
 
 End Class
