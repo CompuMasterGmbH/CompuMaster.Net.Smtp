@@ -1,36 +1,44 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <TargetFrameworks>net48</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <MyType>Console</MyType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Configurations>CI_CD;Debug;Release</Configurations>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DocumentationFile>Demo.xml</DocumentationFile>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DefineDebug>false</DefineDebug>
-    <DocumentationFile>Demo.xml</DocumentationFile>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup>
     <StartupObject>Sub Main</StartupObject>
     <AssemblyTitle>CompuMaster.Net.Smtp Demo</AssemblyTitle>
     <Description>CompuMaster.Net.Smtp</Description>
     <Company>CompuMaster GmbH</Company>
     <Product>CompuMaster.Net.Smtp</Product>
-    <Copyright>2001-2020 CompuMaster GmbH</Copyright>
-    <AssemblyVersion>2020.01.30.100</AssemblyVersion>
+    <Copyright>2001-2025 CompuMaster GmbH</Copyright>
+    <AssemblyVersion>2025.08.21.100</AssemblyVersion>
+    <Title>CompuMaster.Net.Smtp Demo-App</Title>
+  </PropertyGroup>
+
+  <!-- net48 wie gehabt -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+    <MyType>WindowsForms</MyType>    <!-- falls Sie das My-App-Framework dort auch nutzen -->
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <!-- net8: Windows-Desktop + My-App-Framework aktivieren -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+    <UseWindowsForms>true</UseWindowsForms>
+    <MyType>WindowsForms</MyType>    <!-- nötig, damit My-Generator die richtigen Klassen erzeugt -->
+    <VBRuntime>Default</VBRuntime>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DocumentationFile>Demo.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DefineDebug>false</DefineDebug>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CI_CD|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\CI_CD\</OutputPath>
-    <DocumentationFile>Demo.xml</DocumentationFile>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="My Project\Application.Designer.vb">
@@ -72,6 +80,10 @@
     <Content Include="logo_64x64.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+    <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
+    <FrameworkReference Include="Microsoft.WindowsDesktop.App.WindowsForms" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CompuMaster.Net.Smtp\CompuMaster.Net.Smtp.vbproj" />

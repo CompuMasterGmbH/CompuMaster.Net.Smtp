@@ -9,6 +9,8 @@ Public Module DemoApp
         'Ask user of DemoApp for most important settings (optionally add more if required for your demo environment)
         My.Settings.SmtpServerName = InputBox("SmtpServerName",, My.Settings.SmtpServerName)
         If My.Settings.SmtpServerName = Nothing Then Return
+        My.Settings.TestSenderAddress = InputBox("TestSenderAddress",, My.Settings.TestSenderAddress)
+        If My.Settings.TestSenderAddress = Nothing Then Return
         My.Settings.TestRecipientAddress = InputBox("TestRecipientAddress",, My.Settings.TestRecipientAddress)
         If My.Settings.TestRecipientAddress = Nothing Then Return
         My.Settings.Save()
